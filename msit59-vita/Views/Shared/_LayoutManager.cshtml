@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
+    @RenderSection("MyStyle", required: false)
+   
+
+</head>
+<body>
+    <header class=" sticky-top">
+        <div class="container-fluid nav-area bg-dark">
+            <ul class="nav d-flex justify-content-between align-items-center fs-2">
+                <li class="nav-item">
+                    <a href="@Url.Action("Index", "ManagerHome")">
+                        <img class="header-logo" src="./image/logo/logo_300x150.png" alt="">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href=""
+                       class="logout-link fs-5 fw-bolder link-light text-decoration-none">
+                        會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    @if (IsSectionDefined("BreadCrumb"))
+    {
+        <nav class="container-fluid">
+            <div class="row justify-content-start">
+            @RenderSection("BreadCrumb", true)
+        </div>
+    </nav>
+    }
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+
+            <!-- 側邊攔 -->
+            <div id="sidebar-wrapper"
+                 class="col-lg-2 col-sm-3 sidebar sidebar-dark accordion bg-primary list-unstyled text-center">
+                <ul class="">
+                    <li>
+                        <a href="">
+                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <span>訂單管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "ManagerProducts")">
+                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <span>菜單管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "ManagerStores")">
+                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <span>店家資訊</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ManagerReviews">
+                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <span>評論管理</span>
+                        </a>
+                    </li>
+                    <button class="btn-lg btn-danger fixed-button">暫停接單</button>
+                    <!-- <button class="btn-lg btn-danger position-absolute" style="bottom: 10%; left: 32%;">暫停接單</button> -->
+
+                </ul>
+            </div>
+            @if (IsSectionDefined("ContentWrapper"))
+            {
+                <div id="content-wrapper" class="col-lg-10 col-sm-9 bg-light">
+                    @RenderSection("ContentWrapper", required: true)
+                </div>
+            }
+
+        </div> 
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/css/bootstrap.css"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </div>
+
+
+
+
+</body>

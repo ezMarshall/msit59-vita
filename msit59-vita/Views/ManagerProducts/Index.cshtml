@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+@section MyStyle {
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerProducts.css" asp-append-version="true" />
+}
+
+@section BreadCrumb {
+    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
+    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
+        <ol class="breadcrumb pt-3">
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="./ManagerHome.html"
+                   class="text-dark text-decoration-none fw-bolder">首頁</a>
+            </li>
+            <li class="breadcrumb-item">菜單管理</li>
+        </ol>
+    </div>
+
+}
+
+@section ContentWrapper {
+    <div class="row">
+        <div class="col-lg-2 col-sm-12 pt-4">
+            <button class="btn btn-dark btn-lg" data-bs-toggle="modal"
+                    data-bs-target="#EditProductCategoriesModal">
+                設定產品分類
+            </button>
+            <hr class="bg-dark text-dark">
+            <ul id="ProductsCategoryList" class="row list-unstyled ps-4">
+                <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">
+                    健康便當
+                </li>
+                <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">沙拉</li>
+                <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">湯品</li>
+                <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">飲料</li>
+                <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">配菜</li>
+            </ul>
+        </div>
+        <hr class="area-separator d-lg-none">
+        <div id="TableAreas" class="col-lg-10 col-sm-12 row pt-5 pb-4 min-vh-100">
+            <table id="TableProducts" class="table border-bottom border-dark col text-center">
+                <thead>
+                    <tr class="fs-6">
+                        <th scope="col" style="width: 4%;">#</th>
+                        <th scope="col" style="width: 10%;">圖片</th>
+                        <th scope="col" style="width: 25%;">商品名稱</th>
+                        <th scope="col" style="width: 8%;">價格</th>
+                        <th scope="col" style="width: 8%;">庫存數</th>
+                        <th scope="col" style="width: 10%;">上架中</th>
+                        <th scope="col" style="width: 16%;">商品分類</th>
+                        <th scope="col" style="width: 19%;">功能</th>
+                    </tr>
+
+                <tbody id="ProductsTable">
+                </tbody>
+            </table>
+
+            <div>
+                <ul class="pagination align-items-center justify-content-center">
+                    <li id="prevPageButton" class="btn disabled page-item">
+                        <a class="page-link text-dark" href="javascript:void(0)">Previous</a>
+                    </li>
+                    <li id="pageBox1" class="page-item active">
+                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:void(0)">1</a>
+                    </li>
+                    <li id="pageBox2" class="page-item">
+                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:void(0)">2</a>
+                    </li>
+                    <li id="pageBox3" class="page-item">
+                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:void(0)">3</a>
+                    </li>
+                    <li id="nextPageButton" class="btn page-item">
+                        <a class="page-link text-dark" href="javascript:void(0)">Next</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+}
