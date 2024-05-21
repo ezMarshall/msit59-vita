@@ -2,8 +2,7 @@
 
 namespace msit59_vita.Controllers
 {
-    //  後台 店家資訊頁面
-    public class StoreManagerController : Controller
+    public class ManagerProductsController : Controller
     {
         public IActionResult Index()
         {

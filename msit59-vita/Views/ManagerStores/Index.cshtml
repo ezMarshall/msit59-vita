@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+@section MyStyle {
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerStores.css" asp-append-version="true" />
+}
+
+@section BreadCrumb {
+    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
+    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
+        <ol class="breadcrumb pt-3">
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="./ManagerHome.html"
+                   class="text-dark text-decoration-none fw-bolder">首頁</a>
+            </li>
+            <li class="breadcrumb-item">店家資訊</li>
+        </ol>
+    </div>
+
+}
+
+@section ContentWrapper{
+    <div class="bg-img">
+        优輕食（大墩店）
+    </div>
+    <div class="row justify-content-center">
+
+        <div class="col-10 ">
+            <dl class="row fs-5 justify-content-center store-info-area mx-auto">
+                <dt class="col-sm-3">商家名稱</dt>
+                <dd class="col-sm-9">
+                    <span>优輕食（大墩店）</span>
+                  
+                    <button type="button" class="float-end btn btn-outline-success"
+                            data-bs-toggle="modal" data-bs-target="#EditStoreInfoModal">
+                        點我編輯全部
+                    </button>
+                </dd>
+
+
+                <dt class="col-sm-3">商家地址</dt>
+                <dd class="col-sm-9">
+                    <p class="d-inline">台中市</p>
+                    <p class="d-inline">南屯區</p>
+                    <p class="d-inline">大墩十二街153號</p>
+
+                </dd>
+
+                <dt class="col-sm-3">連絡電話</dt>
+                <dd class="col-sm-9">0958405948</dd>
+
+                <dt class="col-sm-3">營業時間</dt>
+                <dd class="col-sm-9">
+                    <dl class="row">
+                        <dt class="col-sm-2">週日</dt>
+                        <dd class="col-sm-10">未營業</dd>
+
+                        <dt class="col-sm-2">週一</dt>
+                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+
+                        <dt class="col-sm-2">週二</dt>
+                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+
+                        <dt class="col-sm-2">週三</dt>
+                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+
+                        <dt class="col-sm-2">週四</dt>
+                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+
+                        <dt class="col-sm-2">週五</dt>
+                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+
+                        <dt class="col-sm-2">週六</dt>
+                        <dd class="col-sm-10">未營業</dd>
+                    </dl>
+                </dd>
+
+                <dt class="col-sm-3">開立發票方式</dt>
+                <dd class="col-sm-9">紙本/電子發票</dd>
+
+                <dt class="col-sm-3">接受LinePay</dt>
+                <dd class="col-sm-9">是</dd>
+            </dl>
+
+
+
+        </div>
+
+
+    </div>
+}

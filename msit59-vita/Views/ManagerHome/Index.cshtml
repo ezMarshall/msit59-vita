@@ -1,0 +1,81 @@
+﻿@{
+    // ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+@section MyStyle{
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerHome.css" asp-append-version="true" />
+}
+
+@section BreadCrumb{
+            <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0" style="height: 56px;"></div>
+            <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0" style="height: 56px;"></div>
+
+}
+
+@section ContentWrapper{
+    <div class="row">
+        <div id="order-info" class="col-lg-9 col-sm-12">
+            <h3>今日訂單資訊</h3>
+            <div class="row">
+                <ul class="col-lg-6 fs-4">
+                    <li>待接單：<a href="">8</a></li>
+                    <li>製作中：<a href="">5</a></li>
+                    <li>配送中/等待自取：<a href="">3</a></li>
+                    <li>已完成：<a href="">46</a></li>
+                    <li>退單/已取消：<a href="">7</a></li>
+
+                </ul>
+                <ul class="col-lg-4 fs-4">
+                    <li>今日營業額：5800</li>
+                    <li>今日銷售數量：49</li>
+                    <li>自取：38&nbsp;&nbsp;外送：11</li>
+                </ul>
+            </div>
+
+        </div>
+        <div id="review-info" class="col-lg-3 col-sm-12">
+            <h3>評論管理</h3>
+            <ul class="row fs-4">
+                <li>本週新進評論：<a href="">5</a></li>
+
+            </ul>
+
+        </div>
+    </div>
+
+    <div id="sales-stats" class="pt-4">
+        <h3>報表統計</h3>
+
+
+        <div id="total-stats" class="row pt-3 pb-3">
+            <div class="col-lg-3 col-sm-5">
+                <img src="https://placehold.co/200x100" class="w-100" alt="">
+            </div>
+            <div class="col-lg-3 col-sm-5">
+                <img src="https://placehold.co/200x100" class="w-100" alt="">
+            </div>
+        </div>
+        <div id="hist-stats" class="row">
+            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                <img src="https://placehold.co/400x400" class="w-100" alt="">
+            </div>
+            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                <img src="https://placehold.co/400x400" class="w-100" alt="">
+            </div>
+            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                <img src="https://placehold.co/400x400" class="w-100" alt="">
+            </div>
+        </div>
+        <div id="line-chart-stats" class="row ">
+            <div class="col-lg-6 col-sm-12  pt-3 pb-3">
+                <img src="https://placehold.co/600x400" class="w-100" alt="">
+            </div>
+            <div class="col-lg-6 col-sm-12  pt-3 pb-3">
+                <img src="https://placehold.co/600x400" class="w-100" alt="">
+            </div>
+        </div>
+    </div>        
+       
+}
