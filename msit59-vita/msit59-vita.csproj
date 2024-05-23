@@ -9,12 +9,10 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
-    <Content Remove="Views\FavoriteStores\index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="Views\FavoriteStores\index.cshtml" />
   </ItemGroup>
 
 </Project>
