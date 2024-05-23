@@ -9,19 +9,12 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Views\FavoriteStores\index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\Manager\" />
-    <Folder Include="wwwroot\image\" />
+    <None Include="Views\FavoriteStores\index.cshtml" />
   </ItemGroup>
 
 </Project>
