@@ -1,3 +1,8 @@
+@model List<Store>;
+
+@{
+    int storeID = 100;
+}
 
 <div class="container-fluid mt-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -11,9 +16,54 @@
     <div class="container container-lg ">
         <h4 class="text-dark">收藏店家</h4>
         <!-- 收藏的店家 -->
+        @foreach (Store store in Model)
+        {
+            <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("storeID"+store.StoreId)">
+                <div class="row mt-3">
+                    <div class="col-12 col-lg-5 mb-3">
+                        <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
 
-        <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
-        <div class="row mt-3">
+                    </div>
+                    <!-- 文字內容 -->
+                    <div class="col-12 col-lg-7">
+                        <div class="d-flex flex-row justify-content-between align-self-center ">
+                            <h5 class=" my-auto fa-solid ">@store.StoreName</h5>
+                            <a href="#" class=" d-block align-self-center text-decoration-none " onClick="cancelFavorite(@store.StoreId)" >
+                                <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-row">
+
+                            <div class="col-4 store-star my-0"
+                                 style="background: linear-gradient(to right ,  #ffd700 0 50%, #F1F0CC 50% 100%)"></div>
+                            <p class="fs-6 pt-1">2.5 <a class="bg-primary text-dark fs-6 link-info" href="">(100評論)</a></p>
+                            <p class="fs-6 pt-1"></p>
+
+                        </div>
+                        <p class="fs-6">連絡電話:@store.StorePhoneNumber</p>
+                        <p class="fs-6">地址:@(store.StoreAddressCity+store.StoreAddressDistrict+store.StoreAddressDetails)</p>
+
+                        <dl>
+                            <dt>營業時間:</dt>
+                            <div class="p-3">
+                                <dd>星期日:休息</dd>
+                                <dd>星期一:1500-2000</dd>
+                                <dd>星期二:1500-2000</dd>
+                                <dd>星期三:1500-2000</dd>
+                                <dd>星期四:1500-2000</dd>
+                                <dd>星期五:1500-2000</dd>
+                                <dd>星期六:休息</dd>
+                            </div>
+                        </dl>
+                        <a class="bg-primary fs-6 link-info" href="./MyData">馬上點餐 ></a>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("storeID"+storeID)">
+            <div class="row mt-3">
             <div class="col-12 col-lg-5 mb-3">
             <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
 
@@ -21,8 +71,8 @@
             <!-- 文字內容 -->
             <div class="col-12 col-lg-7">
             <div class="d-flex flex-row justify-content-between align-self-center ">
-                <h5 class=" my-auto fa-solid">優輕食</h5>
-                <a href="#" class=" d-block align-self-center text-decoration-none" id="favoriteStore">
+                        <h5 class=" my-auto fa-solid ">優輕食</h5>
+                        <a href="#" class=" d-block align-self-center text-decoration-none " onClick="cancelFavorite(@storeID)" id="favoriteStore">
                 <i class="fa-regular fa-heart fs-2 text-info "></i>
                 <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
                 </a>
@@ -50,7 +100,7 @@
                 <dd>星期六:休息</dd>
                 </div>
             </dl>
-            <a class="bg-primary fs-6 link-info" href="#">馬上點餐 ></a>
+                    <a class="bg-primary fs-6 link-info" href="./MyData">馬上點餐 ></a>
             </div>
         </div>
         </div>
@@ -98,3 +148,12 @@
         </div>
     </div>
 </div>
+<script>
+    const cancelFavorite = StoreID => {
+        event.preventDefault();
+        console.log(StoreID);
+        $(`.storeID${StoreID}`).remove();
+    }
+
+
+</script>
