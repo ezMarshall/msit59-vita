@@ -32,14 +32,38 @@ namespace msit59_vita.Controllers
             var query = from o in _context.Favorites
                         join s in _context.Stores on o.StoreId equals s.StoreId
                         where o.CustomerId == 1
-                        select s;
+                        select new
+                        {
+                            o.FavoriteId,
+                            s.StoreId,
+                            s.StoreName,
+                            StoreAddress = s.StoreAddressCity + s.StoreAddressDistrict + s.StoreAddressDetails,
+                            s.StorePhoneNumber,
+                            s.StoreImage
+                        };
 
-            //var query = from o in _context.Favorites
-            //            join s in _context.Stores on o.StoreId equals s.StoreId
-            //            join so in _context.StoreOpeningHours on o.StoreId equals so.StoreId
-            //            into groupjoin
-            //            select groupjoin;
-            //var obj = _context.Stores.ToList();
+            var queryOpeningHours = from o in _context.Favorites
+                                    join s in _context.Stores on o.StoreId equals s.StoreId
+                                    join so in _context.StoreOpeningHours on o.StoreId equals so.StoreId
+                                    select new
+                                    {                                        
+                                        so.Store.StoreId,
+                                        so.MyWeekDay,
+                                        so.StoreOpenOrNot,
+                                        so.StoreOpeningTime,
+                                        so.StoreClosingTime
+                                    };
+            var queryComments = from f in _context.Favorites
+                                //join o in _context.Orders on f.StoreId equals o.StoreId
+                                //join r in _context.Reviews on o.OrderId equals r.OrderId
+                                group f by f.StoreId into g
+                                select new
+                                {
+                                    g.Key          
+                                };
+            ViewBag.queryComments = queryComments.ToList();
+            //queryOpeningHours.ToList().FindAll(i => i.StoreId == 1);
+            ViewBag.openHours = queryOpeningHours.ToList();
             var obj = query.ToList();
             return View(obj);
         }
