@@ -72,5 +72,17 @@ namespace msit59_vita.Controllers
             return View(obj);
         }
 
+
+
+        public IActionResult Cancel(int id)
+        {
+            var  favoriteItem = _context.Favorites.Find(id);
+            _context.Favorites.Remove(favoriteItem);
+            _context.SaveChanges();
+
+            //return View();
+            return Redirect("/FavoriteStores");
+            return RedirectToAction("Index", "FavoriteStores");
+        }
     }
 }
