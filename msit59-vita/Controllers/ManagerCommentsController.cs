@@ -2,9 +2,9 @@
 
 namespace msit59_vita.Controllers
 {
-    public class CommentsManagerController : Controller
+    public class ManagerCommentsController : Controller
     {
-        public IActionResult Index()
+        public IActionResult ManagerComments()
         {
             return View();
         }
