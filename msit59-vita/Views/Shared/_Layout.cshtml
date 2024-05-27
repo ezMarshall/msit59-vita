@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +8,14 @@
     <link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/msit59_vita.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
+    <!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
+
 </head>
+
 <body>
+
     <header>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
             <div class="container-lg">
@@ -127,4 +133,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
