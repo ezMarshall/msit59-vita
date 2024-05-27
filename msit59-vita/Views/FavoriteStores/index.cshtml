@@ -80,7 +80,7 @@
                         </div>
                         <div class="d-flex flex-row">
 
-                            <div class="col-4 store-star my-0"
+                            <div class="col-4 home-store-star my-0"
                                  style="background: linear-gradient(to right ,  #ffd700 0 @(starRange.ToString()+"%"), #F1F0CC @((100-starRange).ToString()+"%") 100%)"></div>
                             <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info" href="">(@(countOfRating + "評論"))</a></p>
                             <p class="fs-6 pt-1"></p>
@@ -196,12 +196,14 @@
         </div>
     </div>
 </div>
-<script>
-    const cancelFavorite = FavoriteId => {
-        event.preventDefault();
-        console.log(FavoriteId);
-        $(`.FavoriteId${FavoriteId}`).remove();
-    }
 
+@section Scripts{
 
-</script>
+    <script>
+        const cancelFavorite = FavoriteId => {
+            event.preventDefault();
+            console.log(FavoriteId);
+            $(`.FavoriteId${FavoriteId}`).remove();
+        }
+    </script>
+}

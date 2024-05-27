@@ -1,4 +1,6 @@
-
+@{
+    ViewData["Title"] = "歷史訂單";
+}
 <div class="container-fluid mt-3">
 
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -270,8 +272,10 @@
         </div>
     </div>
 </div>
-<script>
-    $(".user-center-rating>input").click(function () {
-            $("small").html(`您評價餐廳為${this.value}顆星<span class="text-info">(必填)</span>`);
-        })
-</script>
+@section Scripts{
+    <script>
+        $(".user-center-rating>input").click(function () {
+                $("small").html(`您評價餐廳為${this.value}顆星<span class="text-info">(必填)</span>`);
+            })
+    </script>
+}
