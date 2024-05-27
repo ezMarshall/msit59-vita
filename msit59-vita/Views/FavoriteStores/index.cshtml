@@ -1,7 +1,6 @@
-
 @{
     int storeID = Model[0].StoreId;
-    
+    var openHours = ViewBag.openHours;
 }
 
 <div class="container-fluid mt-3">
@@ -11,44 +10,58 @@
         <li class="breadcrumb-item active text-info" aria-current="page">收藏店家</li>
         </ol>
     </nav>
-    @foreach (var store in ViewBag.queryComments)
-    {
-
-
-        <div class="col-12 col-lg-5 mb-3">
-            (@store)
-        </div>
-    }
-    @foreach (var store in ViewBag.openHours)
-    {
-        if (store.StoreId == 8 && store.MyWeekDay == "Sun")
-        {
-
-            <div class="col-12 col-lg-5 mb-3">
-                @store.StoreId
-            </div>
-            <div class="col-12 col-lg-5 mb-3">
-                @store.MyWeekDay
-            </div>
-        }
-    }
-
     <div class="container container-lg ">
         <h4 class="text-dark">收藏店家</h4>
         <!-- 收藏的店家 -->
          @foreach (var store in Model)
         {
-            @foreach (var oh in ViewBag.openHours)
+            double starRange = 0.0; 
+            double avgOfRating = 0.0;
+            string countOfRating = "";
+            string[] openHourArray = new string[7];
+            @foreach (var comment in ViewBag.queryComments)
             {
-                if (oh.StoreId == store.StoreId && oh.MyWeekDay == "Sun")
+                if (comment.StoreId == store.StoreId)
                 {
 
-                    <div class="col-12 col-lg-5 mb-3">
-                        @oh.StoreId
-                    </div>
-                    <div class="col-12 col-lg-5 mb-3">
-                        @oh.MyWeekDay
-                    </div>
+                    avgOfRating = comment.avgOfRating;
+                    starRange = (avgOfRating / 5 * 100);
+                    countOfRating = comment.countOfRating;
+                }
+            }
+            @foreach (var oh in ViewBag.openHours)
+            {
+                if (oh.StoreId == store.StoreId)
+                {
+                    string openTime = $"{oh.StoreOpeningTime}-{oh.StoreClosingTime}";
+                    string closeText = "休息";
+                    switch (oh.MyWeekDay)
+                    {
+                        case "Sun":
+                            openHourArray[0] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Mon":
+                            openHourArray[1] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Tue":
+                            openHourArray[2] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Wed":
+                            openHourArray[3] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Thu":
+                            openHourArray[4] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Fri":
+                            openHourArray[5] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        case "Sat":
+                            openHourArray[6] = oh.StoreOpenOrNot ? openTime : closeText;
+                            break;
+                        default:
+                            break;
+
+                    }
                 }
             }
             <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
@@ -68,8 +81,8 @@
                         <div class="d-flex flex-row">
 
                             <div class="col-4 store-star my-0"
-                                 style="background: linear-gradient(to right ,  #ffd700 0 50%, #F1F0CC 50% 100%)"></div>
-                            <p class="fs-6 pt-1">2.5 <a class="bg-primary text-dark fs-6 link-info" href="">(100評論)</a></p>
+                                 style="background: linear-gradient(to right ,  #ffd700 0 @(starRange.ToString()+"%"), #F1F0CC @((100-starRange).ToString()+"%") 100%)"></div>
+                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info" href="">(@(countOfRating + "評論"))</a></p>
                             <p class="fs-6 pt-1"></p>
 
                         </div>
@@ -79,13 +92,15 @@
                         <dl>
                             <dt>營業時間:</dt>
                             <div class="p-3">
-                                <dd>星期日:休息</dd>
-                                <dd>星期一:1500-2000</dd>
-                                <dd>星期二:1500-2000</dd>
-                                <dd>星期三:1500-2000</dd>
-                                <dd>星期四:1500-2000</dd>
-                                <dd>星期五:1500-2000</dd>
-                                <dd>星期六:休息</dd>
+
+
+                                <dd>星期日:@openHourArray[0]</dd>
+                                <dd>星期一:@openHourArray[1]</dd>
+                                <dd>星期二:@openHourArray[2]</dd>
+                                <dd>星期三:@openHourArray[3]</dd>
+                                <dd>星期四:@openHourArray[4]</dd>
+                                <dd>星期五:@openHourArray[5]</dd>
+                                <dd>星期六:@openHourArray[6]</dd>
                             </div>
                         </dl>
                         <a class="bg-primary fs-6 link-info" href="./MyData/@store.StoreId">馬上點餐 ></a>
@@ -95,7 +110,7 @@
         }
 
  
-        <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("storeID"+storeID)">
+     <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("storeID"+storeID)">
             <div class="row mt-3">
             <div class="col-12 col-lg-5 mb-3">
             <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
@@ -137,7 +152,7 @@
             </div>
         </div>
     </div>
-    <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
+     <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
             <div class="row mt-3">
             <div class="col-12 col-lg-5 mb-3">
             <img class="card-img-top" src="../img/home_banner.png" alt="店家照片">
@@ -185,7 +200,7 @@
     const cancelFavorite = FavoriteId => {
         event.preventDefault();
         console.log(FavoriteId);
-        $(`.FavoriteId{FavoriteId}`).remove();
+        $(`.FavoriteId${FavoriteId}`).remove();
     }
 
 
