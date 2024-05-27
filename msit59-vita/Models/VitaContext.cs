@@ -37,7 +37,6 @@ public partial class VitaContext : DbContext
 
     public virtual DbSet<StoreOpeningHour> StoreOpeningHours { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>(entity =>

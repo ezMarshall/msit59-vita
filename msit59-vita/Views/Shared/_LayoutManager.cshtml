@@ -4,17 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     @RenderSection("MyStyle", required: false)
    
 
 </head>
 <body>
-    <header class=" sticky-top">
-        <div class="container-fluid nav-area bg-dark">
-            <ul class="nav d-flex justify-content-between align-items-center fs-2">
+    <header class="nav-area bg-dark sticky-top">
+            <ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
                 <li class="nav-item">
                     <a href="@Url.Action("Index", "ManagerHome")">
-                        <img class="header-logo" src="./image/logo/logo_300x150.png" alt="">
+                        <img class="header-logo" src="~/image/logo/logo_300x150.png" alt="">
                     </a>
                 </li>
                 <li class="nav-item">
@@ -27,62 +30,67 @@
         </div>
     </header>
 
-    @if (IsSectionDefined("BreadCrumb"))
-    {
-        <nav class="container-fluid">
-            <div class="row justify-content-start">
-            @RenderSection("BreadCrumb", true)
-        </div>
-    </nav>
-    }
-
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-
+    <div class="row" style="min-height: calc(100vh - 80px);">
+        <div class="col-lg-2 col-sm-3 bg-primary justify-content-center d-flex ">
             <!-- 側邊攔 -->
             <div id="sidebar-wrapper"
-                 class="col-lg-2 col-sm-3 sidebar sidebar-dark accordion bg-primary list-unstyled text-center">
-                <ul class="">
+                 class="col-lg-2 col-sm-3 sidebar sidebar-dark vh-100">
+                <ul class="d-flex flex-column align-items-center h-100 list-unstyled">
                     <li>
                         <a href="">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <img src="~/image/logo/logo_30x30_dark.png" alt="">
                             <span>訂單管理</span>
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("Index", "ManagerProducts")">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <img src="~/image/logo/logo_30x30_dark.png" alt="">
                             <span>菜單管理</span>
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("Index", "ManagerStores")">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <img src="~/image/logo/logo_30x30_dark.png" alt="">
                             <span>店家資訊</span>
                         </a>
                     </li>
                     <li>
                         <a href="ManagerReviews">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
+                            <img src="~/image/logo/logo_30x30_dark.png" alt="">
                             <span>評論管理</span>
                         </a>
                     </li>
+                    <li class="mt-auto">
                     <button class="btn-lg btn-danger fixed-button">暫停接單</button>
+                    </li>
                     <!-- <button class="btn-lg btn-danger position-absolute" style="bottom: 10%; left: 32%;">暫停接單</button> -->
 
                 </ul>
             </div>
-            @if (IsSectionDefined("ContentWrapper"))
-            {
-                <div id="content-wrapper" class="col-lg-10 col-sm-9 bg-light">
-                    @RenderSection("ContentWrapper", required: true)
+            </div>
+           
+            <div id="content-wrapper" class="col-lg-10 col-sm-9 bg-light">
+
+                    @if (IsSectionDefined("BreadCrumb"))
+                    {
+                        <ol class="breadcrumb pt-3">
+                          @RenderSection("BreadCrumb", required: false)
+                       </ol>
+                    }
+                @if (IsSectionDefined("Content"))
+                {
+                    <div class=" row justify-content-center">
+                    @RenderSection("Content", required: true)
+                    </div>
+                }
                 </div>
-            }
+            
 
         </div> 
+     </div>
 
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/css/bootstrap.css"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
     </div>
