@@ -4,44 +4,126 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - msit59_vita</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" /> *@
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/msit59_vita.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">msit59_vita</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <!-- header -->
+    <header class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
+        <div class="container-lg">
+            <h1 class="m-0">
+                <a href="./vita_home.html" class="replace-text-nav">
+                    VITA健康餐盒訂餐平台
+                </a>
+            </h1>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <!-- 已登入 start -->
+                    <li class="nav-item text-light mt-3 mt-lg-0">
+                        <span class="text-primary me-3 nav-welcome ps-2">Welcome Back, 皮卡丘</span>
+                    </li>
+                    <hr class="d-lg-none text-light">
+                    <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
+                    <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
+                    <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
+                    <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
+                    <li><a class="d-lg-none d-block p-2 text-decoration-none" onclick="logout()">登出</a></li>
+                    <li class="nav-item dropdown d-none d-lg-block z-index-1">
+                        <button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
+                                id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            會員中心
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
+                            aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item py-2" href="#">會員資料</a></li>
+                            <li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
+                            <li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
+                            <li><a class="dropdown-item py-2" href="#">我的評論</a></li>
+                            <li><a class="dropdown-item py-2" onclick="logout()">登出</a></li>
+                        </ul>
+                    </li>
+                    <!-- 已登入 end -->
+                    <!-- 未登入 start -->
+                    <!-- <li class="my-2 my-lg-0">
+                      <a href="./login.html" class="d-none d-lg-block rounded-pill btn btn-outline-primary me-3 px-4 py-2">登入</a>
+                      <a href="./login.html" class="d-lg-none p-2 text-decoration-none link-primary">登入</a>
+                    </li>
+                    <li class="my-2 my-lg-0">
+                      <a href="./register.html" class="d-none d-lg-block rounded-pill btn btn-primary px-4 py-2 me-4" id="btnRegister">註冊</a>
+                      <a href="./register.html" class="d-lg-none p-2 text-decoration-none link-primary">註冊</a>
+                    </li> -->
+                    <!-- 未登入 end -->
+
+                    <hr class="d-lg-none text-light">
+
+                    <!-- 購物車 -->
+                    <li>
+                        <a href="#" class="position-relative ms-4 d-none d-lg-block">
+                            <i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
+                            <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="cartNum">1</span>
+                        </a>
+                        <a href="#" class="d-block d-lg-none text-decoration-none p-2">購物車</a>
+                    </li>
+                    <!-- 購物車 end -->
+                    <!-- 已登入：通知鈴鐺 -->
+                    <li>
+                        <a data-bs-toggle="offcanvas" href="#offcanvasNotify" role="button" aria-controls="offcanvasNotify" class="d-block position-relative ms-3 d-none d-lg-block">
+                            <i class="fa-regular fa-bell fs-3 nav-icon"></i>
+                            <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="notifyNum">1</span>
+                        </a>
+                        <a data-bs-toggle="offcanvas" href="#offcanvasNotifyMobile" role="button" aria-controls="offcanvasNotifyMobile" class="d-block d-lg-none text-decoration-none p-2">重要通知</a>
+                    </li>
+                    <!-- 已登入：通知鈴鐺 end -->
+
+
+                </ul>
+
+            </div>
+        </div>
+    </header>
+    <!-- header end -->
+
+    @RenderBody()
+
+
+    <!-- footer -->
+    <footer class="bg-dark pt-5">
+        <div class="container-lg row mx-auto">
+            <div class="col col-md-4">
+                <p class="footer-slogan text-primary">
+                    集結200家健康餐盒，你的健康，我們守護！<br>
+                    首選VITA，百搭你的味蕾。
+                </p>
+            </div>
+            <div class="col col-md-4">
+                <p class="text-primary fw-bold fs-5">聯絡我們</p>
+                <a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
+                <a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
+                <div class="mt-4">
+                    <a href="#" class="footer-link d-inline-block link-primary">
+                        <i class="fa-brands fa-facebook fs-3"></i>
+                    </a>
+                    <a href="#" class="footer-link link-primary">
+                        <i class="fa-brands fa-instagram fs-3 ms-3"></i>
+                    </a>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - msit59_vita - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="col col-md-4">
+                <a href="#" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
+                <a href="#" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
+            </div>
+            <div class="col border-top mt-5 border-primary">
+                <p class="text-primary text-center my-4">© 2024 資展專題報告</p>
+            </div>
         </div>
     </footer>
+    <!-- footer end -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/css/bootstrap.css"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

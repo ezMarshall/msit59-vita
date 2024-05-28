@@ -68,7 +68,7 @@ public partial class VitaContext : DbContext
             entity.Property(e => e.CustomerName).HasMaxLength(20);
             entity.Property(e => e.CustomerNickName).HasMaxLength(10);
             entity.Property(e => e.CustomerPassword)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .IsUnicode(false);
         });
 
@@ -162,7 +162,7 @@ public partial class VitaContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ProductImage)
-                .HasMaxLength(50)
+                .HasMaxLength(80)
                 .IsUnicode(false);
             entity.Property(e => e.ProductName).HasMaxLength(20);
             entity.Property(e => e.ProductUnitPrice).HasColumnType("smallmoney");
@@ -256,6 +256,9 @@ public partial class VitaContext : DbContext
 
             entity.Property(e => e.StoreId).HasColumnName("StoreID");
             entity.Property(e => e.MyWeekDay).HasMaxLength(10);
+            entity.Property(e => e.StoreClosingTime).HasDefaultValueSql("('')");
+            entity.Property(e => e.StoreOpenOrNot).HasDefaultValue(false);
+            entity.Property(e => e.StoreOpeningTime).HasDefaultValueSql("('')");
 
             entity.HasOne(d => d.Store).WithMany(p => p.StoreOpeningHours)
                 .HasForeignKey(d => d.StoreId)
