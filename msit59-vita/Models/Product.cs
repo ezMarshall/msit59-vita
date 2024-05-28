@@ -19,8 +19,6 @@ public partial class Product
 
     public bool ProductOnSell { get; set; }
 
-    public bool ProductOnDelete { get; set; }
-
     public string? ProductImage { get; set; }
 
     public virtual ProductCategory Category { get; set; } = null!;

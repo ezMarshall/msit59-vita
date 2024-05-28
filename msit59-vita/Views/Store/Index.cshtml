@@ -1,0 +1,382 @@
+﻿
+
+<section class="container-lg">
+
+    <!-- 狀態通知開始 -->
+    <div class="product-toolbar">
+        <div class="alert alert-danger my-2 py-1 fs-5 fw-bold text-center" role="alert">
+            門市暫停接單
+        </div>
+    </div>
+    <!-- 狀態通知結束 -->
+    <!-- 店家資訊開始 -->
+    <div class="product-store row mx-auto mb-3 bg-white shadow-sm d-flex justify-content-between">
+        <div class="store-info col-sm-12 col-md-4 p-4">
+            <div class="store-shop d-flex justify-content-between fs-3 fw-bold text-dark">
+                野瘦派(斗六總店)
+                <i id="heart-icon" class="text-danger far fa-heart"></i>
+            </div>
+            <div class="store-comment fs-5 fw-bold mb-2">
+                <span class="star-container">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                </span>
+                <span>
+                    4.5 (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
+                            data-bs-target="#commentModal">100則評論</a>)
+                </span>
+            </div>
+            <div class="store-time fs-6 mb-1">
+                <i class="fa-solid fa-clock me-2"></i>
+                <span>10:00-22:00</span>
+            </div>
+            <div class="store-phone fs-6 mb-1">
+                <i class="fa-solid fa-phone me-2"></i>
+                <span>0492320377</span>
+            </div>
+            <div class="store-address fs-6 mb-1">
+                <i class="fa-solid fa-location-dot me-2"></i>
+                <span>南投縣南投市復興路83號</span>
+            </div>
+            <div class="store-pay fs-6 mb-1">
+                <i class="fa-solid fa-sack-dollar me-2"></i>
+                <span>現金</span>、
+                <span>LINE PAY</span>
+            </div>
+
+        </div>
+        <div class="store-image-container col-sm-12 col-md-8 p-0">
+            <img class="store-image img-fluid w-100" src="./img/Store_37.jpg" alt="店家圖片">
+        </div>
+
+    </div>
+
+
+    <!-- 店家資訊結束 -->
+    <!-- 商品開始 -->
+    <div class="product row">
+
+        <!-- 商品分類開始 -->
+        <div class="product-category col-sm-3">
+            <div class="list-group custom-checkbox rounded-2 shadow-sm">
+                <label class="list-group-item fs-5 fw-bold text-dark">
+                    商品分類
+                </label>
+                <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                    <span>
+                        <input class="form-check-input me-1" type="checkbox" value="">
+                        便當單點
+                    </span>
+                    <span class="badge bg-dark rounded-pill">14</span>
+                </label>
+                <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                    <span>
+                        <input class="form-check-input me-1" type="checkbox" value="">
+                        肉品加購
+                    </span>
+                    <span class="badge bg-dark rounded-pill">14</span>
+                </label>
+                <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                    <span>
+                        <input class="form-check-input me-1" type="checkbox" value="">
+                        配菜加購
+                    </span>
+                    <span class="badge bg-dark rounded-pill">14</span>
+                </label>
+                <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                    <span>
+                        <input class="form-check-input me-1" type="checkbox" value="">
+                        健康餐盒
+                    </span>
+                    <span class="badge bg-dark rounded-pill">14</span>
+                </label>
+                <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                    <span>
+                        <input class="form-check-input me-1" type="checkbox" value="">
+                        單點肉品
+                    </span>
+                    <span class="badge bg-dark rounded-pill">14</span>
+                </label>
+            </div>
+        </div>
+        <!-- 商品分類結束 -->
+        <!-- 商品列表開始 -->
+
+        <div class="product-list col-sm-9 mb-3">
+            <div class="row row-cols-1 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+                        <div class="card-body fs-5 fw-bold">
+                            <div class="product-name mb-1">蒜泥白肉</div>
+                            <div class="product-price">$120</div>
+                        </div>
+                        <div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+
+                            <div class="input-group w-50">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+                                    <i class="fa-solid fa-minus fw-bold text-white"></i>
+                                </button>
+                                <input type="text" class="form-control fw-bold text-center" value="1" id="number">
+                                <button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+                                    <i class="fa-solid fa-plus fw-bold text-white"></i>
+                                </button>
+                            </div>
+                            <button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- 商品列表結束 -->
+    <!-- 商品結束 -->
+
+</section>
