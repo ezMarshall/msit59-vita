@@ -7581,7 +7581,7 @@ textarea.form-control-lg {
 }
 
 .rounded-3 {
-  border-radius: 0.3rem !important;
+  border-radius: 30px !important;
 }
 
 .rounded-circle {
