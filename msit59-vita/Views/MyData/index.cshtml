@@ -1,0 +1,239 @@
+<div class="container-fluid mt-3 ">
+
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="ms-5 breadcrumb">
+            <li class="breadcrumb-item active text-dark">會員中心</li>
+            <li class="breadcrumb-item active text-info" aria-current="page">會員資料</li>
+        </ol>
+    </nav>
+    <div class="container container-lg">
+        <h4 class="text-dark">會員資料</h4>
+
+        <div class="container container-lg w-75 ">
+            <form class="was-validated">
+                <div class="mb-3">
+                    <label for="CustomerName" class="form-label is-required">姓名</label>
+                    <div class="row CustomerName-span">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span class="">王曉明</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerName')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerName-input"   >
+                        <input name = "CustomerName" type="text" class="form-control bg-primary py-0 "  required >
+                        <div class="invalid-feedback">請輸入姓名</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerNickName" class="form-label">暱稱</label>
+
+                    <div class="row CustomerNickName-span ">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span >小明</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerNickName')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerNickName-input"   >
+                        <input name = "CustomerNickName" type="text" class="form-control bg-primary py-0 " >
+                    </div>
+                      
+                </div>
+                <div class="mb-3">
+                    <p for="exampleInputEmail1" class="form-label">電子信箱</p>
+                    <div class="row">
+                        <div class="col-12 border-bottom border-dark">
+                            <span class="">a51515@gmail.com</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerCellPhone"  class="form-label">手機</label>
+
+                    <div class="row CustomerCellPhone-span">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span class="">0955996635</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerCellPhone')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerCellPhone-input"   >
+                        <input name = "CustomerCellPhone" type="text" class="form-control bg-primary py-0 " >
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="CustomerLocalPhone" class="form-label">市話</label>
+                    <div class="row CustomerLocalPhone-span">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span class="">042316166</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerLocalPhone')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerLocalPhone-input"   >
+                        <input name = "CustomerLocalPhone" type="text" class="form-control bg-primary py-0 " >
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-10">                                
+                            <label for="Address" class="form-label ">常用地址</label>
+                        </div>
+                        <div class="col-2 ">
+                            <button class=" bg-primary float-end  btn py-0 CustomerAddress-btn" type="button" onclick="editAdress()"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <div class="mb-3 g-6  ">
+                            
+                        <div class="row">
+                            <div class="col-6 col-lg-6 border-bottom border-dark CustomerAddressCity-span">
+                                    
+                                <span class="">台中市</span>
+                            </div>
+    
+                            <div class="col-6 col-lg-6  border-bottom border-dark CustomerAddressDistrict-span">                                
+                                <span class="">南屯區</span>
+                            </div>
+
+                            <div class="col-6 col-lg-6  CustomerAddressCity-select visually-hidden px-0">
+                                <select class="form-select  form-select-sm  bg-primary  " name="CustomerAddressCity">
+                                    <option selected>台中市</option>
+                                    <option value="1">彰化市</option>
+                                    <option value="2">雲林縣</option>
+                                </select>
+                            </div>
+                            <!-- 動態生成 -->
+                            <div class="col-6 col-lg-6  CustomerAddressDistrict-select visually-hidden px-0">
+                                <select class="form-select  form-select-sm bg-primary " name ="CustomerAddressDistrict">
+                                    <option selected>南屯區</option>
+                                    <option value="1">南區</option>
+                                    <option value="2">北區</option>
+                                    <option value="3">西區</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row CustomerAddressDetails-span mt-3 border-bottom border-dark ">
+                            <span class="">日南里25號5樓</span>
+                        </div>
+                        <!-- 替換 -->
+                        <div class="row CustomerAddressDetails-input mt-3 visually-hidden"   >
+                            <input name = "CustomerAddressDetails" type="text" class="form-control bg-primary py-0 " >
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="CustomerEinvoiceNumber" class="form-label">手機載具</label>
+                    <div class="row CustomerEinvoiceNumber-span">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span class="">/5X-1155</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerEinvoiceNumber')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerEinvoiceNumber-input"   >
+                        <input name = "CustomerEinvoiceNumber" type="text" class="form-control bg-primary py-0 " >
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="CustomerPassword" class="form-label is-required">密碼</label>
+
+                    <div class="row CustomerPassword-span">
+                        <div class="col-10 border-bottom border-dark ">
+                            <span class="">******</span>
+                        </div>
+                        <div class="col-2 border-bottom border-dark">
+                            <button class=" bg-primary float-end  btn py-0 " type="button" onclick="switchTag('CustomerPassword')"><i
+                                    class="fa-regular fa-pen-to-square"></i></button>
+                        </div>
+                    </div>
+                    <!-- 替換 -->
+                    <div class="row visually-hidden CustomerPassword-input"   >
+                        <input name = "CustomerPassword" type="password" class="form-control bg-primary py-0 " required >
+                        <div class="invalid-feedback">請輸入密碼</div>
+                    </div>
+                </div>
+                <div class="mb-3 mt-5 save-div visually-hidden">
+                    <label for="originPassword " class="form-label is-required">原始密碼</label>
+                    <div class="row">
+
+                        <input type="password" class=" form-control bg-primary form-control-sm py-0" name="originPassword" placeholder="輸入原始密碼進行會員資料修改"
+                            required>
+                        <div class="invalid-feedback">請輸入原始密碼</div>
+                    </div>
+                    <div class="d-flex justify-content-end ">
+
+                        <button type="submit" class=" btn btn-outline-success px-4 py-2 rounded-pill d-block ">儲存修改</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let isEdit = false;
+    const showEdit = () => {
+        isEdit ? $(".save-div").removeClass("visually-hidden"):"";
+    }
+    function editAdress(){
+
+        let originText = "";
+        $(".CustomerAddress-btn").addClass("visually-hidden");
+        $(".CustomerAddressCity-span").addClass("visually-hidden");
+        $(".CustomerAddressDistrict-span").addClass("visually-hidden");
+        $(".CustomerAddressDetails-span").addClass("visually-hidden");
+
+        originText = $(".CustomerAddressDetails-span span").text();
+        $(".CustomerAddressCity-select").removeClass("visually-hidden");
+        $(".CustomerAddressDistrict-select").removeClass("visually-hidden");
+        $(".CustomerAddressDetails-input").removeClass("visually-hidden");
+        $(".CustomerAddressCity-select select").focus();
+        $(".CustomerAddressDetails-input>input").val(originText);
+            
+        isEdit = true;
+        showEdit();
+        console.log(originText);
+    }
+    function switchTag(target){
+
+        let originText = "";
+        $(`.${target}-input`).removeClass("visually-hidden");
+        $(`.${target}-input>input`).focus();
+        originText = $(`.${target}-span span`).text();
+        //  直接選在字尾
+        $(`.${target}-input>input`).val( target == "CustomerPassword" ? "": originText);
+        $(`.${target}-span`).addClass("visually-hidden");
+
+        isEdit = true;
+        showEdit();
+        console.log(originText);
+    }
+        
+</script>
