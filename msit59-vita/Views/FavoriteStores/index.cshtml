@@ -1,4 +1,5 @@
 @{
+    ViewData["Title"] = "收藏店家";
     int storeID = 8;
     // var openHours = ViewBag.openHours;
 }
@@ -6,7 +7,7 @@
 <div class="container-fluid mt-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb ms-5">
-        <li class="breadcrumb-item active text-dark">會員中心</li>
+            <li class="breadcrumb-item active text-dark" >會員中心</li>
         <li class="breadcrumb-item active text-info" aria-current="page">收藏店家</li>
         </ol>
     </nav>
@@ -206,6 +207,10 @@
             $(`.FavoriteId${FavoriteId}`).remove();
         }
         const popBtn = (storeName) => {
+            // $("#favoriteStore")[0].scrollIntoView({
+            //     behavior: "smooth", // or "auto" or "instant"
+            //     block: "end" // or "end"
+            // });
             return confirm(`確定取消 ${storeName} 店家收藏?`);
         }
 
