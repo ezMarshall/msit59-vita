@@ -2,9 +2,9 @@
 
 namespace msit59_vita.Controllers
 {
-    public class OrdersManagerController : Controller
+    public class ManagerOrdersController : Controller
     {
-        public IActionResult Index()
+        public IActionResult ManagerOrders()
         {
             return View();
         }
