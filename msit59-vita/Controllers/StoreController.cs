@@ -26,9 +26,13 @@ namespace msit59_vita.Controllers
 				return NotFound();
 			}
 
+			ViewData["Store"] = store;
+
 			var products = _context.Products
 							.Where(x => x.StoreId == id)
 							.ToList();
+
+			ViewData["Products"] = products;
 
 			var productCategoryCounts = (from product in _context.Products
 										 join category in _context.ProductCategories
@@ -44,43 +48,57 @@ namespace msit59_vita.Controllers
 
 			ViewBag.ProductCategoryCounts = productCategoryCounts;
 
-			//var productCategoryCounts = (from product in _context.Products
-			//							 join category in _context.ProductCategories
-			//							 on product.CategoryId equals category.CategoryId
-			//							 where product.StoreId == id
-			//							 group product by new { category.CategoryId, category.CategoryName } into g
-			//							 select new 
-			//							 {
-			//								 CategoryId = g.Key.CategoryId,
-			//								 CategoryName = g.Key.CategoryName,											 
-			//							 }).ToList();
-			//foreach (var item in productCategoryCounts)
-			//{
-			//	Console.WriteLine($"Category Id: {item.CategoryId}, Category Name: {item.CategoryName}, Product Count: {item.ProductCount}");
-			//}
+			///
+			//  取得店家的營業時間
+			///
+			// 獲取當前星期幾
+			string shortDayOfWeekString = DateTime.Today.DayOfWeek.ToString().Substring(0, 3);
+
+			//Console.WriteLine(shortDayOfWeekString);
 
 
-			//ViewData["ProductCategoryCounts"] = productCategoryCounts;
-			//// 獲取當前星期幾
-			//string shortDayOfWeekString = DateTime.Today.DayOfWeek.ToString().Substring(0, 3);
-
-			////Console.WriteLine(shortDayOfWeekString);
-
-
-			//// 查詢對應的 StoreOpeningTime
-			//var storeOpeningTimeQuery = from row in _context.StoreOpeningHours
-			//							where row.StoreId == id
-			//							select new
-			//							{
-			//								myWeekDay = row.MyWeekDay,
-			//								storeOpenOrNot = row.StoreOpenOrNot,
-			//								storeOpeningTime = row.StoreOpeningTime,
-			//								storeClosingTime = row.StoreClosingTime,
-			//							};
+			// 查詢對應的 StoreOpeningTime
+			var storeOpeningTimeQuery = from row in _context.StoreOpeningHours
+										where row.StoreId == id && row.MyWeekDay == shortDayOfWeekString
+										select new
+										{
+											myWeekDay = row.MyWeekDay,
+											storeOpenOrNot = row.StoreOpenOrNot,
+											storeOpeningTime = row.StoreOpeningTime,
+											storeClosingTime = row.StoreClosingTime,
+										};
+			var todayOpeningHours = storeOpeningTimeQuery.FirstOrDefault();
+			ViewBag.storeOpeningTimeQuery = todayOpeningHours;
 
 
-			ViewData["Store"] = store;
-			ViewData["Products"] = products;
+
+
+
+
+
+			var currentTime = DateTime.Now.TimeOfDay;
+
+
+			var orderStatusTime = 0;
+			if (todayOpeningHours.storeOpeningTime.HasValue && currentTime < todayOpeningHours.storeOpeningTime.Value.ToTimeSpan())
+			{
+				orderStatusTime = 2;
+			}
+			else if (todayOpeningHours.storeClosingTime.HasValue && currentTime > todayOpeningHours.storeClosingTime.Value.ToTimeSpan())
+			{
+				orderStatusTime = 3;
+			}
+			else
+			{
+				orderStatusTime = 4;
+			}
+
+			ViewBag.orderStatusTime = orderStatusTime;
+
+			Console.WriteLine(orderStatusTime + "999111111111111111111111");
+
+
+
 
 			return View();
 		}
