@@ -1,0 +1,166 @@
+﻿@model List<msit59_vita.Models.ProductCategory>
+
+
+<div id="alertPlaceholderCategoryDetails" class="d-none">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <span>
+            <strong>警告: </strong><p class="d-inline"></p>
+            <button type="button" id="btnAlertClose" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </span>
+    </div>
+</div>
+<table class="w-100">
+    <thead>
+        <tr>
+            <th scope="col" class="d-none">#</th>
+            <th scope="col" style="width: 70%;">類別名稱</th>
+            <th scope="col" style="width: 30%;">功能</th>
+        </tr>
+    </thead>
+
+    <tbody id="ProductCategoriesTable">
+
+        @foreach (ProductCategory productCategory in Model)
+        {
+            <tr id="Category_@productCategory.CategoryId">
+
+                <td>
+                    <span>@productCategory.CategoryName</span>
+                    <input type="hidden" id="CategoryName_@productCategory.CategoryId" name="CategoryName_@productCategory.CategoryId" value="" />
+
+                </td>
+                <td>
+                    <a href="javascript:void(0)"
+                       class="btn btn-success me-2 mb-1 product-category-edit">編輯</a>
+                    <a href="javascript:void(0)"
+                       class="btn btn-danger me-2 mb-1 product-category-delete">刪除</a>
+                    <a href="javascript:void(0)"
+                       class="btn btn-outline-info me-2 mb-1 d-none product-category-save">儲存</a>
+                    <a href="javascript:void(0)"
+                       class="btn btn-outline-info me-2 mb-1 d-none product-category-ensure-delete">確定</a>
+                    <a href="javascript:void(0)"
+                       class="btn btn-outline-dark me-2 mb-1 d-none product-category-back">取消</a>
+                </td>
+            </tr>
+        }
+
+
+    </tbody>
+
+</table>
+
+
+
+<script>
+
+    $('.product-category-back').on('click', function () {
+        $(this).closest('tr').find('span').removeClass('d-none');
+        $(this).closest('tr').find('[id*=CategoryName]').prop('type', 'hidden');
+
+        $(this).closest('tr').find(".product-category-ensure-delete").addClass("d-none");
+        $(this).closest('tr').find(".product-category-back").addClass("d-none");
+        $(this).closest('tr').find(".product-category-save").addClass("d-none");
+
+        $(this).closest('tr').find(".product-category-edit").removeClass("d-none");
+        $(this).closest('tr').find(".product-category-delete").removeClass("d-none");
+
+
+    })
+
+    $('.product-category-edit').on('click', function () {
+
+        $(this).closest('tr').find(".product-category-edit").addClass("d-none");
+        $(this).closest('tr').find(".product-category-delete").addClass("d-none");
+        $(this).closest('tr').find(".product-category-save").removeClass("d-none");
+        $(this).closest('tr').find(".product-category-back").removeClass("d-none");
+
+        var ProdCateName = $(this).closest('tr').find('span').text();
+        $(this).closest('tr').find('span').addClass('d-none');
+        $(this).closest('tr').find('[id*=CategoryName]').prop('type', 'text');
+        $(this).closest('tr').find('[id*=CategoryName]').prop('value', ProdCateName);
+
+
+
+    })
+
+
+    $('.product-category-save').on("click", function () {
+        var CategoryID = $(this).closest('tr').attr("id").split('_')[1];
+        var CategoryName = $(this).closest('tr').find('[id*=CategoryName]').val();
+
+        if (CategoryName.trim() !== "") {
+            $.ajax({
+                url: '/ManagerProducts/CategoryEdit',
+                method: 'POST',
+                data: { CategoryId: CategoryID, CategoryName: CategoryName },
+                success: function (response) {
+                    // 在成功刪除後，重新加載最新的產品類別資料
+                    $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                        $("#EditProductCategoriesModal").modal("show");
+                    });
+                }
+            })
+
+            // $(this).closest('tr').find('span').removeClass('d-none');
+            // $(this).closest('tr').find('span').text($(this).closest('tr').find('input').prop('value'));
+            // $(this).closest('tr').find('[id*=CategoryName]').prop('type', 'hidden');
+
+            // $(this).closest('tr').find(".product-category-save").addClass("d-none");
+            // $(this).closest('tr').find(".product-category-back").addClass("d-none");
+            // $(this).closest('tr').find(".product-category-edit").removeClass("d-none");
+            // $(this).closest('tr').find(".product-category-delete").removeClass("d-none");
+        } else {
+            $('#alertPlaceholderCategoryDetails .alert-warning p').text("類別名稱不可為空");
+            $("#alertPlaceholderCategoryDetails").removeClass("d-none");
+        }
+
+    })
+
+
+    $('#btnAlertClose').on("click", function () {
+        $('#alertPlaceholderCategoryDetails .alert-warning p').empty();
+        $('#alertPlaceholderCategoryDetails').addClass("d-none");
+    })
+
+
+    $('.product-category-delete').on('click', function () {
+
+        $(this).closest('tr').find(".product-category-edit").addClass("d-none");
+        $(this).closest('tr').find(".product-category-delete").addClass("d-none");
+        $(this).closest('tr').find(".product-category-ensure-delete").removeClass("d-none");
+        $(this).closest('tr').find(".product-category-back").removeClass("d-none");
+
+    })
+
+    $('.product-category-ensure-delete').on('click', function () {
+        var CategoryID = $(this).closest('tr').attr("id").split('_')[1];
+        $.ajax({
+            url: '/ManagerProducts/CategoryDelete',
+            method: 'POST',
+            data: { CategoryId: CategoryID },
+            success: function (response) {
+                // 在成功刪除後，重新加載最新的產品類別資料
+                $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                    $("#EditProductCategoriesModal").modal("show");
+                });
+            },
+            error: function (xhr, status, error) {
+                $('#alertPlaceholderCategoryDetails .alert-warning p').text("仍有商品屬於此類別，請刪掉後再操作。");
+                $("#alertPlaceholderCategoryDetails").removeClass("d-none");
+
+            }
+        })
+
+        // $(this).closest('tr').find(".product-category-ensure-delete").addClass("d-none");
+        // $(this).closest('tr').find(".product-category-back").addClass("d-none");
+        // $(this).closest('tr').find(".product-category-edit").removeClass("d-none");
+        // $(this).closest('tr').find(".product-category-delete").removeClass("d-none");
+
+    })
+
+
+
+</script>
+
