@@ -1,4 +1,5 @@
 
+
 ﻿@{
 	var store = ViewData["Store"] as Store;
 	var products = ViewData["Products"] as List<Product>;
@@ -44,6 +45,7 @@
 	<!-- 狀態通知結束 -->
 	<!-- 店家資訊開始 -->
 	<div class="product-store row mx-auto my-3 bg-white shadow-sm d-flex justify-content-between">
+
 		<div class="store-info col-sm-12 col-md-4 px-4">
 			<div class="store-shop d-flex justify-content-between fs-3 fw-bold text-dark pt-3">
 				@store.StoreName
@@ -66,6 +68,7 @@
 				<i class="fa-solid fa-clock me-2"></i>
 				@* <span>10:00 ~ 11:00</span> *@
 				<span>@(isOpen ? openingTime + " ~ " + closingTime : "今日門市未營業")</span>
+
 			</div>
 			<div class="store-phone fs-6 mb-1">
 				<i class="fa-solid fa-phone me-2"></i>
@@ -176,7 +179,6 @@
 						</div>
 					</div>
 				</div>
-			
 			</div>
 		</div>
 	</div>

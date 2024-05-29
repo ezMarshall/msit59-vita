@@ -18,14 +18,15 @@
         {
             double starRange = 0.0; 
             double avgOfRating = 0.0;
-            string countOfRating = "";
+            string countOfRating = "尚無";
             string[] openHourArray = new string[7];
+            string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/logo/logo_30x30_dark.png" : store.StoreImage;
             @foreach (var comment in ViewBag.queryComments)
             {
                 if (comment.StoreId == store.StoreId)
                 {
 
-                    avgOfRating = comment.avgOfRating;
+                    avgOfRating = Math.Round(comment.avgOfRating,1);
                     starRange = (avgOfRating / 5 * 100);
                     countOfRating = comment.countOfRating;
                 }
@@ -68,7 +69,7 @@
             <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
                 <div class="row mt-3">
                     <div class="col-12 col-lg-5 mb-3">
-                        <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
+                        <img class="card-img-top object-fit-sm-contain object-fit-contain h-75" src="~/@storeImage" alt="@(store.StoreName+"_picture")">
 
                     </div>
                     <!-- 文字內容 -->
@@ -82,8 +83,8 @@
                         <div class="d-flex flex-row">
 
                             <div class="col-4 home-store-star my-0"
-                                 style="background: linear-gradient(to right ,  #ffd700 0 @(starRange.ToString()+"%"), #F1F0CC @((100-starRange).ToString()+"%") 100%)"></div>
-                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info" href="">(@(countOfRating + "評論"))</a></p>
+                                 style="background: linear-gradient(to right ,  #ffd700 0% @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
+                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info ms-1" href="">(@(countOfRating + "評論"))</a></p>
                             <p class="fs-6 pt-1"></p>
 
                         </div>
@@ -156,7 +157,7 @@
      <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
             <div class="row mt-3">
             <div class="col-12 col-lg-5 mb-3">
-            <img class="card-img-top" src="../img/home_banner.png" alt="店家照片">
+                <img class="card-img-top " src="../img/home_banner.png" alt="店家照片">
 
             </div>
             <!-- 文字內容 -->

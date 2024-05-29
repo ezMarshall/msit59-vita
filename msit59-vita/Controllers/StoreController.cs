@@ -28,6 +28,7 @@ namespace msit59_vita.Controllers
 
 			ViewData["Store"] = store;
 
+
 			var products = _context.Products
 							.Where(x => x.StoreId == id)
 							.ToList();
@@ -88,7 +89,7 @@ namespace msit59_vita.Controllers
 			}
 
 			ViewBag.orderStatusTime = orderStatusTime;
-
+      
 			return View();
 		}
 	}
