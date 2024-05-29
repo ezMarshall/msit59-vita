@@ -1,13 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using msit59_vita.Models;
-
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("VitaContext");
 builder.Services.AddDbContext<VitaContext>(x => x.UseSqlServer(connectionString));
-
 
 var app = builder.Build();
 

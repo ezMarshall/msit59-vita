@@ -12058,8 +12058,8 @@ body {
     position: relative;
     width: 100px;
     height: 30px;
-    -webkit-mask: url("../img/star.png") no-repeat center center;
-    mask: url("../img/star.png") no-repeat center center;
+    -webkit-mask: url("../image/Common/star.png") no-repeat center center;
+    mask: url("../image/Common/star.png") no-repeat center center;
     -webkit-mask-size: contain;
     mask-size: contain;
 }
@@ -12071,7 +12071,7 @@ body {
         left: 0;
         width: 100px;
         height: 30px;
-        background: url("../img/star-border.png") no-repeat center center;
+        background: url("../image/Common/star-border.png") no-repeat center center;
         background-size: contain;
     }
 
