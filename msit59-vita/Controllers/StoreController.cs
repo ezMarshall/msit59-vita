@@ -70,12 +70,6 @@ namespace msit59_vita.Controllers
 			var todayOpeningHours = storeOpeningTimeQuery.FirstOrDefault();
 			ViewBag.storeOpeningTimeQuery = todayOpeningHours;
 
-
-
-
-
-
-
 			var currentTime = DateTime.Now.TimeOfDay;
 
 
@@ -94,11 +88,6 @@ namespace msit59_vita.Controllers
 			}
 
 			ViewBag.orderStatusTime = orderStatusTime;
-
-			Console.WriteLine(orderStatusTime + "999111111111111111111111");
-
-
-
 
 			return View();
 		}
