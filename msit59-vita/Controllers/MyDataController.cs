@@ -7,7 +7,7 @@ namespace msit59_vita.Controllers
     {
         private VitaContext _context;
 
-        private int _customerId = 3;
+        private int _customerId = 31;
 
         public MyDataController(VitaContext context)
         {

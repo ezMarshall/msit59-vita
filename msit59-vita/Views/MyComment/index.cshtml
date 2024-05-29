@@ -1,3 +1,7 @@
+@{
+
+    ViewData["Title"] = "我的評論";
+}
 <div class="container-fluid mt-3  h-100">
 
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -6,11 +10,44 @@
             <li class="breadcrumb-item active text-info" aria-current="page">我的評論</li>
         </ol>
     </nav>
-
-
     <div class="container container-lg mb-3  h-100">
         <h4 class="text-dark">我的評論</h4>
         <!-- 評論內容 -->
+
+        @foreach(var review in Model)
+        {
+            double starRange = (Math.Round(review.ReviewRating,1) / 5 * 100);
+            string reviewTime = review.ReviewTime;
+
+            <div class="container container-lg border-bottom  border-dark w-75">
+
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="fa-solid mt-3 ">@(review.StoreName)</h5>
+                    </div>
+                    <div class="col-4 home-store-star ms-2" style="background: linear-gradient(to right , #FFD700 0 @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
+                    <div class="col-8 ">
+                        <p class="fs-6 pt-1">@review.ReviewRating</p>
+                    </div>
+                </div>
+                <p>@reviewTime</p>
+
+                <dl>
+                    <dt>品項:</dt>
+                    <div class="p-2">
+
+                        <dd>雞胸肉餐盒*1</dd>
+                        <dd>牛小排餐盒*1</dd>
+                        <dd>蒲燒魚餐盒*2</dd>
+                        <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
+                    </div>
+                    <dt>評論:</dt>
+                    <div class="p-2">
+                        <dd class="text-break">@review.ReviewContent</dd>
+                    </div>
+                </dl>
+            </div>
+        }
         <div class="container container-lg border-bottom  border-dark w-75" >
 
             <div class="row">
