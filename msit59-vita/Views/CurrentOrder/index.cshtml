@@ -67,20 +67,20 @@
                     <dd class="col-6">@order.StoreName</dd>
 
 
-                    <dt class="col-6">取貨人:</dt>
+                    <dt class="col-6">取餐人:</dt>
                     <dd class="col-6">@order.CustomerName</dd>
 
                     <dt class="col-6">連絡電話:</dt>
                     <dd class="col-6">@order.OrderPhoneNumber</dd>
 
 
-                    <dt class="col-6">取貨方式:</dt>
+                    <dt class="col-6">取餐方式:</dt>
                     <dd class="col-6">@order.OrderDeliveryVia</dd>
 
                     @if (@order.OrderDeliveryVia == "外送")
                     {
 
-                        <dt class="col-6">取貨地址:</dt>
+                        <dt class="col-6">取餐地址:</dt>
                         <dd class="col-6">@order.OrderAddress</dd>
                     }
                     <dt class="col-6">訂餐時間:</dt>
