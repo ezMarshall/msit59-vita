@@ -1,3 +1,9 @@
+@{
+
+    ViewData["Title"] = "當前訂單";
+}
+
+
 <div class="container-fluid mt-3">
 
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -11,10 +17,146 @@
         <h4 class="text-dark">當前訂單</h4>
         <div class="container container-lg w-75 mt-4 px-0">
             <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill ">當前訂單</button>
+            @* todo切換訂單介面 *@
             <button type="submit"
                 class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">歷史訂單</button>
         </div>
     </div>
+    @foreach (var order in Model)
+    {
+        string orderStatus = "";
+        string UniformInvoiceVia = "本店免用統一發票";
+        int count = 0;
+        switch (order.CustomerOrderStatus)
+        {
+            case 0:
+                orderStatus = "待接單";
+                break;
+            case 1:
+                orderStatus = "製作中";
+                break;
+            case 2:
+                orderStatus = order.OrderDeliveryVia == "自取" ? "等待自取" : "配送中";
+                break;
+            case 3:
+                orderStatus = "已完成";
+                break;
+            case 4:
+                orderStatus = "退單";
+                break;
+            case 5:
+                orderStatus = "客戶已取消";
+                break;
+            default:
+                break;
+        }
+
+        <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3" id="@($"order{order.OrderId}")">
+            <div class="container-lg container row  ">
+                <!-- 店家照片 -->
+                <div class="col-12 col-lg-4 mb-3">
+                    <img class="card-img-top" src="~/@order.StoreImage" alt="@($"store{order.StoreId}_picture")">
+                </div>
+                <!-- 訂單明細 -->
+                <dl class="row col-12 col-lg-8 ">
+
+                    <dt class="col-6">訂單編號:</dt>
+                    <dd class="col-6">@order.OrderId</dd>
+
+                    <dt class="col-6">店名:</dt>
+                    <dd class="col-6">@order.StoreName</dd>
+
+
+                    <dt class="col-6">取貨人:</dt>
+                    <dd class="col-6">@order.CustomerName</dd>
+
+                    <dt class="col-6">連絡電話:</dt>
+                    <dd class="col-6">@order.OrderPhoneNumber</dd>
+
+
+                    <dt class="col-6">取貨方式:</dt>
+                    <dd class="col-6">@order.OrderDeliveryVia</dd>
+
+                    @if (@order.OrderDeliveryVia == "外送")
+                    {
+
+                        <dt class="col-6">取貨地址:</dt>
+                        <dd class="col-6">@order.OrderAddress</dd>
+                    }
+                    <dt class="col-6">訂餐時間:</dt>
+                    <dd class="col-6">@order.OrderTime</dd>
+
+                    <dt class="col-6">預計送達/取餐時間:</dt>
+                    <dd class="col-6">@order.PredictedArrivalTime</dd>
+
+
+                    <dt class="col-6">付款方式:</dt>
+                    <dd class="col-6">@order.OrderPayment</dd>
+
+                    @if (order.OrderUniformInvoiceVia == 2)
+                    {
+                        UniformInvoiceVia = "手機載具";
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+
+                        <dt class="col-6">手機載具:</dt>
+                        <dd class="col-6">@order.OrderEinvoiceNumber</dd>
+                    }
+                    else if (order.OrderUniformInvoiceVia == 1)
+                    {
+                        UniformInvoiceVia = "紙本發票";
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+                    }else{
+
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+                    }
+
+
+
+                    <dt class="col-6">內容/數量:</dt>
+                    <div class="col-6" id="@order.OrderId">
+
+                        @for (int i = 0; i < ViewBag.products.Count; i++)
+                        {
+                            var product = ViewBag.products[i];
+                            if (order.OrderId != product.OrderId) continue;
+                            count++;
+                            <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
+                            if (count == 4)
+                            {
+                                <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@order.OrderId)">更多</a></dd>
+                            }
+                        }
+                    </div>
+
+
+                    <dt class="col-6">訂單金額:</dt>
+                    @for (int i = 0; i < ViewBag.price.Count;i++)
+                    {
+                        if (ViewBag.price[i].OrderId != order.OrderId) continue;
+                        <dd class="col-6">@($"${ViewBag.price[i].totalPrice}")</dd>
+
+                    }
+                    
+
+                    <dt class="col-6">給店家留言:</dt>
+                    <dd class="col-6">@order.OrderStoreMemo</dd>
+
+                </dl>
+                <div class="col-12 col-lg-12  d-flex flex-column mb-2">
+                    <p class=" ms-auto ">訂單狀態: <span class="text-info">@orderStatus</span></p>
+                    @if (@orderStatus == "待接單")
+                    {
+
+                        <button type="button" class="ms-auto btn btn-outline-success text-dark px-4 py-2 rounded-pill" onclick="cancelOrder(@order.OrderId)">取消訂單</button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
     <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3">
         <div class="container-lg container row  ">
             <!-- 店家照片 -->
@@ -81,5 +223,25 @@
             </div>
         </div>
     </div>
-
 </div>
+
+@section Scripts {
+    <script>
+        function showProducts(id) {
+            event.preventDefault();
+            $(`#${id}>dd`).removeClass("visually-hidden");
+            $(`#${id}>dd>a`).remove();
+        }
+        //todo 
+        /*
+         * 
+         *整理頁面
+         *  更改狀態
+         * 店家通知?
+         */
+        function cancelOrder(id) {
+            event.preventDefault();
+            $($"#order{id}").remove();
+        }
+    </script>
+}

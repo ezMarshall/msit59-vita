@@ -31,40 +31,41 @@
                     countOfRating = comment.countOfRating;
                 }
             }
-            @foreach (var oh in ViewBag.openHours)
+            @* @foreach (var oh in ViewBag.openHours) *@
+            @for (int i = 0; i < ViewBag.openHours.Count;i++)
             {
-                if (oh.StoreId == store.StoreId)
+                var oh = ViewBag.openHours[i];
+                if (oh.StoreId != store.StoreId) continue;
+                string openTime = $"{oh.StoreOpeningTime}-{oh.StoreClosingTime}";
+                string closeText = "休息";
+                switch (oh.MyWeekDay)
                 {
-                    string openTime = $"{oh.StoreOpeningTime}-{oh.StoreClosingTime}";
-                    string closeText = "休息";
-                    switch (oh.MyWeekDay)
-                    {
-                        case "Sun":
-                            openHourArray[0] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Mon":
-                            openHourArray[1] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Tue":
-                            openHourArray[2] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Wed":
-                            openHourArray[3] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Thu":
-                            openHourArray[4] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Fri":
-                            openHourArray[5] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        case "Sat":
-                            openHourArray[6] = oh.StoreOpenOrNot ? openTime : closeText;
-                            break;
-                        default:
-                            break;
+                    case "Sun":
+                        openHourArray[0] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Mon":
+                        openHourArray[1] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Tue":
+                        openHourArray[2] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Wed":
+                        openHourArray[3] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Thu":
+                        openHourArray[4] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Fri":
+                        openHourArray[5] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    case "Sat":
+                        openHourArray[6] = oh.StoreOpenOrNot ? openTime : closeText;
+                        break;
+                    default:
+                        break;
 
-                    }
                 }
+                
             }
             <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
                 <div class="row mt-3">
