@@ -12,11 +12,6 @@ namespace msit59_vita.Controllers
 
         public IActionResult Register()
         {
-            ViewBag.isNameValid = true;
-            ViewBag.isEmailValid = true;
-            ViewBag.isCellPhoneValid = true;
-            ViewBag.isPasswordValid = true;
-
             return View();
         }
 
