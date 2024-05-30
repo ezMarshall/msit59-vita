@@ -1,0 +1,51 @@
+﻿.order-input:focus {
+    outline: none;
+    border: 2px solid #399E5A;
+}
+
+.order-input {
+    border: solid #262a10;
+}
+
+.order-select {
+    height: 35px;
+}
+
+.clear-btn {
+    border-radius: 15px;
+    padding: 6px;
+    font-weight: bold;
+    height: 34px;
+}
+
+.search-icon i {
+    position: absolute;
+    left: 170px;
+    top: 10px;
+    z-index: 1;
+    color: #262a10;
+}
+
+.search-icon {
+    position: relative;
+    align-items: center;
+}
+
+.btn-dark:hover {
+    background-color: #FF6700;
+    border: none;
+}
+
+.btn {
+    border: none;
+}
+
+    .btn:hover, .btn:focus, .btn:active, .btn:visited {
+        outline: none;
+        box-shadow: none;
+    }
+
+.order-tr {
+    height: 65px;
+    cursor: pointer;
+}

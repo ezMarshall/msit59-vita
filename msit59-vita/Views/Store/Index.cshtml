@@ -1,10 +1,14 @@
 
+
 ﻿@{
 	var store = ViewData["Store"] as Store;
 	var products = ViewData["Products"] as List<Product>;
+	byte orderStatus = store.StoreOrderStatus;
+	bool isOrder = (orderStatus == 1) ? true : false;
 
-
-
+	var openingTime = ViewBag.storeOpeningTimeQuery?.storeOpeningTime;
+	var closingTime = ViewBag.storeOpeningTimeQuery?.storeClosingTime;
+	var isOpen = ViewBag.storeOpeningTimeQuery?.storeOpenOrNot ?? false;
 
 }
 
@@ -12,15 +16,38 @@
 
 	<!-- 狀態通知開始 -->
 	<div class="product-toolbar">
-		<div class="alert alert-danger my-2 py-1 fs-5 fw-bold text-center" role="alert">
-			門市暫停接單
-		</div>
+
+
+		@if (!isOrder)
+		{
+			<div class="alert alert-danger mt-3 py-1 fs-5 fw-bold text-center" role="alert">
+				門市暫停接單
+			</div>
+		}
+		else if (ViewBag.orderStatusTime == 2)
+		{
+			<div class="alert alert-secondary mt-3 py-1 fs-5 fw-bold text-center" role="alert">
+				門市尚未營業
+			</div>
+		}
+		else if (ViewBag.orderStatusTime == 3)
+		{
+			<div class="alert alert-secondary mt-3 py-1 fs-5 fw-bold text-center" role="alert">
+				門市結束營業
+			</div>
+		}
+		else if (ViewBag.orderStatusTime == 4)
+		{
+			
+		}
+
 	</div>
 	<!-- 狀態通知結束 -->
 	<!-- 店家資訊開始 -->
-	<div class="product-store row mx-auto mb-3 bg-white shadow-sm d-flex justify-content-between">
+	<div class="product-store row mx-auto my-3 bg-white shadow-sm d-flex justify-content-between">
+
 		<div class="store-info col-sm-12 col-md-4 px-4">
-			<div class="store-shop d-flex justify-content-between fs-3 fw-bold text-dark pt-3">
+			<div class="store-shop d-flex justify-content-between fs-3 fw-bold text-dark pt-2">
 				@store.StoreName
 				<i id="heart-icon" class="text-danger far fa-heart"></i>
 			</div>
@@ -39,9 +66,9 @@
 			</div>
 			<div class="store-time fs-6 mb-1">
 				<i class="fa-solid fa-clock me-2"></i>
-				<span>10:00 ~ 11:00</span>
+				@* <span>10:00 ~ 11:00</span> *@
+				<span>@(isOpen ? openingTime + " ~ " + closingTime : "今日門市未營業")</span>
 
-				@* <span>@storeOpeningTime.StoreOpeningTime ~ @storeOpeningTime.StoreClosingTime</span> *@
 			</div>
 			<div class="store-phone fs-6 mb-1">
 				<i class="fa-solid fa-phone me-2"></i>
@@ -51,7 +78,7 @@
 				<i class="fa-solid fa-location-dot me-2"></i>
 				<span>@store.StoreAddressCity@store.StoreAddressDistrict@store.StoreAddressDetails</span>
 			</div>
-			<div class="store-pay fs-6 mb-1 pb-3">
+			<div class="store-pay fs-6 mb-1">
 				<i class="fa-solid fa-sack-dollar me-2"></i>
 				<span>現金</span>
 
@@ -100,34 +127,6 @@
 						便當單點
 					</span>
 					<span class="badge bg-dark rounded-pill">14</span>
-				</label>
-				<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-						<input class="form-check-input me-1" type="checkbox" value="">
-						肉品加購
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
-				</label>
-				<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-						<input class="form-check-input me-1" type="checkbox" value="">
-						配菜加購
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
-				</label>
-				<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-						<input class="form-check-input me-1" type="checkbox" value="">
-						健康餐盒
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
-				</label>
-				<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-						<input class="form-check-input me-1" type="checkbox" value="">
-						單點肉品
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
 				</label> *@
 			</div>
 		</div>
@@ -136,7 +135,34 @@
 
 		<div class="product-list col-sm-9 mb-3">
 			<div class="row row-cols-1 row-cols-md-3 g-3">
-				<div class="col">
+				@for (var i = 0; i < products.Count; i++)
+				{
+					var product = products[i];
+					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
+					<div class="col">
+						<div class="card h-100">
+							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
+							<div class="card-body fs-5 fw-bold">
+								<div class="product-name mb-1">@product.ProductName</div>
+								<div class="product-price">$@Convert.ToInt32(product.ProductUnitPrice)</div>
+							</div>
+							<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+								<div class="input-group w-50">
+									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+										<i class="fa-solid fa-minus fw-bold text-white"></i>
+									</button>
+									<input type="text" class="form-control fw-bold text-center" value="1" id="number">
+									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+										<i class="fa-solid fa-plus fw-bold text-white"></i>
+									</button>
+								</div>
+								<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+							</div>
+						</div>
+					</div>
+				}
+				@* <div class="col">
+
 					<div class="card h-100">
 						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
 						<div class="card-body fs-5 fw-bold">
@@ -157,251 +183,8 @@
 							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
 						</div>
 					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
-				</div>
-
-
+				</div> *@
+			
 			</div>
 		</div>
 	</div>

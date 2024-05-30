@@ -1,0 +1,85 @@
+﻿.comment-input:focus {
+    outline: none;
+    border: 2px solid #399E5A;
+}
+
+.comment-input {
+    border: solid #262a10;
+}
+
+.comment-select {
+    height: 35px;
+}
+
+.clear-btn {
+    border-radius: 15px;
+    padding: 6px;
+    font-weight: bold;
+    height: 34px;
+}
+
+.search-icon i {
+    position: absolute;
+    left: 170px;
+    top: 10px;
+    z-index: 1;
+    color: #262a10;
+}
+
+.search-icon {
+    position: relative;
+    align-items: center;
+}
+
+.btn-dark:hover {
+    background-color: #FF6700;
+    border: none;
+}
+
+.btn {
+    border: none;
+}
+
+.rating .fa-star {
+    color: #ccc;
+}
+
+    .rating .fa-star.fill {
+        color: #ffd700; /* 實心星星為黃色 */
+    }
+
+#TableProducts tbody td:nth-child(4) {
+    max-width: 100px; /* 設置最大寬度 */
+    white-space: nowrap; /* 防止換行 */
+    overflow: hidden; /* 隱藏溢出部分 */
+    text-overflow: ellipsis; /* 使用省略號 */
+}
+
+.card {
+    background-color: rgb(235, 231, 231);
+    color: #262a10;
+    border: none; /* 去掉上邊框 */
+    padding: 1rem; /* 調整內邊距 */
+    text-align: left;
+}
+
+.btn-close {
+    --bs-btn-close-color: orange;
+}
+
+.btn-primary:hover {
+    background-color: #FF6700;
+}
+
+.customer-reply-text {
+    height: 160px;
+}
+
+.comment-tr {
+    cursor: pointer;
+}
+
+.btn:focus, .btn:active {
+    box-shadow: none;
+}
+/*# sourceMappingURL=manage_comments.css.map */
