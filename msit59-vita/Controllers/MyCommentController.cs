@@ -38,7 +38,6 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
-            var dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
             var queryComment = from r in _context.Reviews
                                where r.Order.CustomerId == _customerId
                                orderby r.ReviewTime descending
@@ -52,7 +51,20 @@ namespace msit59_vita.Controllers
 
                                };
 
+            var queryProducts = from r in _context.Reviews
+                                join o in _context.Orders on r.OrderId equals o.OrderId
+                                join od in _context.OrderDetails on o.OrderId equals od.OrderId
+                                where o.CustomerId == _customerId
+                                select new
+                                {
+                                   r.ReviewId,
+                                   od.Product.ProductName,
+                                   od.UnitPrice,
+                                   od.Quantity
+                                    
+                                };
 
+            ViewBag.products = queryProducts.ToList();
             return View(queryComment.ToList());
         }
     }

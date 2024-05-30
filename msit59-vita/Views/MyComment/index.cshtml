@@ -13,11 +13,11 @@
     <div class="container container-lg mb-3  h-100">
         <h4 class="text-dark">我的評論</h4>
         <!-- 評論內容 -->
-
-        @foreach(var review in Model)
+        @foreach (var review in Model)
         {
-            double starRange = (Math.Round(review.ReviewRating,1) / 5 * 100);
+            double starRange = (Math.Round(review.ReviewRating, 1) / 5 * 100);
             string reviewTime = review.ReviewTime;
+            int count = 0;
 
             <div class="container container-lg border-bottom  border-dark w-75">
 
@@ -35,11 +35,17 @@
                 <dl>
                     <dt>品項:</dt>
                     <div class="p-2">
-
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>牛小排餐盒*1</dd>
-                        <dd>蒲燒魚餐盒*2</dd>
-                        <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
+                        @for (int i = 0; i < ViewBag.products.Count; i++)
+                        {
+                            var product = ViewBag.products[i];
+                            if (review.ReviewId != product.ReviewId) continue;
+                            count++;
+                            <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
+                            if (count == 3)
+                            {
+                                <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
+                            }
+                        }
                     </div>
                     <dt>評論:</dt>
                     <div class="p-2">
