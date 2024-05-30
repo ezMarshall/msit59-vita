@@ -34,16 +34,16 @@
 
                 <dl>
                     <dt>品項:</dt>
-                    <div class="p-2">
+                    <div class="p-2" id="@review.ReviewId">
                         @for (int i = 0; i < ViewBag.products.Count; i++)
                         {
                             var product = ViewBag.products[i];
                             if (review.ReviewId != product.ReviewId) continue;
                             count++;
                             <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
-                            if (count == 3)
+                            if (count == 4)
                             {
-                                <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
+                                <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@review.ReviewId)">更多</a></dd>
                             }
                         }
                     </div>
@@ -115,3 +115,12 @@
 
 
 </div>
+@section  Scripts {
+<script>
+    function showProducts(id) {
+        event.preventDefault();
+        $(`#${id}>dd`).removeClass("visually-hidden");
+        $(`#${id}>dd>a`).remove();
+    }
+</script>
+}
