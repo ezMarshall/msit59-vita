@@ -1,13 +1,11 @@
-
-
 ﻿@{
 	var store = ViewData["Store"] as Store;
 	var products = ViewData["Products"] as List<Product>;
 	byte orderStatus = store.StoreOrderStatus;
 	bool isOrder = (orderStatus == 1) ? true : false;
 
-	var openingTime = ViewBag.storeOpeningTimeQuery?.storeOpeningTime;
-	var closingTime = ViewBag.storeOpeningTimeQuery?.storeClosingTime;
+	var openingTime = ViewBag.storeOpeningTimeQuery?.storeOpeningTime.ToString("HH:mm");
+	var closingTime = ViewBag.storeOpeningTimeQuery?.storeClosingTime.ToString("HH:mm");
 	var isOpen = ViewBag.storeOpeningTimeQuery?.storeOpenOrNot ?? false;
 
 }
@@ -38,7 +36,7 @@
 		}
 		else if (ViewBag.orderStatusTime == 4)
 		{
-			
+
 		}
 
 	</div>
@@ -51,23 +49,18 @@
 				@store.StoreName
 				<i id="heart-icon" class="text-danger far fa-heart"></i>
 			</div>
-			<div class="store-comment fs-5 fw-bold mb-2">
-				<span class="star-container">
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="far fa-star"></i>
-				</span>
+			<div class="store-comment fs-6 fw-bold mb-2 d-flex align-items-center">
+				<span class="star-container home-store-star d-inline-block"
+					  style="background: linear-gradient(to right ,  #ffd700 0% @((ViewBag.averageRating*20).ToString()+"%"), #FFFFFF @((ViewBag.averageRating*20).ToString()+"%") 100%)"></span>
 				<span>
-					4.5 (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
-					   data-bs-target="#commentModal">100則評論</a>)
+					@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
+					   data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
 				</span>
 			</div>
 			<div class="store-time fs-6 mb-1">
 				<i class="fa-solid fa-clock me-2"></i>
 				@* <span>10:00 ~ 11:00</span> *@
-				<span>@(isOpen ? openingTime + " ~ " + closingTime : "今日門市未營業")</span>
+				<span>@(isOpen ? openingTime + "-" + closingTime : "今日門市未營業")</span>
 
 			</div>
 			<div class="store-phone fs-6 mb-1">
@@ -82,7 +75,8 @@
 				<i class="fa-solid fa-sack-dollar me-2"></i>
 				<span>現金</span>
 
-				@if (store.StoreLinePay){
+				@if (store.StoreLinePay)
+				{
 					<span>、LINE PAY</span>
 				}
 
@@ -101,35 +95,46 @@
 	<div class="product row">
 
 		<!-- 商品分類開始 -->
-		<div class="product-category col-sm-3">
-			<div class="list-group custom-checkbox rounded-2 shadow-sm">
-				<label class="list-group-item fs-5 fw-bold text-dark">
-					商品分類
-				</label>
 
-				@foreach (var category in ViewBag.ProductCategoryCounts)
-				{
-					<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-						<span>
-							<input class="form-check-input me-1" type="checkbox" value="">
-							@category.CategoryName
-						</span>
-						<span class="badge bg-dark rounded-pill">
-							@category.ProductCount
-						</span>
+		
+			
+			<div class="product-category col-sm-3">
+				<form action="/Store/Index/@store.StoreId" method="get">
+
+				<div id="categoryFilter" class="list-group custom-checkbox rounded-2 shadow-sm">
+					<label class="list-group-item fs-5 fw-bold text-dark">
+						商品分類
 					</label>
-				}
+
+					@foreach (var category in ViewBag.ProductCategoryCounts)
+					{
+						<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+							<span>
+								<input class="form-check-input me-1 category-checkbox" type="checkbox" name="categoryName" value="@category.CategoryId">
+								@category.CategoryName
+							</span>
+							<span class="badge bg-dark rounded-pill">
+								@category.ProductCount
+							</span>
+						</label>
+					}
 
 
-				@* <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+					@* <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
 					<span>
-						<input class="form-check-input me-1" type="checkbox" value="">
-						便當單點
+					<input class="form-check-input me-1" type="checkbox" value="">
+					便當單點
 					</span>
 					<span class="badge bg-dark rounded-pill">14</span>
-				</label> *@
+					</label> *@
+				</div>
+
+				</form>
 			</div>
-		</div>
+		
+		
+
+		
 		<!-- 商品分類結束 -->
 		<!-- 商品列表開始 -->
 
@@ -139,7 +144,7 @@
 				{
 					var product = products[i];
 					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
-					<div class="col">
+					<div class="col product-category-@product.CategoryId">
 						<div class="card h-100">
 							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
 							<div class="card-body fs-5 fw-bold">
@@ -151,7 +156,7 @@
 									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
 										<i class="fa-solid fa-minus fw-bold text-white"></i>
 									</button>
-									<input type="text" class="form-control fw-bold text-center" value="1" id="number">
+									<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
 									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
 										<i class="fa-solid fa-plus fw-bold text-white"></i>
 									</button>
@@ -162,28 +167,28 @@
 					</div>
 				}
 				@* <div class="col">
-					<div class="card h-100">
-						<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-						<div class="card-body fs-5 fw-bold">
-							<div class="product-name mb-1">蒜泥白肉</div>
-							<div class="product-price">$120</div>
-						</div>
-						<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+				<div class="card h-100">
+				<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
+				<div class="card-body fs-5 fw-bold">
+				<div class="product-name mb-1">蒜泥白肉</div>
+				<div class="product-price">$120</div>
+				</div>
+				<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
 
-							<div class="input-group w-50">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-									<i class="fa-solid fa-minus fw-bold text-white"></i>
-								</button>
-								<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-								<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-									<i class="fa-solid fa-plus fw-bold text-white"></i>
-								</button>
-							</div>
-							<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-						</div>
-					</div>
+				<div class="input-group w-50">
+				<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+				<i class="fa-solid fa-minus fw-bold text-white"></i>
+				</button>
+				<input type="text" class="form-control fw-bold text-center" value="1" id="number">
+				<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+				<i class="fa-solid fa-plus fw-bold text-white"></i>
+				</button>
+				</div>
+				<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+				</div>
+				</div>
 				</div> *@
-			
+
 			</div>
 		</div>
 	</div>
@@ -191,3 +196,22 @@
 	<!-- 商品結束 -->
 
 </section>
+
+@section Scripts {
+
+	<script>
+		function adjustValue(button, change) {
+			var inputElement = button.parentNode.querySelector('input');
+			var newValue = parseInt(inputElement.value) + change;
+			if (newValue >= 1) {
+				inputElement.value = newValue;
+			} else {
+				inputElement.value = 1;
+			}
+		}
+
+	
+
+	</script>
+	
+}

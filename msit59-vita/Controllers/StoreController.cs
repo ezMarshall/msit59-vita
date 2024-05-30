@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using msit59_vita.Models;
 using System;
 
@@ -89,9 +90,36 @@ namespace msit59_vita.Controllers
 			}
 
 			ViewBag.orderStatusTime = orderStatusTime;
-      
+
+			// 取得星星平均
+			var averageReviewRating = from s in _context.Stores
+								join o in _context.Orders on s.StoreId equals o.StoreId
+								join r in _context.Reviews on o.OrderId equals r.OrderId
+								where s.StoreId == id && r.ReviewRating != null
+								select (decimal?)(r.ReviewRating);
+
+			//var averageRating = averageReviewRating.Average() != null ? Math.Round(averageReviewRating.Average()??0 , 1) : 0;
+			var averageRating = Math.Round(averageReviewRating.Average() ?? 0, 1);
+
+			//Console.WriteLine(averageRating);
+			ViewBag.averageRating = averageRating;
+
+			// 取得評論數
+			var reviewCount = from s in _context.Stores
+							  join o in _context.Orders on s.StoreId equals o.StoreId
+							  join r in _context.Reviews on o.OrderId equals r.OrderId
+							  where s.StoreId == id
+							  select r;
+
+			var reviewCountSum = reviewCount.Count() != 0 ? reviewCount.Count().ToString()+ "評論" : "尚未有評論";
+			//Console.WriteLine(reviewCountSum);
+			// 取得評論總和
+			ViewBag.reviewCountSum = reviewCountSum;
+
 			return View();
 		}
+
 	}
+
 
 }
