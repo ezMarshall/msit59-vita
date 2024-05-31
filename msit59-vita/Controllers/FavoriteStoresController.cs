@@ -12,7 +12,7 @@ namespace msit59_vita.Controllers
     {
 
         private VitaContext _context;
-        private int _customerId = 1;
+        private int _customerId = 31;
 
         public FavoriteStoresController(VitaContext context)
         {

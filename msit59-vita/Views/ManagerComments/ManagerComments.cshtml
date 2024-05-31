@@ -1,0 +1,199 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+    
+}
+
+@section MyStyle {
+    
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerComments.css" asp-append-version="true" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+}
+
+@section BreadCrumb {
+    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
+        <ol class="breadcrumb pt-3">
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="./ManagerHome.html"
+                   class="text-dark text-decoration-none fw-bolder">首頁</a>
+            </li>
+            <li class="breadcrumb-item">評論管理</li>
+        </ol>
+    </div>
+}
+
+@section Content {
+
+    <div class=" row justify-content-center">
+        <div id="TableAreas" class="pt-0 pb-4 ps-2 col-lg-11 col-sm-9 ">
+            <div class=" d-lg-flex mb-2 container-fluid">
+                <form id="searchForm" method="get" action="@Url.Action("ManagerComments", "ManagerComments")">
+                    <div class="search-icon">
+                        <a href="#" id="searchLink">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                        <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="text" name="searchString" placeholder="請輸入關鍵字">
+                    </div>
+                </form>
+                <div>
+                    <input class="comment-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
+                    <span class="fw-bold">~</span>
+                    <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
+                </div>
+                <div>
+                    <select class="comment-select border-2 border-dark rounded-3 py-1 px-2 me-3" id="">
+                        <option value="">回覆狀態</option>
+                        <option value="1">已回覆</option>
+                        <option value="0">未回覆</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</button>
+                </div>
+
+            </div>
+
+            <table id="TableProducts" class="table table-hover table-borderless border-bottom border-dark text-center">
+                <thead class="border-dark">
+                    <tr>
+                        <th scope="col" style="width: 8%">#</th>
+                        <th scope="col" style="width: 13%">發佈人</th>
+                        <th scope="col" style="width: 17%">發佈時間</th>
+                        <th scope="col" style="width: 18%">發佈內容</th>
+                        <th scope="col" style="width: 18%">評論星級</th>
+                        <th scope="col" style="width: 10%">回覆狀態</th>
+                        <th scope="col" style="width: 13%">操作</th>
+                        <th scope="col" style="width: 3%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int counter = 1;
+                        foreach (var item in ViewBag.customers)
+                        {
+                                <tr>
+                                    <th class="align-middle" scope="row">@counter</th>
+                                    <td class="align-middle">@item.CustomerName</td>
+                                    <td class="align-middle">@item.ReviewTime.ToString("yyyy/MM/dd HH:mm")</td>
+                                    <td class="align-middle">@item.ReviewContent</td>
+                                    <td class="align-middle rating">
+                                        <i class="fa fa-star @((item.ReviewRating>=1)?"fill":"")"></i>
+                                        <i class="fa fa-star @((item.ReviewRating>=2)?"fill":"")"></i>
+                                        <i class="fa fa-star @((item.ReviewRating>=3)?"fill":"")"></i>
+                                        <i class="fa fa-star @((item.ReviewRating>=4)?"fill":"")"></i>
+                                        <i class="fa fa-star @((item.ReviewRating>=5)?"fill":"") "></i>
+                                    </td>
+                                    <td class="align-middle">
+                                        @((item.StoreReplyContent != null)?"已回覆":"未回覆" )
+                                    </td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-dark me-1 fw-bold btn-accept show-alert" data-bs-toggle="modal" data-bs-target=@($"#replyModal-{counter}") @((item.StoreReplyContent != null) ? "disabled" : "")>回覆</button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target=@($"#accordion-{counter}") aria-expanded="false" aria-controls="accordion-1">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            // accordion start
+                                <tr class="comment-tr">
+                                    <td colspan="8" class=" p-0">
+                                        <div class="collapse" id=@($"accordion-{counter}")>
+                                            <div class="d-lg-flex">
+                                                <div class="col-lg-6 card card-body">
+                                                    <p class="fw-bold">發佈內容：</p>
+                                                    <p>@item.ReviewContent</p>
+                                                </div>
+                                                <div class="col-lg-6 card card-body">
+                                                    <p class="fw-bold">訂購品項：</p>
+                                                    <p>@item.ProductName</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            // accordion end
+                            // modal start
+                                <div class="modal" id=@($"replyModal-{counter}") data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                                        <div class="rounded-3 h-75 modal-content">
+                                            <div class="modal-header bg-dark">
+                                                <h5 class="fw-bold text-primary modal-title" id="staticBackdropLabel">評論回覆</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div>
+                                                    <p class="h-50 fw-bold">評論：</p>
+                                                    <p class="p-3 rounded-3 bg-primary  customer-reply-text">@item.ReviewContent</p>
+                                                </div>
+                                                <div>
+                                                    <p class="h-50 fw-bold">回覆：</p>
+                                                    <textarea class="p-3 w-100 rounded-3 border-dark" rows="7" name="replyTtext" id="replyText"></textarea>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer bg-dark">
+                                                <button type="button" class="btn btn-primary border-0 rounded-3 fw-bold text-dark" data-bs-dismiss="modal">送出</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            // modal end
+                        counter++;
+                        }
+                    }
+                </tbody>
+            </table>
+          
+            @* pagination *@
+            <div aria-label="" class="">
+                <ul class="pagination align-items-center justify-content-center">
+                    <li id="prevPageButton" class="btn disabled page-item">
+                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Previous</a>
+                    </li>
+                    <li id="pageBox1" class="page-item active">
+                        <a id="pageBox1-link" class="rounded-2 page-link text-dark"
+                           href="javascript:void(0)">1</a>
+                    </li>
+                    <li id="pageBox2" class="page-item">
+                        <a id="pageBox2-link" class=" rounded-2 page-link text-dark"
+                           href="javascript:void(0)">2</a>
+                    </li>
+                    <li id="pageBox3" class="page-item">
+                        <a id="pageBox3-link" class="rounded-2 page-link text-dark"
+                           href="javascript:void(0)">3</a>
+                    </li>
+                    <li id="nextPageButton" class="btn page-item">
+                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        var searchInput = document.querySelector('input[name="searchString"]');
+        var searchLink = document.getElementById('searchLink');
+        var searchForm = document.getElementById('searchForm');
+
+        searchLink.addEventListener('click', function (event) {
+            event.preventDefault(); // 阻止連結的預設行為
+            searchForm.submit(); // 提交表單
+        });
+
+        searchInput.addEventListener('input', function () {
+            var searchString = this.value;
+            var url = '@Url.Action("ManagerComments", "ManagerComments", new { searchString = "__id__" })'.replace('__id__', encodeURIComponent(searchString));
+            searchLink.href = url; // 更新連結的 URL
+        });
+    </script>
+
+
+}
+
+
+
+
+
+
+
