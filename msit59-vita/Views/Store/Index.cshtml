@@ -8,6 +8,7 @@
 	var closingTime = ViewBag.storeOpeningTimeQuery?.storeClosingTime.ToString("HH:mm");
 	var isOpen = ViewBag.storeOpeningTimeQuery?.storeOpenOrNot ?? false;
 
+	string heartIconClass = ViewBag.isFavorite ? "fas" : "far";
 }
 
 <section class="container-lg">
@@ -45,9 +46,9 @@
 	<div class="product-store row mx-auto my-3 bg-white shadow-sm d-flex justify-content-between">
 
 		<div class="store-info col-sm-12 col-md-4 px-4">
-			<div class="store-shop d-flex justify-content-between fs-3 fw-bold text-dark pt-2">
+			<div class="store-shop d-flex justify-content-between fs-4 fw-bold text-dark pt-3">
 				@store.StoreName
-				<i id="heart-icon" class="text-danger far fa-heart"></i>
+				<i id="heart-icon" class="text-info @heartIconClass fa-heart"></i>
 			</div>
 			<div class="store-comment fs-6 fw-bold mb-2 d-flex align-items-center">
 				<span class="star-container home-store-star d-inline-block"
@@ -166,28 +167,6 @@
 						</div>
 					</div>
 				}
-				@* <div class="col">
-				<div class="card h-100">
-				<img src="./img/Product_92.jpg" class="card-img-top" alt="食物圖片">
-				<div class="card-body fs-5 fw-bold">
-				<div class="product-name mb-1">蒜泥白肉</div>
-				<div class="product-price">$120</div>
-				</div>
-				<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-
-				<div class="input-group w-50">
-				<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-				<i class="fa-solid fa-minus fw-bold text-white"></i>
-				</button>
-				<input type="text" class="form-control fw-bold text-center" value="1" id="number">
-				<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-				<i class="fa-solid fa-plus fw-bold text-white"></i>
-				</button>
-				</div>
-				<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-				</div>
-				</div>
-				</div> *@
 
 			</div>
 		</div>
@@ -196,6 +175,32 @@
 	<!-- 商品結束 -->
 
 </section>
+
+
+@* 跳轉登入頁面需要調整 *@
+<form method="post" action="/Register/Register">
+	<!-- 登入模態對話框 -->
+	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body text-center fs-3 fw-bold">
+					<i class="fa-solid fa-circle-exclamation text-danger fs-2"></i>
+					<p id="loginMessage"></p>
+					<!-- 在這裡添加登入表單或其他內容 -->
+				</div>
+				<div class="modal-footer border-0 d-flex justify-content-center">
+					<button type="submit" class="btn btn-info text-white col-4">登入</button>
+					<button type="button" class="btn btn-secondary col-4" data-bs-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>
+
 
 @section Scripts {
 
@@ -210,7 +215,53 @@
 			}
 		}
 
-	
+		// 點擊心心按鈕
+		// var heartIcon = document.getElementById('heart-icon');
+
+
+		// heartIcon.addEventListener('click', function () {
+
+		// 	if (heartIcon.classList.contains('far')) {
+		// 		heartIcon.classList.remove('far');
+		// 		heartIcon.classList.add('fas');
+		// 	} else {
+		// 		heartIcon.classList.remove('fas');
+		// 		heartIcon.classList.add('far');
+		// 	}
+		// });
+
+		$(function () {
+			var storeId = @store.StoreId;
+
+			$('#heart-icon').click(function () {
+				$.ajax({
+					url: '@Url.Action("ToggleFavorite", "Store")',
+					type: 'POST',
+					data: { storeId: storeId },
+					success: function (data) {
+						if (data.success) {
+							// 切換愛心圖標狀態
+							$('#heart-icon').toggleClass('far fas');
+						} else {
+							// 顯示登入視窗
+							showLoginModal(data.message);
+						}
+					}
+				});
+			});
+		});
+
+		function showLoginModal(message) {
+			// 您的代碼,用於顯示登入視窗
+			// 可以在這裡顯示錯誤消息
+			// alert(message);
+			// 設置錯誤消息
+			$('#loginMessage').text(message);
+
+			// 顯示模態對話框
+			$('#loginModal').modal('show');
+		}
+
 
 	</script>
 	
