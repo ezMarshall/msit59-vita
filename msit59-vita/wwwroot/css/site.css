@@ -12216,6 +12216,9 @@ body {
 .user-center-rating input:checked ~ label:before {
     opacity: 1;
 }
+.user-center-image{
+    object-fit:cover;
+}
 
 .product-store .store-comment .fa-star {
     color: #ffd700;
