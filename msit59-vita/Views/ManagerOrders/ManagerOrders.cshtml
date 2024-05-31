@@ -1,0 +1,237 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+@section MyStyle {
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerOrders.css" asp-append-version="true" />
+}
+
+@section BreadCrumb {
+    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
+    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
+        <ol class="breadcrumb pt-3">
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="./ManagerHome.html"
+                   class="text-dark text-decoration-none fw-bolder">首頁</a>
+            </li>
+            <li class="breadcrumb-item">訂單管理</li>
+        </ol>
+    </div>
+}
+
+@section ContentWrapper{
+    <div class=" row justify-content-center ">
+        <div id="TableAreas" class=" pt-0 pb-4 ps-2 col-11 ">
+            <div class="d-lg-flex mb-2 container-fluid">
+                <div class="search-icon">
+                    <a href="#">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </a>
+                    <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3" type="text" placeholder="請輸入關鍵字">
+                </div>
+                <div>
+                    <input class="order-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
+                    <span class="fw-bold">~</span>
+                    <input class="order-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
+                </div>
+                <div>
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="">
+                        <option value="">訂單種類</option>
+                        <option value="0">外送</option>
+                        <option value="1">自取</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" name="" id="">
+                        <option value="">訂單狀態</option>
+                        <option value="finished">已完成</option>
+                        <option value="unfinish">未完成</option>
+                        <option value="declined">已退單</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</button>
+                </div>
+            </div>
+
+            <table id="TableProducts" class=" table table-hover table-borderless border-bottom border-dark text-center">
+                <thead class="border-dark">
+                    <tr>
+                        <th scope="col" style="width: 10%">#</th>
+                        <th scope="col" style="width: 16%">訂單編號</th>
+                        <th scope="col" style="width: 17%">訂餐時間</th>
+                        <th scope="col" style="width: 13%">付款方式</th>
+                        <th scope="col" style="width: 13%">訂單種類</th>
+                        <th scope="col" style="width: 13%">訂單狀態</th>
+                        <th scope="col" style="width: 18%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-row-id="1" class="order-tr">
+                        <th class="align-middle" scope="row">1</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">待接單</td>
+                        <td class="align-middle">
+                            <button class="btn btn-success me-1 fw-bold btn-accept show-alert">接單</button>
+                            <button class="btn btn-danger fw-bold btn-decline show-alert">退單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="2" class="order-tr">
+                        <th class="align-middle" scope="row">2</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">待接單</td>
+                        <td class="align-middle">
+                            <button class="btn btn-dark me-1 fw-bold show-alert">出店</button>
+                            <button class="btn btn-dark fw-bold show-alert">完成訂單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="3" class="order-tr">
+                        <th class="align-middle" scope="row">3</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">等待自取</td>
+                        <td class="align-middle">
+                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
+                            <button class="btn btn-dark fw-bold ">完成訂單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="4" class="order-tr">
+                        <th class="align-middle" scope="row">4</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">等待自取</td>
+                        <td class="align-middle">
+                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
+                            <button class="btn btn-dark fw-bold ">完成訂單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="5" class="order-tr">
+                        <th class="align-middle" scope="row">5</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">等待自取</td>
+                        <td class="align-middle">
+                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
+                            <button class="btn btn-dark fw-bold ">完成訂單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="6" class="order-tr">
+                        <th class="align-middle" scope="row">6</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">外送中</td>
+                        <td class="align-middle ">
+                            <button class="btn btn-dark fw-bold ">出店</button>
+                            <button class="btn btn-dark fw-bold ">完成訂單</button>
+                        </td>
+                    </tr>
+                    <tr data-row-id="7" class="order-tr">
+                        <th class="align-middle" scope="row">7</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">已完成</td>
+                        <td class="align-middle">
+                        </td>
+                    </tr>
+                    <tr data-row-id="8" class="order-tr">
+                        <th class="align-middle" scope="row">8</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">已取消</td>
+                        <td class="align-middle">
+                        </td>
+                    </tr>
+                    <tr data-row-id="9" class="order-tr">
+                        <th class="align-middle" scope="row">9</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">已退單</td>
+                        <td class="align-middle">
+                        </td>
+                    </tr>
+                    <tr data-row-id="10" class="order-tr">
+                        <th class="align-middle" scope="row">10</th>
+                        <td class="align-middle" scope="row">12345678</td>
+                        <td class="align-middle">2024/05/02 12:30</td>
+                        <td class="align-middle">現金</td>
+                        <td class="align-middle">外送</td>
+                        <td class="align-middle">已完成</td>
+                        <td class="align-middle">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div aria-label="" class="">
+                <ul class="pagination align-items-center justify-content-center">
+                    <li id="prevPageButton" class="btn disabled page-item">
+                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Previous</a>
+                    </li>
+                    <li id="pageBox1" class="page-item active">
+                        <a id="pageBox1-link" class="rounded-2 page-link text-dark" href="javascript:void(0)">1</a>
+                    </li>
+                    <li id="pageBox2" class="page-item">
+                        <a id="pageBox2-link" class=" rounded-2 page-link text-dark" href="javascript:void(0)">2</a>
+                    </li>
+                    <li id="pageBox3" class="page-item">
+                        <a id="pageBox3-link" class="rounded-2 page-link text-dark" href="javascript:void(0)">3</a>
+                    </li>
+                    <li id="nextPageButton" class="btn page-item">
+                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts{
+    <script>
+        var buttons = document.querySelectorAll('.show-alert');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var buttonText = this.textContent;
+                console.log(buttonText);
+                Swal.fire({
+
+                    html: `<b>是否確認"${buttonText}"?</b>`,
+                    showConfirmButton: 'true',
+                    showCancelButton: 'true',
+                    showCloseButton: 'true',
+                    confirmButtonText: "確認",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: '#262a10',
+                    cancelButtonColor: '#9db7a8',
+                    width: '300px'
+
+
+                })
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+
+}
