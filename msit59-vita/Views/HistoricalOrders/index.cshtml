@@ -13,14 +13,13 @@
     <div class="container container-lg ">
         <h4 class="text-dark">歷史訂單</h4>
         <div class="container container-lg w-75 mt-4 px-0">
-            <button type="submit"
+            <button type="button"
                 class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
-            <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
+            <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
         </div>
         
     @foreach (var order in Model)
         {
-
             string orderStatus = "";
             string UniformInvoiceVia = "本店免用統一發票";
             int count = 0;
@@ -48,7 +47,7 @@
                     break;
             }
 
-            <div class="container container-lg w-75 my-3 border-bottom border-dark">
+            <div class="container container-lg w-75 my-3 border-bottom border-dark" id="@($"order-{order.OrderId}")">
                 <div class="row">
                     <dl class="row col-12 col-lg-8">
 
@@ -111,8 +110,7 @@
 
 
                         <dt class="col-6">內容/數量:</dt>
-                        <div class="col-6" id="@order.OrderId">
-
+                        <div class="col-6" id="@($"content-{order.OrderId}")">                            
                             @for (int i = 0; i < ViewBag.products.Count; i++)
                             {
                                 var product = ViewBag.products[i];
@@ -143,11 +141,23 @@
                     <div class="col-12 col-lg-4">
 
                         <div class=" d-flex align-items-center h-75">
-                            <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
-                                    data-bs-target="#myModal">
-                                <i class="fa-regular fa-message fa-flip-horizontal"></i>
-                                <p class="d-inline-block pt-2 ">評論</p>
-                            </button>
+                            @if(order.Reviews.Count >0)
+                            {
+                                <button type="button" class="btn mx-auto text-info disabled" data-bs-toggle="modal"
+                                data-bs-target="#myModal">
+                                    <i class="fa-regular fa-message fa-flip-horizontal text-dark"></i>
+                                    <p class="d-inline-block pt-2 text-dark">已評論</p>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
+                                        data-bs-target="#comment-modal" id="@($"comment-{order.OrderId}")" onclick="comment(@order.OrderId)">
+                                    <i class="fa-regular fa-message fa-flip-horizontal"></i>
+                                    <p class="d-inline-block pt-2 ">評論</p>
+                                </button>
+                            }
+                            
 
                         </div>
 
@@ -166,7 +176,7 @@
 </div>
 
 <!-- The Modal -->
-<div class="modal fade " id="myModal">
+<div class="modal fade " id="comment-modal">
     <div class="modal-dialog  modal-lg modal-dialog-centered ">
         <div class="modal-content d-flex flex-column">
 
@@ -176,28 +186,35 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body d-flex flex-column ">
-                <!-- bug沒有開新分頁星星數會保留 但文字沒更改 -->
-                <div class="user-center-rating d-flex flex-row-reverse justify-content-center">
-                    <input type="radio" name="rating" value="5" id="5" checked><label class="fs-1" for="5">☆</label>
-                    <input type="radio" name="rating" value="4" id="4"><label class="fs-1" for="4">☆</label>
-                    <input type="radio" name="rating" value="3" id="3"><label class="fs-1" for="3">☆</label>
-                    <input type="radio" name="rating" value="2" id="2"><label class="fs-1" for="2">☆</label>
-                    <input type="radio" name="rating" value="1" id="1"><label class="fs-1" for="1">☆</label>
+            <form action="/HistoricalOrders/Comment" method="post">
+                <div class="modal-body d-flex flex-column ">
+                    
+                
+                
+                    <!-- bug沒有開新分頁星星數會保留 但文字沒更改 -->
+                    <div class="user-center-rating d-flex flex-row-reverse justify-content-center">
+
+                        <input type="text" name="OrderId" value="OMGOMG" class="form-control bg-primary py-0 " />
+                        <input type="radio" name="ReviewRating" value="5" id="5" checked><label class="fs-1" for="5">☆</label>
+                        <input type="radio" name="ReviewRating" value="4" id="4"><label class="fs-1" for="4">☆</label>
+                        <input type="radio" name="ReviewRating" value="3" id="3"><label class="fs-1" for="3">☆</label>
+                        <input type="radio" name="ReviewRating" value="2" id="2"><label class="fs-1" for="2">☆</label>
+                        <input type="radio" name="ReviewRating" value="1" id="1"><label class="fs-1" for="1">☆</label>
+                    </div>
+                    <small class="align-self-center">您評價餐廳為5顆星<span class="text-info">(必填)</span></small>
+                    <textarea rows="10" name="ReviewContent" placeholder="可輸入兩百字評論(非必填)"
+                        class="align-self-center form-control mt-2 w-75"></textarea>
+
                 </div>
-                <small class="align-self-center">您評價餐廳為5顆星<span class="text-info">(必填)</span></small>
-                <textarea rows="10" name="" id="" placeholder="可輸入兩百字評論(非必填)"
-                    class="align-self-center form-control mt-2 w-75"></textarea>
 
-            </div>
+                <!-- Modal footer -->
+                <div class="modal-footer d-flex justify-content-evenly border-0">
+                    <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill"
+                        data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-outline-success px-4 py-2 rounded-pill">確認</button>
+                </div>
 
-            <!-- Modal footer -->
-            <div class="modal-footer d-flex justify-content-evenly border-0">
-                <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill"
-                    data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill">確認</button>
-            </div>
-
+            </form>
         </div>
     </div>
 </div>
@@ -209,8 +226,12 @@
 
         function showProducts(id) {
             event.preventDefault();
-            $(`#${id}>dd`).removeClass("visually-hidden");
-            $(`#${id}>dd>a`).remove();
+            $(`#content-${id}>dd`).removeClass("visually-hidden");
+            $(`#content-${id}>dd>a`).remove();
         }
+        function comment(id) {
+            $(`#comment-modal input[name="OrderId"]`).val(id);
+        }
+
     </script>
 }

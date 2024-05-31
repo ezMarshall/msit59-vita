@@ -21,6 +21,7 @@ namespace msit59_vita.Controllers
                              select new
                              {
                                  o.OrderId,
+                                 o.Reviews,
                                  o.Store.StoreId,
                                  OrderPayment = o.OrderPayment ? "現金" : "LINE PAY",
                                  o.Store.StoreName,
@@ -60,6 +61,24 @@ namespace msit59_vita.Controllers
             ViewBag.products = queryProducts.ToList();
             ViewBag.price = queryPrice.ToList();
             return View(queryOrder.ToList());
+        }
+
+        [HttpPost]
+        public IActionResult Comment(int OrderId,string ReviewContent,byte ReviewRating)
+        {
+
+
+            Review review = new Review();
+            review.OrderId = OrderId;
+            review.ReviewContent = ReviewContent;
+            review.ReviewRating = ReviewRating;
+            review.ReviewTime = DateTime.Now;
+            _context.Add(review);
+            _context.SaveChanges();
+
+
+
+            return Redirect("/HistoricalOrders");
         }
     }
 }
