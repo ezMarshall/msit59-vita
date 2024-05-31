@@ -1,0 +1,39 @@
+﻿@model List<msit59_vita.Models.Product>
+
+
+
+<div class="row row-cols-1 row-cols-md-3 g-3">
+	@foreach (var product in Model)
+	{
+		var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
+		<div class="col product-category-@product.CategoryId">
+			<div class="card h-100">
+				<img src="~/@productImage" class="card-img-top" alt="食物圖片">
+				<div class="card-body fs-5 fw-bold">
+					<div class="product-name mb-1">@product.ProductName</div>
+					<div class="product-price">$@Convert.ToInt32(product.ProductUnitPrice)</div>
+				</div>
+				<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+					<div class="input-group w-50">
+						<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+							<i class="fa-solid fa-minus fw-bold text-white"></i>
+						</button>
+						<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
+						<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+							<i class="fa-solid fa-plus fw-bold text-white"></i>
+						</button>
+					</div>
+					<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+				</div>
+			</div>
+		</div>
+	}
+
+
+</div>
+
+
+
+
+
+

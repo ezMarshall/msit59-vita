@@ -55,7 +55,7 @@
 					  style="background: linear-gradient(to right ,  #ffd700 0% @((ViewBag.averageRating*20).ToString()+"%"), #FFFFFF @((ViewBag.averageRating*20).ToString()+"%") 100%)"></span>
 				<span>
 					@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
-					   data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
+										  data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
 				</span>
 			</div>
 			<div class="store-time fs-6 mb-1">
@@ -97,79 +97,70 @@
 
 		<!-- 商品分類開始 -->
 
-		
-			
-			<div class="product-category col-sm-3">
-				<form action="/Store/Index/@store.StoreId" method="get">
-
-				<div id="categoryFilter" class="list-group custom-checkbox rounded-2 shadow-sm">
-					<label class="list-group-item fs-5 fw-bold text-dark">
-						商品分類
-					</label>
-
-					@foreach (var category in ViewBag.ProductCategoryCounts)
-					{
-						<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-							<span>
-								<input class="form-check-input me-1 category-checkbox" type="checkbox" name="categoryName" value="@category.CategoryId">
-								@category.CategoryName
-							</span>
-							<span class="badge bg-dark rounded-pill">
-								@category.ProductCount
-							</span>
-						</label>
-					}
 
 
-					@* <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-					<input class="form-check-input me-1" type="checkbox" value="">
-					便當單點
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
-					</label> *@
-				</div>
+		<div class="product-category col-sm-3">
 
-				</form>
-			</div>
-		
-		
+			<div id="categoryFilter" class="list-group custom-checkbox rounded-2 shadow-sm">
+				<label class="list-group-item fs-5 fw-bold text-dark">
+					商品分類
+				</label>
 
-		
-		<!-- 商品分類結束 -->
-		<!-- 商品列表開始 -->
-
-		<div class="product-list col-sm-9 mb-3">
-			<div class="row row-cols-1 row-cols-md-3 g-3">
-				@for (var i = 0; i < products.Count; i++)
+				@foreach (var category in ViewBag.ProductCategoryCounts)
 				{
-					var product = products[i];
-					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
-					<div class="col product-category-@product.CategoryId">
-						<div class="card h-100">
-							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
-							<div class="card-body fs-5 fw-bold">
-								<div class="product-name mb-1">@product.ProductName</div>
-								<div class="product-price">$@Convert.ToInt32(product.ProductUnitPrice)</div>
-							</div>
-							<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
-								<div class="input-group w-50">
-									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
-										<i class="fa-solid fa-minus fw-bold text-white"></i>
-									</button>
-									<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
-									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
-										<i class="fa-solid fa-plus fw-bold text-white"></i>
-									</button>
-								</div>
-								<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
-							</div>
-						</div>
-					</div>
+					<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+						<span>
+							<input class="form-check-input me-1 category-checkbox" type="checkbox" name="categoryName" value="@category.CategoryId">
+							@category.CategoryName
+						</span>
+						<span class="badge bg-dark rounded-pill">
+							@category.ProductCount
+						</span>
+					</label>
 				}
-
 			</div>
 		</div>
+
+
+
+
+		<!-- 商品分類結束 -->
+		<!-- 商品列表開始 -->
+		<div id="product-list" class="product-list col-sm-9 mb-3">
+			<partial name="_ProductListPartial" model="products" />
+		</div>
+		@* <div class="product-list col-sm-9 mb-3">
+		<div class="row row-cols-1 row-cols-md-3 g-3">
+
+		@for (var i = 0; i < products.Count; i++)
+		{
+		var product = products[i];
+		var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
+		<div class="col product-category-@product.CategoryId">
+		<div class="card h-100">
+		<img src="~/@productImage" class="card-img-top" alt="食物圖片">
+		<div class="card-body fs-5 fw-bold">
+		<div class="product-name mb-1">@product.ProductName</div>
+		<div class="product-price">$@Convert.ToInt32(product.ProductUnitPrice)</div>
+		</div>
+		<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+		<div class="input-group w-50">
+		<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+		<i class="fa-solid fa-minus fw-bold text-white"></i>
+		</button>
+		<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
+		<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+		<i class="fa-solid fa-plus fw-bold text-white"></i>
+		</button>
+		</div>
+		<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+		</div>
+		</div>
+		</div>
+		}
+
+		</div>
+		</div> *@
 	</div>
 	<!-- 商品列表結束 -->
 	<!-- 商品結束 -->
@@ -216,26 +207,12 @@
 		}
 
 		// 點擊心心按鈕
-		// var heartIcon = document.getElementById('heart-icon');
-
-
-		// heartIcon.addEventListener('click', function () {
-
-		// 	if (heartIcon.classList.contains('far')) {
-		// 		heartIcon.classList.remove('far');
-		// 		heartIcon.classList.add('fas');
-		// 	} else {
-		// 		heartIcon.classList.remove('fas');
-		// 		heartIcon.classList.add('far');
-		// 	}
-		// });
-
 		$(function () {
 			var storeId = @store.StoreId;
 
 			$('#heart-icon').click(function () {
 				$.ajax({
-					url: '@Url.Action("ToggleFavorite", "Store")',
+					url: '/Store/ToggleFavorite',
 					type: 'POST',
 					data: { storeId: storeId },
 					success: function (data) {
@@ -262,7 +239,31 @@
 			$('#loginModal').modal('show');
 		}
 
+		//商品分類篩選
+		$('.category-checkbox').change(function () {
+			var selectedCategories = [];
+			$('.category-checkbox:checked').each(function () {
+				selectedCategories.push($(this).val());
+			});
+
+			var storeId = @store.StoreId;
+			// 發送 AJAX 請求
+			$.ajax({
+				url: '/Store/FilterProducts', // 你的控制器方法的路徑
+				type: 'POST',
+				data: { categoryIds: selectedCategories, storeId: storeId },
+				success: function (data) {
+					// 在這裡處理從控制器返回的數據
+					// console.log(data);
+					$('#product-list').html(data);
+				},
+				error: function () {
+					alert('發生錯誤');
+				}
+			});
+		});
+
 
 	</script>
-	
+
 }
