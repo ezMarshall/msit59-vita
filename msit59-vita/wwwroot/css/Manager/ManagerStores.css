@@ -10102,19 +10102,7 @@ textarea.form-control-lg {
   color: white;
 }
 
-.bg-img {
-    height: 200px;
-    background-image: url(/image/StorePictures/Store_1.jpeg);
-    background-attachment: fixed;
-    line-height: 200px;
-    text-align: center;
-    color: black;
-    font-size: 50px;
-    font-weight: 900;
-    letter-spacing: 20px;
-    opacity: 80%;
-    background-position: center;
-}
+
 
 .store-info-area {
   padding: 50px 50px 50px 50px;
