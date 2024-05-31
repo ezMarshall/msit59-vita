@@ -21,7 +21,15 @@ namespace msit59_vita.Controllers
          * 
          */
 
-        
+        public IActionResult Canecl(int orderId) {
+
+            Order order = _context.Orders.Find(orderId);
+            order.CustomerOrderStatus = 5;
+            _context.SaveChanges();
+
+            return Redirect("/CurrentOrder");
+        }
+
         public IActionResult Index()
         {
             var queryOrder = from o in _context.Orders

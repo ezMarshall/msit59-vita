@@ -148,14 +148,17 @@
                     <p class=" ms-auto ">訂單狀態: <span class="text-info">@orderStatus</span></p>
                     @if (@orderStatus == "待接單")
                     {
-
-                        <button type="button" class="ms-auto btn btn-outline-success text-dark px-4 py-2 rounded-pill" onclick="cancelOrder(@order.OrderId)">取消訂單</button>
+                        <form class="ms-auto" action="/CurrentOrder/Canecl" method="post">
+                            <input class=" visually-hidden" name="orderId" value="@order.OrderId">
+                            <button type="submit" class="btn btn-outline-success text-dark px-4 py-2 rounded-pill" >取消訂單</button>
+                        </form>
                     }
 
                 </div>
             </div>
         </div>
     }
+    @*下面是假資料*@
     <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3">
         <div class="container-lg container row  ">
             <!-- 店家照片 -->
@@ -230,18 +233,7 @@
             event.preventDefault();
             $(`#${id}>dd`).removeClass("visually-hidden");
             $(`#${id}>dd>a`).remove();
-        }
-        //todo 
-        /*
-         * 
-         *整理頁面
-         *  更改狀態
-         * 店家通知?
-         */
-        function cancelOrder(id) {
-            event.preventDefault();
-            $(`#order${id}`).remove();
-        }
+        }       
         $("#order-btns>button").click(function () {
             window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
         })
