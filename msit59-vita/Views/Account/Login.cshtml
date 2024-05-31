@@ -1,4 +1,6 @@
-﻿@{
+﻿@model msit59_vita.Models.ViewModels.LoginViewModel
+
+@{
     ViewData["Title"] = "登入";
 }
 
@@ -6,10 +8,10 @@
     <h2 class="text-center text-success fw-bold mb-3">登入</h2>
     <div class="row container justify-content-center mx-auto">
         <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
-            <form class="needs-validation" novalidate action="/Login/Login" method="post">
+            <form class="needs-validation" novalidate action="/Account/Login" method="post">
                 <div class="mb-3">
                     <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required/>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required />
                     <div class="invalid-feedback ps-3">
                         請輸入電子信箱
                     </div>
@@ -19,7 +21,7 @@
                     <a href="javascriot:void(0)" class="link-dark position-absolute end-0" data-bs-toggle="modal"
                        data-bs-target="#modalForgetPwd">忘記密碼</a>
                     <input type="password" class="form-control text-dark rounded-pill" id="CustomerPassword"
-                           name="CustomerPassword" required/>
+                           name="CustomerPassword" required />
                     <div class="invalid-feedback ps-3">
                         請輸入密碼
                     </div>
@@ -36,13 +38,13 @@
             </form>
             <p class="mt-4 mb-0 text-center">
                 還沒有會員？
-                <a href="./Register" class="link-dark">馬上註冊</a>
+                <a href="/Account/Register" class="link-dark">馬上註冊</a>
             </p>
         </div>
     </div>
 </section>
 
-@section Scripts{
+@section Scripts {
     <script>
         $(document).ready(function () {
             let form = $('.needs-validation');

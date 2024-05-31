@@ -1,4 +1,4 @@
-﻿@model msit59_vita.Models.Customer
+﻿@model msit59_vita.Models.ViewModels.RegisterViewModel
 
 @{
     ViewData["Title"] = "註冊";
@@ -8,7 +8,7 @@
     <h2 class="text-center text-success fw-bold mb-3">註冊</h2>
     <div class="row container justify-content-center mx-auto">
         <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
-            <form class="needs-validation" novalidate action="/Register/Register" method="post">
+            <form class="needs-validation" novalidate action="/Account/Register" method="post">
                 <div class="mb-3">
                     <label for="CustomerName" class="form-label is-required ps-3 mb-1">姓名</label>
                     <input type="text" class="form-control text-dark rounded-pill" id="CustomerName" name="CustomerName" required>
@@ -81,8 +81,8 @@
                     <p class="psw-memo ps-3 mb-0">至少有一個大寫英文、小寫英文及數字。</p>
                 </div>
                 <div class="mb-3 position-relative">
-                    <label for="CheckPassword" class="form-label is-required ps-3 mb-1">確認密碼</label>
-                    <input type="password" class="form-control text-dark rounded-pill" id="CheckPassword" required>
+                    <label for="ConfirmPassword" class="form-label is-required ps-3 mb-1">確認密碼</label>
+                    <input type="password" class="form-control text-dark rounded-pill" id="ConfirmPassword" name="ConfirmPassword" required>
                     <div class="invalid-feedback ps-3">
                         密碼不符
                     </div>
@@ -95,7 +95,9 @@
 </section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     <script>
         $(function () {
@@ -140,7 +142,7 @@
                 if ($(this).val()) {
                     if (!phonePattern.test($(this).val())) {
                         $(this).addClass('is-invalid');
-                    } 
+                    }
                 }
             })
 
@@ -154,10 +156,10 @@
             })
 
             // 再次輸入密碼驗證
-            $('#CheckPassword').on('blur', function () {
+            $('#ConfirmPassword').on('blur', function () {
                 $(this).removeClass('is-invalid');
-                if (($('#CustomerPassword').val() !== $('#CheckPassword').val())) {
-                    $('#CheckPassword').addClass('is-invalid');
+                if (($('#CustomerPassword').val() !== $('#ConfirmPassword').val())) {
+                    $('#ConfirmPassword').addClass('is-invalid');
                 }
             })
 
