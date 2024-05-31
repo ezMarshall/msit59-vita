@@ -12,9 +12,9 @@
     </nav>
     <div class="container container-lg ">
         <h4 class="text-dark">歷史訂單</h4>
-        <div class="container container-lg w-75 mt-4 px-0">
+        <div class="container container-lg w-75 mt-4 px-0 " id="order-btns">
             <button type="button"
-                class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
+                class="user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
             <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
         </div>
         
@@ -232,6 +232,8 @@
         function comment(id) {
             $(`#comment-modal input[name="OrderId"]`).val(id);
         }
-
+        $("#order-btns>button").click(function () {
+            window.location.href = $(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
+        })
     </script>
 }

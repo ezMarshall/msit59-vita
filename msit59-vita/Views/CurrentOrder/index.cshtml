@@ -7,7 +7,7 @@
 <div class="container-fluid mt-3">
 
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-        <ol class="breadcrumb ms-5">
+        <ol class="breadcrumb ms-5" >
             <li class="breadcrumb-item active text-dark">會員中心</li>
             <li class="breadcrumb-item active text-dark">我的訂單</li>
             <li class="breadcrumb-item active text-info" aria-current="page">當前訂單</li>
@@ -15,10 +15,9 @@
     </nav>
     <div class="container container-lg ">
         <h4 class="text-dark">當前訂單</h4>
-        <div class="container container-lg w-75 mt-4 px-0">
-            <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill ">當前訂單</button>
-            @* todo切換訂單介面 *@
-            <button type="submit"
+        <div class="container container-lg w-75 mt-4 px-0" id="order-btns">
+            <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">當前訂單</button>
+            <button type="button"
                 class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">歷史訂單</button>
         </div>
     </div>
@@ -241,7 +240,10 @@
          */
         function cancelOrder(id) {
             event.preventDefault();
-            $($"#order{id}").remove();
+            $(`#order${id}`).remove();
         }
+        $("#order-btns>button").click(function () {
+            window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
+        })
     </script>
 }
