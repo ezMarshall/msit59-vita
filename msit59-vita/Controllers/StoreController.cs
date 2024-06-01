@@ -112,6 +112,8 @@ namespace msit59_vita.Controllers
 							  where s.StoreId == id
 							  select r;
 			var totalReviews = reviewCount.Count();
+
+			ViewBag.totalReviews = totalReviews;
 			var reviewCountSum = reviewCount.Count() != 0 ? reviewCount.Count().ToString() + "評論" : "尚無評論";
 			//Console.WriteLine(reviewCountSum);
 			// 取得評論總和
@@ -162,8 +164,6 @@ namespace msit59_vita.Controllers
 
 			var customerReviewCountsList = customerReviewCounts.ToList();
 			ViewBag.customerReviewCounts = customerReviewCountsList;
-
-			Console.WriteLine(ViewBag.customerReviewCounts[1].CustomerName+"123211111111111111");
 
 
             //使用者id目前寫固定值和登入寫true
