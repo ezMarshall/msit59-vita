@@ -53,10 +53,22 @@
 			<div class="store-comment fs-6 fw-bold mb-2 d-flex align-items-center">
 				<span class="star-container home-store-star d-inline-block"
 					  style="background: linear-gradient(to right ,  #ffd700 0% @((ViewBag.averageRating*20).ToString()+"%"), #FFFFFF @((ViewBag.averageRating*20).ToString()+"%") 100%)"></span>
-				<span>
-					@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
-										  data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
-				</span>
+
+				@if (ViewBag.totalReviews > 0)
+				{
+					<span>
+						@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal" data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
+					</span>
+				}
+				else
+				{
+					<span>@ViewBag.averageRating (@ViewBag.reviewCountSum)</span>
+				}
+
+				@* <span>
+				@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
+				data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
+				</span> *@
 			</div>
 			<div class="store-time fs-6 mb-1">
 				<i class="fa-solid fa-clock me-2"></i>
@@ -127,7 +139,49 @@
 		<!-- 商品分類結束 -->
 		<!-- 商品列表開始 -->
 		<div id="product-list" class="product-list col-sm-9 mb-3">
-			<partial name="_ProductListPartial" model="products" />
+			<div class="row row-cols-1 row-cols-md-3 g-3">
+				@foreach (var product in products)
+				{
+					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
+					<div class="col product-category-@product.CategoryId product-item" data-id="@product.ProductId" data-stock="@product.ProductUnitsInStock">
+						<div class="card h-100">
+							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
+							<div class="card-body fs-5 fw-bold">
+								<div class="product-name mb-1">@product.ProductName</div>
+								<div class="product-price">$@Convert.ToInt32(product.ProductUnitPrice)</div>
+							</div>
+							<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
+								<div class="input-group w-50">
+									<button class="quantity btn btn-success" type="button" onclick="productAdjustValue(this, -1)">
+										<i class="fa-solid fa-minus fw-bold text-white"></i>
+									</button>
+									<input type="text" class="form-control fw-bold text-center product-quantity-input" value="1" id="@product.ProductId" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+									<button class="quantity btn btn-success" type="button" onclick="productAdjustValue(this, 1)">
+										<i class="fa-solid fa-plus fw-bold text-white"></i>
+									</button>
+								</div>
+								@if (ViewBag.orderStatusTime == 2 || ViewBag.orderStatusTime == 3)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+								}
+								else if (!isOrder)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+								}
+								else if (ViewBag.storeOpeningTimeQuery.storeOpenOrNot == false)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+								}
+								else
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-danger fw-bold" type="button">加入購物車</button>
+								}
+							</div>
+						</div>
+					</div>
+				}
+
+			</div>
 		</div>
 	</div>
 	<!-- 商品列表結束 -->
@@ -160,22 +214,79 @@
 
 </form>
 
-<partial name="_StoreCommentPartial" model="store"/>
+<partial name="_StoreCommentPartial" model="store" />
 
 
 
 @section Scripts {
 
 	<script>
-		function adjustValue(button, change) {
-			var inputElement = button.parentNode.querySelector('input');
-			var newValue = parseInt(inputElement.value) + change;
-			if (newValue >= 1) {
-				inputElement.value = newValue;
-			} else {
-				inputElement.value = 1;
+		// 商品數量調整
+		$('#product-list').on('input change paste keyup', '.product-quantity-input', function () {
+			var inputField = $(this);
+			var cartItemId = inputField.closest('.product-item').data('id');
+			var maxStock = inputField.closest('.product-item').data('stock');
+
+			var currentValue = parseInt(inputField.val());
+			var newValue = currentValue;
+
+			if (isNaN(newValue) || newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+			} else if (newValue > 99) {
+				newValue = 99;
 			}
+
+			inputField.val(newValue);
+
+		});
+
+		function productAdjustValue(button, increment) {
+			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
+			var cartItemId = inputField.closest('.product-item').data('id');
+			var maxStock = inputField.closest('.product-item').data('stock');
+			var currentValue = parseInt(inputField.val());
+			var newValue = currentValue + increment;
+
+			if (isNaN(newValue) || newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+			} else if (newValue > 99) {
+				newValue = 99;
+			}
+
+			inputField.val(newValue);
 		}
+
+		// 加入購物車
+		$('#product-list').on('click', '.product-btn', function () {
+			var productId = $(this).attr('id');
+			var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
+			var storeId = @store.StoreId;
+			// 發送 AJAX 請求
+			$.ajax({
+				url: '/ShoppingCarts/AddToCart', // 你的控制器方法的路徑
+				type: 'POST',
+				data: { productId: productId, quantity: quantity, storeId: storeId },
+				success: function (data) {
+					// 在這裡處理從控制器返回的數據
+					console.log(data);
+					if (data.success) {
+						alert('商品已加入購物車');
+					} else {
+						if (data.message == '請先登入') {
+							showLoginModal(data.message);
+						}
+						alert('商品數量不足');
+					}
+				},
+				error: function () {
+					alert('發生錯誤');
+				}
+			});
+		});
 
 		// 點擊心心按鈕
 		$(function () {
@@ -225,7 +336,7 @@
 				data: { categoryIds: selectedCategories, storeId: storeId },
 				success: function (data) {
 					// 在這裡處理從控制器返回的數據
-					// console.log(data);
+					//console.log(data);
 					$('#product-list').html(data);
 				},
 				error: function () {

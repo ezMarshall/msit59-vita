@@ -112,8 +112,8 @@ namespace msit59_vita.Controllers
 							  where s.StoreId == id
 							  select r;
 			var totalReviews = reviewCount.Count();
-
 			ViewBag.totalReviews = totalReviews;
+
 			var reviewCountSum = reviewCount.Count() != 0 ? reviewCount.Count().ToString() + "評論" : "尚無評論";
 			//Console.WriteLine(reviewCountSum);
 			// 取得評論總和
@@ -248,6 +248,7 @@ namespace msit59_vita.Controllers
 			}
 
 			var products = productsQuery.ToList();
+
 			// 將結果返回給前端
 			//return Json(products);
 			return PartialView("_ProductListPartial", products);

@@ -2,139 +2,418 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VITA | @ViewData["Title"]</title>
-    <link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
-    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
-    <!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>VITA | @ViewData["Title"]</title>
+	<link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
+	<!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
 
 </head>
 
 <body>
 
 
-    <header>
-        <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
-            <div class="container-lg">
-                <h1 class="m-0">
-                    <a asp-controller="Home" asp-action="Index" class="replace-text-nav">
-                        VITA健康餐盒訂餐平台
-                    </a>
-                </h1>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav ms-auto">
-                        <!-- 已登入 start -->
-                        <li class="nav-item text-light mt-3 mt-lg-0">
-                            <span class="text-primary me-3 nav-welcome ps-2">Welcome Back, 皮卡丘</span>
-                        </li>
-                        <li class="d-lg-none border-light border-top opacity-25 my-3">
-                        <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
-                        <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
-                        <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
-                        <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
-                        <li><a class="d-lg-none d-block p-2 text-decoration-none" onclick="logout()">登出</a></li>
-                        <li class="nav-item dropdown d-none d-lg-block z-index-1">
-                            <button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
-                                    id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                會員中心
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
-                                aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item py-2" href="#">會員資料</a></li>
-                                <li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
-                                <li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
-                                <li><a class="dropdown-item py-2" href="#">我的評論</a></li>
-                                <li><a class="dropdown-item py-2" onclick="logout()">登出</a></li>
-                            </ul>
-                        </li>
-                        <!-- 已登入 end -->
-                        <!-- 未登入 start -->
-                        <!-- <li class="my-2 my-lg-0">
-                          <a asp-controller="Login" asp-action="Index" class="d-none d-lg-block rounded-pill btn btn-outline-primary me-3 px-4 py-2">登入</a>
-                          <a asp-controller="Login" asp-action="Index" class="d-lg-none p-2 text-decoration-none link-primary">登入</a>
-                        </li>
-                        <li class="my-2 my-lg-0">
-                          <a asp-controller="Register" asp-action="Index" class="d-none d-lg-block rounded-pill btn btn-primary px-4 py-2 me-4" id="btnRegister">註冊</a>
-                          <a asp-controller="Register" asp-action="Index" class="d-lg-none p-2 text-decoration-none link-primary">註冊</a>
-                        </li> -->
-                        <!-- 未登入 end -->
+	<header>
+		<nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
+			<div class="container-lg">
+				<h1 class="m-0">
+					<a asp-controller="Home" asp-action="Index" class="replace-text-nav">
+						VITA健康餐盒訂餐平台
+					</a>
+				</h1>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+						aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown">
+					<ul class="navbar-nav ms-auto">
+						<!-- 已登入 start -->
+						<li class="nav-item text-light mt-3 mt-lg-0">
+							<span class="text-primary me-3 nav-welcome ps-2">Welcome Back, 皮卡丘</span>
+						</li>
+						<li class="d-lg-none border-light border-top opacity-25 my-3">
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" onclick="logout()">登出</a></li>
+						<li class="nav-item dropdown d-none d-lg-block z-index-1">
+							<button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
+									id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								會員中心
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
+								aria-labelledby="navbarDropdownMenuLink">
+								<li><a class="dropdown-item py-2" href="#">會員資料</a></li>
+								<li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
+								<li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
+								<li><a class="dropdown-item py-2" href="#">我的評論</a></li>
+								<li><a class="dropdown-item py-2" onclick="logout()">登出</a></li>
+							</ul>
+						</li>
+						<!-- 已登入 end -->
+						<!-- 未登入 start -->
+						<!-- <li class="my-2 my-lg-0">
+						  <a asp-controller="Login" asp-action="Index" class="d-none d-lg-block rounded-pill btn btn-outline-primary me-3 px-4 py-2">登入</a>
+						  <a asp-controller="Login" asp-action="Index" class="d-lg-none p-2 text-decoration-none link-primary">登入</a>
+						</li>
+						<li class="my-2 my-lg-0">
+						  <a asp-controller="Register" asp-action="Index" class="d-none d-lg-block rounded-pill btn btn-primary px-4 py-2 me-4" id="btnRegister">註冊</a>
+						  <a asp-controller="Register" asp-action="Index" class="d-lg-none p-2 text-decoration-none link-primary">註冊</a>
+						</li> -->
+						<!-- 未登入 end -->
 
-                        <li class="d-lg-none border-light border-top opacity-25 my-3">
-
-                        <!-- 購物車 -->
-                        <li>
-                            <a href="javascript:void(0)" class="position-relative ms-4 d-none d-lg-block">
-                                <i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
-                                <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="cartNum">1</span>
-                            </a>
-                            <a href="javascript:void(0)" class="d-block d-lg-none text-decoration-none p-2">購物車</a>
-                        </li>
-                        <!-- 購物車 end -->
-                        <!-- 已登入：通知鈴鐺 -->
-                        <li>
-                            <a data-bs-toggle="offcanvas" href="#offcanvasNotify" role="button" aria-controls="offcanvasNotify" class="d-block position-relative ms-3 d-none d-lg-block">
-                                <i class="fa-regular fa-bell fs-3 nav-icon"></i>
-                                <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="notifyNum">1</span>
-                            </a>
-                            <a data-bs-toggle="offcanvas" href="#offcanvasNotifyMobile" role="button" aria-controls="offcanvasNotifyMobile" class="d-block d-lg-none text-decoration-none p-2">重要通知</a>
-                        </li>
-                        <!-- 已登入：通知鈴鐺 end -->
+						<li class="d-lg-none border-light border-top opacity-25 my-3">
 
 
-                    </ul>
+							<!-- 購物車 -->
 
-                </div>
-            </div>
-        </nav>
-    
-    </header>
 
-   @RenderBody()
+						<li>
+							<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
+							   class="position-relative ms-4 d-none d-lg-block">
+								<i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
+								<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold"
+									  id="cartNum">1</span>
+							</a>
 
-    <footer class="bg-dark pt-5">
-        <div class="container-lg row mx-auto">
-            <div class="d-none d-md-block col-md-4 mb-3 mb-md-0">
-                <p class="footer-slogan text-primary">
-                    集結200家健康餐盒，你的健康，我們守護！<br>
-                    首選VITA，百搭你的味蕾。
-                </p>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="text-primary fw-bold fs-5">聯絡我們</p>
-                <a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
-                <a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
-                <div class="mt-4">
-                    <a href="#" class="footer-link d-inline-block link-primary">
-                        <i class="fa-brands fa-facebook fs-3"></i>
-                    </a>
-                    <a href="#" class="footer-link link-primary">
-                        <i class="fa-brands fa-instagram fs-3 ms-3"></i>
-                    </a>
-                </div>
-            </div>
+							<a data-bs-toggle="offcanvas" href="#offcanvasCartMobile" role="button" aria-controls="offcanvasCartMobile"
+							   class="d-block d-lg-none text-decoration-none p-2">購物車</a>
 
-            <div class="col-6 col-md-4">
-                <a asp-controller="JoinUs" asp-action="Index" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
-                <a asp-controller="QA" asp-action="Index" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
-            </div>
-            <div class="col-12 border-top mt-5 border-primary">
-                <p class="text-primary text-center my-4">© 2024 資展專題報告</p>
-            </div>
-        </div>
-    </footer>
-    <!-- footer end -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+						</li>
+						<!-- 購物車 end -->
+						<!-- 已登入：通知鈴鐺 -->
+						<li>
+							<a data-bs-toggle="offcanvas" href="#offcanvasNotify" role="button" aria-controls="offcanvasNotify" class="d-block position-relative ms-3 d-none d-lg-block">
+								<i class="fa-regular fa-bell fs-3 nav-icon"></i>
+								<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="notifyNum">1</span>
+							</a>
+							<a data-bs-toggle="offcanvas" href="#offcanvasNotifyMobile" role="button" aria-controls="offcanvasNotifyMobile" class="d-block d-lg-none text-decoration-none p-2">重要通知</a>
+						</li>
+						<!-- 已登入：通知鈴鐺 end -->
+
+
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+
+	</header>
+
+	@RenderBody()
+
+	<footer class="bg-dark pt-5">
+		<div class="container-lg row mx-auto">
+			<div class="d-none d-md-block col-md-4 mb-3 mb-md-0">
+				<p class="footer-slogan text-primary">
+					集結200家健康餐盒，你的健康，我們守護！<br>
+					首選VITA，百搭你的味蕾。
+				</p>
+			</div>
+			<div class="col-6 col-md-4">
+				<p class="text-primary fw-bold fs-5">聯絡我們</p>
+				<a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
+				<a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
+				<div class="mt-4">
+					<a href="#" class="footer-link d-inline-block link-primary">
+						<i class="fa-brands fa-facebook fs-3"></i>
+					</a>
+					<a href="#" class="footer-link link-primary">
+						<i class="fa-brands fa-instagram fs-3 ms-3"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="col-6 col-md-4">
+				<a asp-controller="JoinUs" asp-action="Index" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
+				<a asp-controller="QA" asp-action="Index" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
+			</div>
+			<div class="col-12 border-top mt-5 border-primary">
+				<p class="text-primary text-center my-4">© 2024 資展專題報告</p>
+			</div>
+		</div>
+	</footer>
+	<!-- footer end -->
+	<!-- 購物車頁面開始 -->
+	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+		<div class="offcanvas-header justify-content-end">
+			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+					aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
+
+			<div  class="cart-container overflow-auto">
+				@* <div class="cart-item d-flex justify-content-between pb-3">
+				<img src="./image/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
+				<div class="cart-details">
+				<div class="cart-info d-flex justify-content-between mb-1">
+				<div class="me-3">
+				<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
+				<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
+				</div>
+				<div class="product-delate text-success fs-4 mt-1">
+				<i class="fa-solid fa-trash"></i>
+				</div>
+				</div>
+				<div class="shop-price d-flex justify-content-around align-items-center">
+				<div class="input-group w-50">
+				<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
+				<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
+				</button>
+				<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="1" id="number">
+				<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
+				<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
+				</button>
+				</div>
+				<div class="fs-5 fw-bold text-center product-price" data-price="100">$100</div>
+				</div>
+
+				</div>
+				</div> *@
+
+			</div>
+
+
+			<div class="total-price pt-3">
+				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+
+				<div class="d-grid col-10 mx-auto">
+					<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="button">立即結帳</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 購物車頁面結束 -->
+	<!-- 手機版購物車開始 -->
+	<div class="offcanvas offcanvas-bottom bg-light h-75" tabindex="-1" id="offcanvasCartMobile"
+		 aria-labelledby="offcanvasCart MobileLabel">
+		<div class="offcanvas-header justify-content-end">
+			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+					aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body cart-list">
+
+			<div class="cart-container">
+				
+
+			</div>
+
+
+
+			@* <div class="cart-item d-flex justify-content-between pb-3">
+			<img src="./img/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
+			<div class="cart-details">
+			<div class="cart-info d-flex justify-content-between mb-1">
+			<div class="me-3">
+			<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
+			<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
+			</div>
+			<div class="product-delate text-success fs-4 mt-1">
+			<i class="fa-solid fa-trash"></i>
+			</div>
+			</div>
+			<div class="shop-price d-flex justify-content-around align-items-center">
+			<div class="input-group w-50">
+			<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
+			<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
+			</button>
+			<input type="text" class="form-control fs-5 fw-bold text-center" value="1" id="number">
+			<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
+			<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
+			</button>
+			</div>
+			<div class="fs-5 fw-bold text-center">$100</div>
+			</div>
+
+			</div>
+			</div> *@
+
+			@* <div class="fs-5 fw-bold text-center text-success mb-3">總金額：$200</div> *@
+			<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+
+			<div class="d-grid col-10 mx-auto">
+				<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="button">立即結帳</button>
+			</div>
+
+		</div>
+	</div>
+	<!-- 手機版購物車結束 -->
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/cartjs.js" asp-append-version="true"></script>
+
+
+	@await RenderSectionAsync("Scripts", required: false)
+
+	<script>
+		$(document).ready(function () {
+
+			getCart();
+
+			// 初始化時計算總金額
+			// calculateTotalPrice();
+
+		});
+
+		// 商品數量改變時
+		// $('#cart-container').on('change paste keyup', '.product-quantity-input', function () {
+		// 	// console.log('change');
+		// 	calculateTotalPrice();
+		// 	var cartItemId = $(this).closest('.cart-item').data('id');
+		// 	var newQuantity = parseInt($(this).val());
+		// 	updateCartItemQuantity(cartItemId, newQuantity);
+		// });
+
+		$('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
+			var inputField = $(this);
+			var cartItemId = inputField.closest('.cart-item').data('id');
+			var maxStock = inputField.closest('.cart-item').data('stock');
+
+			var currentValue = parseInt(inputField.val());
+			// console.log(currentValue);
+			var newValue = currentValue;
+
+			if (isNaN(newValue) || newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+			} else if (newValue > 99) {
+				newValue = 99;
+			}
+
+			inputField.val(newValue);
+			calculateTotalPrice();
+			// updateCartItemQuantity(cartItemId, newValue);
+		});
+
+		function getCart() {
+			$.ajax({
+				type: "GET",
+				url: "/ShoppingCarts/Index",
+				success: function (data) {
+					// console.log(data);
+					renderCartItems(data);
+				},
+				error: function (xhr, status, error) {
+					console.error("Error fetching cart data: ", error);
+				}
+			});
+		}
+
+		function renderCartItems(cartItems) {
+			var cartContainer = $(".cart-container");
+			cartContainer.empty();
+
+			cartItems.forEach(function (item) {
+				var cartItemHtml = `
+									<div class="cart-item d-flex justify-content-between pb-3" data-id="${item.shoppingCartId}" data-stock="${item.productUnitsInStock}">
+										<img src="/${item.productImage}" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
+										<div class="cart-details">
+											<div class="cart-info d-flex justify-content-between mb-1">
+												<div class="me-3">
+													<div class="shop-name fs-6 fw-bold">${item.storeName}</div>
+													<div class="product-name fs-5 fw-bold">${item.productName}</div>
+												</div>
+												<div class="product-delate text-success fs-4 mt-1" onclick="deleteCartItem(${item.shoppingCartId})">
+													<i class="fa-solid fa-trash"></i>
+												</div>
+											</div>
+											<div class="shop-price d-flex justify-content-around align-items-center">
+												<div class="input-group w-50">
+													<button class="btn border-0" type="button" onclick="adjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+														<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
+													</button>
+													<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="${item.quantity}" id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+													<button class="btn border-0" type="button" onclick="adjustValue(this, 1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+														<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
+													</button>
+												</div>
+												<div class="fs-5 fw-bold text-center product-price" data-price="${item.price}">${item.price}</div>
+											</div>
+										</div>
+									</div>
+								`;
+				cartContainer.append(cartItemHtml);
+			});
+
+			calculateTotalPrice();
+
+		}
+
+		function calculateTotalPrice() {
+			var totalPrice = 0;
+			$('.cart-item').each(function () {
+				var quantity = parseInt($(this).find('.product-quantity-input').val());
+				var price = parseInt($(this).find('.product-price').data('price'));
+				if (!isNaN(quantity) && !isNaN(price)) {
+					totalPrice += quantity * price;
+				}
+			});
+			if (!isNaN(totalPrice)) {
+				$('.totalPriceNum').text('$' + totalPrice);
+				// $('#totalPriceMobile').text('$' + totalPrice);
+			}
+		}
+
+		// 加減商品數量
+		function adjustValue(button, increment, cartItemId, maxStock) {
+			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
+			var currentValue = parseInt(inputField.val());
+			var newValue = currentValue + increment;
+			if (newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+			}
+			inputField.val(newValue);
+			calculateTotalPrice();
+			// updateCartItemQuantity(cartItemId, newValue);
+		}
+
+		// function updateCartItemQuantity(cartItemId, newQuantity) {
+		// 	$.ajax({
+		// 		type: "POST",
+		// 		url: "/ShoppingCarts/UpdateQuantity",
+		// 		data: JSON.stringify({ id: cartItemId, quantity: newQuantity }),
+		// 		contentType: "application/json; charset=utf-8",
+		// 		success: function (data) {
+		// 			console.log("Quantity updated successfully.");
+		// 		},
+		// 		error: function (xhr, status, error) {
+		// 			console.error("Error updating quantity: ", error);
+		// 		}
+		// 	});
+		// }
+
+		function deleteCartItem(cartItemId) {
+			$(`.cart-item[data-id=${cartItemId}]`).remove();
+			calculateTotalPrice();
+
+			// $.ajax({
+			// 	type: "POST",
+			// 	url: "/ShoppingCarts/Delete",
+			// 	data: JSON.stringify({ id: cartItemId }),
+			// 	contentType: "application/json; charset=utf-8",
+			// 	success: function (data) {
+			// 		console.log("Item deleted successfully.");
+			// 	},
+			// 	error: function (xhr, status, error) {
+			// 		console.error("Error deleting item: ", error);
+			// 	}
+			// });
+		}
+
+
+
+	</script>
+
 </body>
 
 </html>

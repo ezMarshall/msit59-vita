@@ -1,7 +1,6 @@
 ﻿@model List<msit59_vita.Models.Product>
 
 
-
 <div class="row row-cols-1 row-cols-md-3 g-3">
 	@foreach (var product in Model)
 	{
@@ -18,22 +17,66 @@
 						<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
 							<i class="fa-solid fa-minus fw-bold text-white"></i>
 						</button>
-						<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
+						<input type="text" class="form-control fw-bold text-center product-quantity-input" value="1" id="@product.ProductId" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
 						<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
 							<i class="fa-solid fa-plus fw-bold text-white"></i>
 						</button>
 					</div>
-					<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+					<button id="@product.ProductId" class="product-btn btn btn-outline-danger fw-bold" type="button">加入購物車</button>
 				</div>
 			</div>
 		</div>
 	}
 
-
 </div>
 
 
+<script>
+	// function adjustValue(button, increment) {
+	// 	var inputField = $(button).closest('.input-group').find('.product-quantity-input');
+	// 	var currentValue = parseInt(inputField.val());
+	// 	var newValue = currentValue + increment;
+	// 	if (newValue < 1) {
+	// 		newValue = 1;
+	// 	}
+	// 	inputField.val(newValue);
+	// }
 
 
+	// function adjustValue(button, increment, cartItemId, maxStock) {
+	// 	var inputField = $(button).closest('.input-group').find('.product-quantity-input');
+	// 	var currentValue = parseInt(inputField.val());
+	// 	var newValue = currentValue + increment;
+	// 	if (newValue < 1) {
+	// 		newValue = 1;
+	// 	} else if (newValue > maxStock) {
+	// 		newValue = maxStock;
+	// 	}
+	// 	inputField.val(newValue);
+	// 	// calculateTotalPrice();
+	// 	// updateCartItemQuantity(cartItemId, newValue);
+	// }
+
+	$('.product-btn').click(function (event) {
+		event.preventDefault();
+		var productId = $(this).attr('id');
+		var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
+		console.log('ProductId:', productId, 'Quantity:', quantity);
+
+		$.ajax({
+			url: '/ShoppingCarts/AddToCart',
+			method: 'POST',
+			data: { productId: productId, quantity: quantity },
+			success: function (response) {
+				console.log(response);
+				alert('商品已加入購物車');
+			},
+			error: function (xhr, status, error) {
+				console.log(error);
+				alert('加入購物車失敗');
+			}
+		})
+	});
+</script>
 
 
