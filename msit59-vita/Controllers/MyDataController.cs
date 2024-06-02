@@ -50,13 +50,16 @@ namespace msit59_vita.Controllers
         {
 
             Customer customer = _context.Customers.Find(id);
-            //密碼不一樣
-            if(customer.CustomerPassword != originPassword)
+            //沒有該id
+            if (customer == null)
             {
+
                 return View();
             }
-            if (customer == null) { 
-            
+            //密碼不一樣
+            if (customer.CustomerPassword != originPassword)
+            {
+                return View();
             }
             //必填項目
             customer.CustomerPassword = String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword : CustomerPassword; 

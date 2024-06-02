@@ -127,10 +127,11 @@
                             <div class="col-6 col-lg-6 border-bottom border-dark CustomerAddressCity-span">
                                     
                                 <span class="">@CustomerAddressCity</span>
+                                @* <span class="">臺中市</span> *@
                             </div>
     
                             <div class="col-6 col-lg-6  border-bottom border-dark CustomerAddressDistrict-span">                                
-                                <span class="">@CustomerAddressDistrict</span>
+                                <span class="">@CustomerAddressDistrict</span>                                 
                             </div>
 
                             <!-- todo動態生成 -->
@@ -226,21 +227,40 @@
 <script>
     
     let isEdit = false;
+    let adressData;
+    // 載入縣市名稱
+    $(document).ready(async () => {
+        adressData = await getAdressData();
+        let cityOptions = "";
+        adressData.forEach((v, i) => {
+            cityOptions += $(".CustomerAddressCity-span span").text() === v.CityName ? `<option selected>${v.CityName}</option> ` : `<option>${v.CityName}</option> `
+        })
+        $("#CustomerAddressCity>select").html(cityOptions);
+    })
     const showEdit = () => {
         isEdit ? $(".save-div").removeClass("visually-hidden"):"";
     }
-    const getAdressData = async() => {
-            return await fetch("/data/CityCountryData.json")
-                .then(data => data.json)
-                .then(data => data)
+    const getAdressData = async () => {        
+        return await fetch("data/CityCountryData.json",
+        {
+            method: 'GET'
+        })               
+        .then(res => res.json())
+        .then(data => data)
     }
+    const setAddressDistrict = async() => {
+        let districtOptions = "";
+        const city = adressData.find(v => v.CityName === $("#CustomerAddressCity>select option:selected").text());
+        city.AreaList.forEach(v => {
+            districtOptions += $(".CustomerAddressDistrict-span span").text() === v.AreaName ? `<option selected>${v.AreaName}</option> ` : `<option>${v.AreaName}</option> `
+        });
+        $("#CustomerAddressDistrict>select").html(districtOptions);
+    }    
     //根據選到的城市 放區CustomerAddressDistrict的選項
-    $("#CustomerAddressCity>select").change(async function () {
-
-        console.log(await getAdressData());
-        $("#CustomerAddressDistrict>select").html($("<option>").text("三民區"));
+    $("#CustomerAddressCity>select").change(async function(){
+            await setAddressDistrict();
     })
-    function editAdress(){
+    async function editAdress(){
 
         let originText = "";
         //隱藏文字
@@ -256,13 +276,11 @@
         $(".CustomerAddressDetails-input").removeClass("visually-hidden");
         $(".CustomerAddressCity-select select").focus();
         $(".CustomerAddressDetails-input>input").val(originText);
-            
+        await setAddressDistrict();
         isEdit = true;
         showEdit();
         console.log(originText);
     }
-
-
     function switchTag(target){
 
         let originText = "";
