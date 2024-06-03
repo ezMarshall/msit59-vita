@@ -24,27 +24,24 @@
 }
 @section Content {
     <div class="row">
-        <div class="col-lg-2 col-sm-12 pt-4">
-            <button class="btn btn-dark btn-lg" id="btnEditProductCategoriesModal">
-                @* data-bs-toggle="modal" data-bs-target="#EditProductCategoriesModal" *@
-                設定商品分類
-            </button>
+        <div class="col-lg-2 pt-4 text-center">
+            <button class="btn btn-dark btn-lg category-font" id="btnEditProductCategoriesModal">設定商品分類</button>
+            <hr />
+            <ul id="ProductsCategoryList" class="row list-unstyled">
 
-            <hr class="bg-dark text-dark">
-            <ul id="ProductsCategoryList" class="row list-unstyled ps-4">
                 @{
                     foreach (var category in Model.Categories)
                     {
-                            <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">
-                                @category.CategoryName
-                            </li>
+
+                        <li class="pb-1 text-center col-lg-12 col-3 category-font">
+                            @category.CategoryName
+                        </li>
                     }
                 }
 
             </ul>
-
+            <hr class="d-lg-none" />
         </div>
-        <hr class="area-separator d-lg-none">
 
 
         <div id="TableAreas" class="col-lg-10 col-sm-12 row pt-5 pb-4" style="height: calc(100vh - 200px);">
@@ -193,12 +190,12 @@
                 });
 
             });
-
             $('#btnProductEditEnsure').on('click', function () {
                 var ProductName = $('input[name = ProductName]').val();
                 var ProductId = $('input[name = ProductName]').val();
                 console.log(ProductName);
             })
+        });
         });
 
 
@@ -219,8 +216,8 @@
 
                 })
             } else {
-                $('.').text("類別名稱不可為空");
-                $("#alertPlaceholderProductEdit").removeClass("d-none");
+                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
+                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
             }
 
         })
@@ -277,7 +274,7 @@
             })
 
         })
-        }
+        
         
     </script>
     }

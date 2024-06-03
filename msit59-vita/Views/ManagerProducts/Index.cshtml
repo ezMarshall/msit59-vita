@@ -63,9 +63,9 @@
                     foreach (var category in Model.Categories)
                     {
 
-                        <li class="pb-1 text-center col-lg-12 col-3 category-font">
-                            @category.CategoryName
-                        </li>
+                            <li class="pb-1 text-center col-lg-12 col-3 category-font">
+                                @category.CategoryName
+                            </li>
                     }
                 }
 
@@ -98,27 +98,27 @@
                             foreach (var product in Model.Products)
                             {
                                 productNumber++;
-                                <tr>
-                                    <th class="align-middle" scope="row">@productNumber</th>
-                                    <td class="align-middle">
-                                        <img src="~/@product.ProductImage" class="object-fit-cover @(string.IsNullOrEmpty(product.ProductImage) ? "invisible": "")" style="width: 50px; height: 50px;" alt="">
-                                    </td>
-                                    <td class="align-middle">@product.ProductName</td>
-                                    <td class="align-middle">$@Convert.ToInt32(product.ProductUnitPrice)</td>
-                                    <td class="align-middle">@product.ProductUnitsInStock</td>
-                                    <td class="align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input " type="checkbox" id="Switch_@product.ProductId"
-                                            @((product.ProductOnSell == true) ? "checked" : "") />
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">@product.CategoryName</td>
-                                    <td class="align-middle">
-                                        <a href="/ManagerProducts/ProductCopy/@product.ProductId" class="btn btn-outline-info btn-sm mr-1 mb-1">複製</a>
-                                        <a href="/ManagerProducts/ProductEdit/@product.ProductId"
-                                           class="btn btn-outline-success btn-sm mr-1 mb-1">編輯</a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <th class="align-middle" scope="row">@productNumber</th>
+                                        <td class="align-middle">
+                                            <img src="~/@product.ProductImage" class="object-fit-cover @(string.IsNullOrEmpty(product.ProductImage) ? "invisible": "")" style="width: 50px; height: 50px;" alt="">
+                                        </td>
+                                        <td class="align-middle">@product.ProductName</td>
+                                        <td class="align-middle">$@Convert.ToInt32(product.ProductUnitPrice)</td>
+                                        <td class="align-middle">@product.ProductUnitsInStock</td>
+                                        <td class="align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input " type="checkbox" id="Switch_@product.ProductId"
+                                                @((product.ProductOnSell == true) ? "checked" : "") />
+                                            </div>
+                                        </td>
+                                        <td class="align-middle product-category-name">@product.CategoryName</td>
+                                        <td class="align-middle">
+                                            <a href="/ManagerProducts/ProductCopy/@product.ProductId" class="btn btn-outline-info btn-sm mr-1 mb-1">複製</a>
+                                            <a href="/ManagerProducts/ProductEdit/@product.ProductId"
+                                               class="btn btn-outline-success btn-sm mr-1 mb-1">編輯</a>
+                                        </td>
+                                    </tr>
                             }
                         }
 
@@ -137,21 +137,21 @@
                         @{
                             if (Model.PageCount <= 3)
                             {
-                                <li id="pageBox1" class="page-item @(Model.CurrentPageIndex == 1 ? "active" : "")">
-                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
-                                        1
-                                    </a>
-                                </li>
-                                <li id="pageBox2" class="page-item @(Model.CurrentPageIndex == 2 ? "active" : "") @(Model.PageCount < 2 ? "disabled" : "")">
-                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
-                                        2
-                                    </a>
-                                </li>
-                                <li id="pageBox3" class="page-item @(Model.CurrentPageIndex == 3 ? "active" : "") @(Model.PageCount < 3 ? "disabled" : "")">
-                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
-                                        3
-                                    </a>
-                                </li>
+                                    <li id="pageBox1" class="page-item @(Model.CurrentPageIndex == 1 ? "active" : "")">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                            1
+                                        </a>
+                                    </li>
+                                    <li id="pageBox2" class="page-item @(Model.CurrentPageIndex == 2 ? "active" : "") @(Model.PageCount < 2 ? "disabled" : "")">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                            2
+                                        </a>
+                                    </li>
+                                    <li id="pageBox3" class="page-item @(Model.CurrentPageIndex == 3 ? "active" : "") @(Model.PageCount < 3 ? "disabled" : "")">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
+                                            3
+                                        </a>
+                                    </li>
                             }
                             else
                             {
@@ -159,82 +159,82 @@
                                 // pageBox1
                                 if (Model.CurrentPageIndex == 1)
                                 {
-                                    <li id="pageBox1" class="page-item active">
-                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
-                                            1
-                                        </a>
-                                    </li>
+                                        <li id="pageBox1" class="page-item active">
+                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                                1
+                                            </a>
+                                        </li>
                                 }
                                 else if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                    <li id="pageBox1" class="page-item">
-                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
-                                            @(Model.CurrentPageIndex - 2)
-                                        </a>
-                                    </li>
+                                        <li id="pageBox1" class="page-item">
+                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
+                                                @(Model.CurrentPageIndex - 2)
+                                            </a>
+                                        </li>
 
                                 }
                                 else
                                 {
-                                    <li id="pageBox1" class="page-item">
-                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
-                                            @(Model.CurrentPageIndex - 1)
-                                        </a>
-                                    </li>
+                                        <li id="pageBox1" class="page-item">
+                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
+                                                @(Model.CurrentPageIndex - 1)
+                                            </a>
+                                        </li>
                                 }
 
                                 // pageBox2
                                 if (Model.CurrentPageIndex == 1)
                                 {
-                                    <li id="pageBox2" class="page-item">
-                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
-                                            2
-                                        </a>
-                                    </li>
+                                        <li id="pageBox2" class="page-item">
+                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                                2
+                                            </a>
+                                        </li>
 
                                 }
                                 else if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                    <li id="pageBox2" class="page-item">
-                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
-                                            @(Model.PageCount - 1)
-                                        </a>
-                                    </li>
+                                        <li id="pageBox2" class="page-item">
+                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
+                                                @(Model.PageCount - 1)
+                                            </a>
+                                        </li>
                                 }
                                 else
                                 {
 
-                                    <li id="pageBox2" class="page-item active">
-                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
-                                            @Model.CurrentPageIndex
-                                        </a>
-                                    </li>
+                                        <li id="pageBox2" class="page-item active">
+                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
+                                                @Model.CurrentPageIndex
+                                            </a>
+                                        </li>
                                 }
 
                                 // pageBox3
                                 if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                    <li id="pageBox3" class="page-item active">
-                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
-                                            @Model.PageCount
-                                        </a>
-                                    </li>
+                                        <li id="pageBox3" class="page-item active">
+                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
+                                                @Model.PageCount
+                                            </a>
+                                        </li>
                                 }
                                 else if (Model.CurrentPageIndex == 1)
                                 {
-                                    <li id="pageBox3" class="page-item">
-                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
-                                            @(Model.CurrentPageIndex + 2)
-                                        </a>
-                                    </li>
+                                        <li id="pageBox3" class="page-item">
+                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
+                                                @(Model.CurrentPageIndex + 2)
+                                            </a>
+                                        </li>
                                 }
                                 else
                                 {
-                                    <li id="pageBox3" class="page-item">
-                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
-                                            @(Model.CurrentPageIndex + 1)
-                                        </a>
-                                    </li>
+                                        <li id="pageBox3" class="page-item">
+                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
+                                                @(Model.CurrentPageIndex + 1)
+                                            </a>
+                                        </li>
                                 }
 
                             }
@@ -320,7 +320,27 @@
     </div>
 
     <!-- #endregion -->
+    <!-- #region Modal: Warning -->
+
+    <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">警告</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion -->
 }
+
 
 @section Scripts {
     <script>
@@ -341,6 +361,7 @@
                 });
 
             });
+
 
 
         });
@@ -372,8 +393,19 @@
         $(".form-check-input").on("change", function () {
             var ProductId = $(this).prop("id").split('_')[1];
             var ProductOnSell = $(this).prop("checked");
-            console.log(ProductId);
-            console.log(ProductOnSell);
+            var AllCategories = $('#ProductsCategoryList').find('li').map(function () {
+                return $(this).text().trim();
+            }).get();
+            var ProductCategory = $(this).closest('tr').find('.product-category-name').text();
+
+            if (!AllCategories.includes(ProductCategory)) {
+                $(this).prop("checked", false);
+                $('#WarningModal').modal('show');
+                console.log($('#WarningModal'))
+                $('#WarningModal .modal-body').text("此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別");
+                return;
+                
+            }else{
 
             $.ajax({
                 url: '/ManagerProducts/ProductOnSellSwitch',
@@ -384,12 +416,18 @@
                 },
                 success: function (response) {
                     if (!response.success) {
+                        $(this).prop("checked",false);
+                        $('#WarningModal').modal('show');
+                        $('#WarningModal .modal-body').text(response.message);
+
                     }
-                    else {
-                        console.log("ProductOnSellSwitch請求成功");
-                    }
+                    
                 }
             });
+
+
+            }
+
         });
 
 

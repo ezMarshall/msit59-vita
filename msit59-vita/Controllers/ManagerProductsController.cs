@@ -21,6 +21,7 @@ namespace msit59_vita.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+
         public IActionResult Index()
         {
 
@@ -109,19 +110,30 @@ namespace msit59_vita.Controllers
             Product item = _context.Products.Find(ProductId);
             ProductCategory category = _context.ProductCategories.Find(item.CategoryId);
 
-            if (category.CategoryOnDelete == true)
-
+            if (category.CategoryOnDelete == true && ProductOnSell == true)
+            {
+                return Json(new { success = false, message = "此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別" });
+            }
+            else
+            {
                 item.ProductOnSell = ProductOnSell;
-            _context.SaveChanges();
+                _context.SaveChanges();
 
-            return Json(new { success = true });
+                return Json(new { success = true });
+            }
+
+               
+           
         }
+
+        //[HttpGet("ManagerProducts/ProductCopy/{id}")]
         public IActionResult ProductCopy(int id)
         {
 
             return View(GetSpecificProduct(id));
         }
 
+        //[HttpPost("ManagerProducts/ProductCopy/{id}")]
         [HttpPost]
         public IActionResult ProductCopy(string ProductName, decimal ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
         {
@@ -159,7 +171,7 @@ namespace msit59_vita.Controllers
 
         }
 
-
+        //[HttpGet("ManagerProducts/ProductEdit/{id}")]
         public IActionResult ProductEdit(int id)
         {
 
@@ -168,6 +180,7 @@ namespace msit59_vita.Controllers
         }
 
 
+        /* [HttpPost("ManagerProducts/ProductEdit/{id}")]*/
         [HttpPost]
         public IActionResult ProductEdit(ProductViewModel clientItem)
         {
@@ -185,7 +198,7 @@ namespace msit59_vita.Controllers
 
             }
 
-            return Redirect("/ManagerProducts/Index");
+            return View("ProductEdit", clientItem.ProductId);
         }
 
         [HttpPost]
