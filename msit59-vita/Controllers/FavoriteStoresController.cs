@@ -12,26 +12,26 @@ namespace msit59_vita.Controllers
     {
 
         private VitaContext _context;
+        private int _customerId = 31;
 
         public FavoriteStoresController(VitaContext context)
         {
             _context = context;
         }
 
-        
+
         /*
          * 取得使用者id CustomerID
          * 經由id查找資料 店家資料
          * 營業時間
          * 平均星級+評論數
          */
-
-        public IActionResult Index( )            
+        public IActionResult index( )            
         {
-            ViewBag.CustomerID = 1;
+            ViewBag.CustomerID = _customerId;
             var query = from o in _context.Favorites
                         join s in _context.Stores on o.StoreId equals s.StoreId
-                        where o.CustomerId == 1
+                        where o.CustomerId == _customerId
                         select new
                         {
                             o.FavoriteId,
@@ -45,6 +45,7 @@ namespace msit59_vita.Controllers
             var queryOpeningHours = from o in _context.Favorites
                                     join s in _context.Stores on o.StoreId equals s.StoreId
                                     join so in _context.StoreOpeningHours on o.StoreId equals so.StoreId
+                                    where o.CustomerId == _customerId
                                     select new
                                     {                                        
                                         so.Store.StoreId,
@@ -57,6 +58,7 @@ namespace msit59_vita.Controllers
             var queryComments = from f in _context.Favorites
                                 join o in _context.Orders on f.StoreId equals o.StoreId
                                 join r in _context.Reviews on o.OrderId equals r.OrderId
+                                where f.CustomerId == _customerId
                                 group r by r.Order.StoreId into g
                                 select new
                                 {
@@ -72,5 +74,16 @@ namespace msit59_vita.Controllers
             return View(obj);
         }
 
+
+        public IActionResult Cancel(int id)
+        {
+            var  favoriteItem = _context.Favorites.Find(id);
+            _context.Favorites.Remove(favoriteItem);
+            _context.SaveChanges();
+
+            //return View();
+            return Redirect("/FavoriteStores");
+            return RedirectToAction("Index", "FavoriteStores");
+        }
     }
 }
