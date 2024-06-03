@@ -8,7 +8,9 @@
 	<link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
 	<link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/toastr.js/toastr.css" asp-append-version="true" />
 	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<script src="~/lib/toastr.js/toastr.min.js"></script>
 	<!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
 	<!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
 
@@ -232,8 +234,6 @@
 
 			</div>
 			</div> *@
-
-			@* <div class="fs-5 fw-bold text-center text-success mb-3">總金額：$200</div> *@
 			<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
 
 			<div class="d-grid col-10 mx-auto">
@@ -252,167 +252,7 @@
 
 	@await RenderSectionAsync("Scripts", required: false)
 
-	<script>
-		$(document).ready(function () {
 
-			getCart();
-
-			// 初始化時計算總金額
-			// calculateTotalPrice();
-
-		});
-
-		// 商品數量改變時
-		// $('#cart-container').on('change paste keyup', '.product-quantity-input', function () {
-		// 	// console.log('change');
-		// 	calculateTotalPrice();
-		// 	var cartItemId = $(this).closest('.cart-item').data('id');
-		// 	var newQuantity = parseInt($(this).val());
-		// 	updateCartItemQuantity(cartItemId, newQuantity);
-		// });
-
-		$('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
-			var inputField = $(this);
-			var cartItemId = inputField.closest('.cart-item').data('id');
-			var maxStock = inputField.closest('.cart-item').data('stock');
-
-			var currentValue = parseInt(inputField.val());
-			// console.log(currentValue);
-			var newValue = currentValue;
-
-			if (isNaN(newValue) || newValue < 1) {
-				newValue = 1;
-			} else if (newValue > maxStock) {
-				newValue = maxStock;
-			} else if (newValue > 99) {
-				newValue = 99;
-			}
-
-			inputField.val(newValue);
-			calculateTotalPrice();
-			// updateCartItemQuantity(cartItemId, newValue);
-		});
-
-		function getCart() {
-			$.ajax({
-				type: "GET",
-				url: "/ShoppingCarts/Index",
-				success: function (data) {
-					// console.log(data);
-					renderCartItems(data);
-				},
-				error: function (xhr, status, error) {
-					console.error("Error fetching cart data: ", error);
-				}
-			});
-		}
-
-		function renderCartItems(cartItems) {
-			var cartContainer = $(".cart-container");
-			cartContainer.empty();
-
-			cartItems.forEach(function (item) {
-				var cartItemHtml = `
-									<div class="cart-item d-flex justify-content-between pb-3" data-id="${item.shoppingCartId}" data-stock="${item.productUnitsInStock}">
-										<img src="/${item.productImage}" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
-										<div class="cart-details">
-											<div class="cart-info d-flex justify-content-between mb-1">
-												<div class="me-3">
-													<div class="shop-name fs-6 fw-bold">${item.storeName}</div>
-													<div class="product-name fs-5 fw-bold">${item.productName}</div>
-												</div>
-												<div class="product-delate text-success fs-4 mt-1" onclick="deleteCartItem(${item.shoppingCartId})">
-													<i class="fa-solid fa-trash"></i>
-												</div>
-											</div>
-											<div class="shop-price d-flex justify-content-around align-items-center">
-												<div class="input-group w-50">
-													<button class="btn border-0" type="button" onclick="adjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-														<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
-													</button>
-													<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="${item.quantity}" id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-													<button class="btn border-0" type="button" onclick="adjustValue(this, 1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-														<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
-													</button>
-												</div>
-												<div class="fs-5 fw-bold text-center product-price" data-price="${item.price}">${item.price}</div>
-											</div>
-										</div>
-									</div>
-								`;
-				cartContainer.append(cartItemHtml);
-			});
-
-			calculateTotalPrice();
-
-		}
-
-		function calculateTotalPrice() {
-			var totalPrice = 0;
-			$('.cart-item').each(function () {
-				var quantity = parseInt($(this).find('.product-quantity-input').val());
-				var price = parseInt($(this).find('.product-price').data('price'));
-				if (!isNaN(quantity) && !isNaN(price)) {
-					totalPrice += quantity * price;
-				}
-			});
-			if (!isNaN(totalPrice)) {
-				$('.totalPriceNum').text('$' + totalPrice);
-				// $('#totalPriceMobile').text('$' + totalPrice);
-			}
-		}
-
-		// 加減商品數量
-		function adjustValue(button, increment, cartItemId, maxStock) {
-			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
-			var currentValue = parseInt(inputField.val());
-			var newValue = currentValue + increment;
-			if (newValue < 1) {
-				newValue = 1;
-			} else if (newValue > maxStock) {
-				newValue = maxStock;
-			}
-			inputField.val(newValue);
-			calculateTotalPrice();
-			// updateCartItemQuantity(cartItemId, newValue);
-		}
-
-		// function updateCartItemQuantity(cartItemId, newQuantity) {
-		// 	$.ajax({
-		// 		type: "POST",
-		// 		url: "/ShoppingCarts/UpdateQuantity",
-		// 		data: JSON.stringify({ id: cartItemId, quantity: newQuantity }),
-		// 		contentType: "application/json; charset=utf-8",
-		// 		success: function (data) {
-		// 			console.log("Quantity updated successfully.");
-		// 		},
-		// 		error: function (xhr, status, error) {
-		// 			console.error("Error updating quantity: ", error);
-		// 		}
-		// 	});
-		// }
-
-		function deleteCartItem(cartItemId) {
-			$(`.cart-item[data-id=${cartItemId}]`).remove();
-			calculateTotalPrice();
-
-			// $.ajax({
-			// 	type: "POST",
-			// 	url: "/ShoppingCarts/Delete",
-			// 	data: JSON.stringify({ id: cartItemId }),
-			// 	contentType: "application/json; charset=utf-8",
-			// 	success: function (data) {
-			// 		console.log("Item deleted successfully.");
-			// 	},
-			// 	error: function (xhr, status, error) {
-			// 		console.error("Error deleting item: ", error);
-			// 	}
-			// });
-		}
-
-
-
-	</script>
 
 </body>
 

@@ -143,7 +143,7 @@
 				@foreach (var product in products)
 				{
 					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
-					<div class="col product-category-@product.CategoryId product-item" data-id="@product.ProductId" data-stock="@product.ProductUnitsInStock">
+					<div class="col product-category-@product.CategoryId product-item" data-id="@product.ProductId" data-category="@product.CategoryId" data-stock="@product.ProductUnitsInStock" data-store="@store.StoreId">
 						<div class="card h-100">
 							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
 							<div class="card-body fs-5 fw-bold">
@@ -162,19 +162,26 @@
 								</div>
 								@if (ViewBag.orderStatusTime == 2 || ViewBag.orderStatusTime == 3)
 								{
-									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
 								}
 								else if (!isOrder)
 								{
-									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
 								}
 								else if (ViewBag.storeOpeningTimeQuery.storeOpenOrNot == false)
 								{
-									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>加入購物車</button>
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
 								}
 								else
 								{
-									<button id="@product.ProductId" class="product-btn btn btn-outline-danger fw-bold" type="button">加入購物車</button>
+									if (product.ProductUnitsInStock > 0)
+									{
+										<button id="@product.ProductId" class="product-btn btn btn-outline-danger fw-bold" type="button">加入購物車</button>
+									}
+									else
+									{
+										<button id="@product.ProductId" class="product-btn btn btn-dark fw-bold" type="button" disabled>商品已售完</button>
+									}
 								}
 							</div>
 						</div>
@@ -215,12 +222,15 @@
 </form>
 
 <partial name="_StoreCommentPartial" model="store" />
+<script src="~/js/cartjs.js"></script>
 
 
 
 @section Scripts {
 
 	<script>
+
+
 		// 商品數量調整
 		$('#product-list').on('input change paste keyup', '.product-quantity-input', function () {
 			var inputField = $(this);
@@ -234,8 +244,10 @@
 				newValue = 1;
 			} else if (newValue > maxStock) {
 				newValue = maxStock;
-			} else if (newValue > 99) {
-				newValue = 99;
+				maxQuantity();
+			} else if (newValue > 30) {
+				newValue = 30;
+				maxQuantity();
 			}
 
 			inputField.val(newValue);
@@ -253,8 +265,10 @@
 				newValue = 1;
 			} else if (newValue > maxStock) {
 				newValue = maxStock;
-			} else if (newValue > 99) {
-				newValue = 99;
+				maxQuantity();
+			} else if (newValue > 30) {
+				newValue = 30;
+				maxQuantity();
 			}
 
 			inputField.val(newValue);
@@ -265,6 +279,15 @@
 			var productId = $(this).attr('id');
 			var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
 			var storeId = @store.StoreId;
+
+			// $('.product-item').data('store')
+			// $('.cart-item').data('storeid')
+			// console.log($('.cart-item').data('storeid'));
+
+			if ($('.product-item').data('store') != $('.cart-item').data('storeid')) {
+				return addSameStoreProdouctMessage();
+			} 
+
 			// 發送 AJAX 請求
 			$.ajax({
 				url: '/ShoppingCarts/AddToCart', // 你的控制器方法的路徑
@@ -274,7 +297,9 @@
 					// 在這裡處理從控制器返回的數據
 					console.log(data);
 					if (data.success) {
-						alert('商品已加入購物車');
+						getCart();
+						AddCartSuccess();
+
 					} else {
 						if (data.message == '請先登入') {
 							showLoginModal(data.message);
@@ -287,6 +312,47 @@
 				}
 			});
 		});
+
+		// 顯示加入購物車成功訊息
+		function AddCartSuccess() {
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": false,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "2000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+			toastr["success"]("商品已加入購物車！");
+		}
+		//顯示請選擇同一個門市商品訊息
+		function addSameStoreProdouctMessage() {
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": false,
+				"positionClass": "toast-top-center",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+			toastr["warning"]("請選擇同一個門市商品或先結算再加入購物車！")
+		}
 
 		// 點擊心心按鈕
 		$(function () {
@@ -327,24 +393,22 @@
 			$('.category-checkbox:checked').each(function () {
 				selectedCategories.push($(this).val());
 			});
+			// console.log(selectedCategories);
 
-			var storeId = @store.StoreId;
-			// 發送 AJAX 請求
-			$.ajax({
-				url: '/Store/FilterProducts', // 你的控制器方法的路徑
-				type: 'POST',
-				data: { categoryIds: selectedCategories, storeId: storeId },
-				success: function (data) {
-					// 在這裡處理從控制器返回的數據
-					//console.log(data);
-					$('#product-list').html(data);
-				},
-				error: function () {
-					alert('發生錯誤');
+			// 顯示勾選的分類商品
+			$('[data-category]').each(function () {
+				var categoryValue = $(this).data('category');
+				if (selectedCategories.length === 0) {
+					$(this).show(); 
+				} else {
+					if (selectedCategories.includes(categoryValue.toString())) {
+						$(this).show(); 
+					} else {
+						$(this).hide(); 
+					}
 				}
 			});
 		});
-
 
 	</script>
 

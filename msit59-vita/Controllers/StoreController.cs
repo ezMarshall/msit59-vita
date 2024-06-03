@@ -224,35 +224,6 @@ namespace msit59_vita.Controllers
 			return Json(new { success = true, isFavorite = !isFavorite });
 		}
 
-		//商品篩選功能
-		[HttpPost]
-		public IActionResult FilterProducts(List<int> categoryIds, int storeId)
-		{
-			// 根據 categoryIds 查找需要顯示的商品
-			//var products = _context.Products
-			//				.Where(p => categoryIds.Contains(p.CategoryId) && p.StoreId == storeId)
-			//				.ToList();
-
-			IQueryable<Product> productsQuery = _context.Products;
-
-			// 如果沒有選擇任何分類，則返回所有商品
-			if (categoryIds == null || categoryIds.Count == 0)
-			{
-				// 如果需要基於商店ID進行過濾，則添加此條件
-				productsQuery = productsQuery.Where(p => p.StoreId == storeId);
-			}
-			else
-			{
-				// 否則，根據選定的分類過濾商品
-				productsQuery = productsQuery.Where(p => categoryIds.Contains(p.CategoryId) && p.StoreId == storeId);
-			}
-
-			var products = productsQuery.ToList();
-
-			// 將結果返回給前端
-			//return Json(products);
-			return PartialView("_ProductListPartial", products);
-		}
 
 	}
 
