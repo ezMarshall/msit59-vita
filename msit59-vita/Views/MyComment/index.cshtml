@@ -30,22 +30,28 @@
                     </div>
                     <div class ="col-12 col-lg-8 row">
 
-                        <div class="col-12">
+                        <div class="col-12 d-flex flex-row">
                             <h5 class="fa-solid ">@(review.StoreName)</h5>
+                            <div class="home-store-star ms-2" style="background: linear-gradient(to right , #FFD700 0 @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <dl>
                                 <dt class="fs-6 pt-1 ">評分:</dt>
                                  <div class="d-flex flex-row align-items-start">
                                     <div class="home-store-star ms-2" style="background: linear-gradient(to right , #FFD700 0 @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
                                     <dd class="fs-6 ms-2 pt-1 ">@(review.ReviewRating + "顆星")</dd>
                                 </div>
+                            </dl>
+                        </div>
 
 
+                        <div class="col-12">
+
+                            <dl>
                                 <div class="d-flex justify-content-between">
 
-                                    <dt >評論:</dt>
-                                    <dd>@review.ReviewTime</dd>
+                                    <dt >評論內容:</dt>
+                                    <dd >@review.ReviewTime</dd>
                                 </div>
                                 <div class="p-2 ms-auto">
                                     <dd class="text-break">@review.ReviewContent</dd>
@@ -54,7 +60,7 @@
                                 <div class="d-flex justify-content-between">
 
                                     <dt>店家回覆:</dt>
-                                    <dd>@StoreReplyTime</dd>
+                                    <dd >@StoreReplyTime</dd>
                                 </div>
                                 <div class="p-2">
                                     <dd class="text-break">@StoreReplyContent</dd>

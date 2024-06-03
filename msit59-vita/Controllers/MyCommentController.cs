@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using msit59_vita.Models;
 using System.Globalization;
+using System;
+
 
 namespace msit59_vita.Controllers
 {
@@ -50,8 +52,7 @@ namespace msit59_vita.Controllers
                                    r.ReviewContent,
                                    ReviewTime = r.ReviewTime.ToString("yyyy/MM/dd HH:mm"),
                                    StoreImage = r.Order.Store.StoreImage,
-                                   //r.StoreReplyTime,
-                                   StoreReplyTime = String.IsNullOrWhiteSpace(r.StoreReplyContent) ? "" :r.StoreReplyTime.ToString(),
+                                   StoreReplyTime = String.IsNullOrWhiteSpace(r.StoreReplyTime.ToString()) ? "":Convert.ToDateTime(r.StoreReplyTime).ToString("yyyy/MM/dd HH:mm"),
                                    r.StoreReplyContent,
                                    r.OrderId
 
