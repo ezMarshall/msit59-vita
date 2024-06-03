@@ -20,7 +20,8 @@
             double avgOfRating = 0.0;
             string countOfRating = "尚無";
             string[] openHourArray = new string[7];
-            string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/logo/logo_30x30_dark.png" : store.StoreImage;
+            string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/Common/300x300_default.png" : store.StoreImage;
+
             @foreach (var comment in ViewBag.queryComments)
             {
                 if (comment.StoreId == store.StoreId)

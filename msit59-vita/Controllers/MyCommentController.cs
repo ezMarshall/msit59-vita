@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using msit59_vita.Models;
 using System.Globalization;
 
@@ -47,7 +48,12 @@ namespace msit59_vita.Controllers
                                    r.ReviewId,
                                    ReviewRating = Convert.ToDouble(r.ReviewRating),
                                    r.ReviewContent,
-                                   ReviewTime = r.ReviewTime.ToString("yyyy/MM/dd HH:mm")
+                                   ReviewTime = r.ReviewTime.ToString("yyyy/MM/dd HH:mm"),
+                                   StoreImage = r.Order.Store.StoreImage,
+                                   //r.StoreReplyTime,
+                                   StoreReplyTime = String.IsNullOrWhiteSpace(r.StoreReplyContent) ? "" :r.StoreReplyTime.ToString(),
+                                   r.StoreReplyContent,
+                                   r.OrderId
 
                                };
 

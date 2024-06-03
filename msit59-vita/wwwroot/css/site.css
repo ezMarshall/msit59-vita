@@ -12218,6 +12218,7 @@ body {
 }
 .user-center-image{
     object-fit:cover;
+    height:250px;
 }
 
 .product-store .store-comment .fa-star {
