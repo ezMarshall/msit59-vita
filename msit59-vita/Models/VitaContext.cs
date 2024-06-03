@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace msit59_vita.Models;
 
-public partial class VitaContext : DbContext
+public partial class VitaContext : IdentityDbContext<IdentityUser>
 {
     public VitaContext()
     {
@@ -39,6 +41,8 @@ public partial class VitaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
@@ -64,7 +68,7 @@ public partial class VitaContext : DbContext
             entity.Property(e => e.CustomerName).HasMaxLength(20);
             entity.Property(e => e.CustomerNickName).HasMaxLength(10);
             entity.Property(e => e.CustomerPassword)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .IsUnicode(false);
         });
 
@@ -158,7 +162,7 @@ public partial class VitaContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ProductImage)
-                .HasMaxLength(50)
+                .HasMaxLength(80)
                 .IsUnicode(false);
             entity.Property(e => e.ProductName).HasMaxLength(20);
             entity.Property(e => e.ProductUnitPrice).HasColumnType("smallmoney");
@@ -252,11 +256,21 @@ public partial class VitaContext : DbContext
 
             entity.Property(e => e.StoreId).HasColumnName("StoreID");
             entity.Property(e => e.MyWeekDay).HasMaxLength(10);
+            entity.Property(e => e.StoreClosingTime).HasDefaultValueSql("('')");
+            entity.Property(e => e.StoreOpenOrNot).HasDefaultValue(false);
+            entity.Property(e => e.StoreOpeningTime).HasDefaultValueSql("('')");
 
             entity.HasOne(d => d.Store).WithMany(p => p.StoreOpeningHours)
                 .HasForeignKey(d => d.StoreId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoreOpeningHours_Stores");
+        });
+
+        modelBuilder.Entity<VitaUser>(entity =>
+        {
+            entity.ToTable("AspNetUsers");
+            entity.HasDiscriminator<string>("CusDis");
+            entity.Property(e => e.VitaUserName).HasColumnName("VitaUserName");
         });
 
         OnModelCreatingPartial(modelBuilder);

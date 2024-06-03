@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace msit59_vita.Models;
 
@@ -14,14 +15,14 @@ public partial class Customer
     public string CustomerEmail { get; set; } = null!;
 
     public string? CustomerCellPhone { get; set; }
-
+  
     public string? CustomerLocalPhone { get; set; }
 
-    public string CustomerAddressCity { get; set; } = null!;
+    public string? CustomerAddressCity { get; set; }
 
-    public string CustomerAddressDistrict { get; set; } = null!;
+    public string? CustomerAddressDistrict { get; set; }
 
-    public string CustomerAddressDetails { get; set; } = null!;
+    public string? CustomerAddressDetails { get; set; }
 
     public string? CustomerAddressMemo { get; set; }
 

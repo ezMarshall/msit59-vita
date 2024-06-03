@@ -27,11 +27,11 @@ public partial class Order
 
     public string? OrderEinvoiceNumber { get; set; }
 
-    public string OrderAddressCity { get; set; } = null!;
+    public string? OrderAddressCity { get; set; }
 
-    public string OrderAddressDistrict { get; set; } = null!;
+    public string? OrderAddressDistrict { get; set; }
 
-    public string OrderAddressDetails { get; set; } = null!;
+    public string? OrderAddressDetails { get; set; }
 
     public string? OrderAddressMemo { get; set; }
 

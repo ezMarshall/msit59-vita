@@ -1,12 +1,13 @@
 @{
-    int storeID = Model[0].StoreId;
-    var openHours = ViewBag.openHours;
+    ViewData["Title"] = "收藏店家";
+    int storeID = 8;
+    // var openHours = ViewBag.openHours;
 }
 
 <div class="container-fluid mt-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb ms-5">
-        <li class="breadcrumb-item active text-dark">會員中心</li>
+            <li class="breadcrumb-item active text-dark" >會員中心</li>
         <li class="breadcrumb-item active text-info" aria-current="page">收藏店家</li>
         </ol>
     </nav>
@@ -17,14 +18,15 @@
         {
             double starRange = 0.0; 
             double avgOfRating = 0.0;
-            string countOfRating = "";
+            string countOfRating = "尚無";
             string[] openHourArray = new string[7];
+            string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/logo/logo_30x30_dark.png" : store.StoreImage;
             @foreach (var comment in ViewBag.queryComments)
             {
                 if (comment.StoreId == store.StoreId)
                 {
 
-                    avgOfRating = comment.avgOfRating;
+                    avgOfRating = Math.Round(comment.avgOfRating,1);
                     starRange = (avgOfRating / 5 * 100);
                     countOfRating = comment.countOfRating;
                 }
@@ -67,22 +69,22 @@
             <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
                 <div class="row mt-3">
                     <div class="col-12 col-lg-5 mb-3">
-                        <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
+                        <img class="card-img-top object-fit-sm-contain object-fit-contain h-75" src="~/@storeImage" alt="@(store.StoreName+"_picture")">
 
                     </div>
                     <!-- 文字內容 -->
                     <div class="col-12 col-lg-7">
                         <div class="d-flex flex-row justify-content-between align-self-center ">
                             <h5 class=" my-auto fa-solid ">@store.StoreName</h5>
-                            <a href="#" class=" d-block align-self-center text-decoration-none " onClick="cancelFavorite(@store.FavoriteId)">
+                            <a href="/FavoriteStores/Cancel/?id=@store.FavoriteId" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('@store.StoreName')">
                                 <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
                             </a>
                         </div>
                         <div class="d-flex flex-row">
 
                             <div class="col-4 home-store-star my-0"
-                                 style="background: linear-gradient(to right ,  #ffd700 0 @(starRange.ToString()+"%"), #F1F0CC @((100-starRange).ToString()+"%") 100%)"></div>
-                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info" href="">(@(countOfRating + "評論"))</a></p>
+                                 style="background: linear-gradient(to right ,  #ffd700 0% @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
+                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info ms-1" href="">(@(countOfRating + "評論"))</a></p>
                             <p class="fs-6 pt-1"></p>
 
                         </div>
@@ -120,7 +122,7 @@
             <div class="col-12 col-lg-7">
             <div class="d-flex flex-row justify-content-between align-self-center ">
                         <h5 class=" my-auto fa-solid ">優輕食</h5>
-                        <a href="#" class=" d-block align-self-center text-decoration-none " onClick="cancelFavorite(@storeID)" id="favoriteStore">
+                        <a href="#" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('storeStoreName');" id="favoriteStore">
                 <i class="fa-regular fa-heart fs-2 text-info "></i>
                 <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
                 </a>
@@ -155,7 +157,7 @@
      <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
             <div class="row mt-3">
             <div class="col-12 col-lg-5 mb-3">
-            <img class="card-img-top" src="../img/home_banner.png" alt="店家照片">
+                <img class="card-img-top " src="../img/home_banner.png" alt="店家照片">
 
             </div>
             <!-- 文字內容 -->
@@ -205,5 +207,13 @@
             console.log(FavoriteId);
             $(`.FavoriteId${FavoriteId}`).remove();
         }
+        const popBtn = (storeName) => {
+            // $("#favoriteStore")[0].scrollIntoView({
+            //     behavior: "smooth", // or "auto" or "instant"
+            //     block: "end" // or "end"
+            // });
+            return confirm(`確定取消 ${storeName} 店家收藏?`);
+        }
+
     </script>
 }

@@ -1,0 +1,177 @@
+﻿@model msit59_vita.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "註冊";
+}
+
+<section class="container-lg py-5 mx-auto min-h-custom">
+    <h2 class="text-center text-success fw-bold mb-3">註冊</h2>
+    <div class="row container justify-content-center mx-auto">
+        <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
+            <form class="needs-validation" novalidate action="/Account/Register" method="post">
+                <div class="mb-3">
+                    <label for="CustomerName" class="form-label is-required ps-3 mb-1">姓名</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerName" name="CustomerName" required>
+                    <div class="invalid-feedback ps-3" data-valmsg-for="CustomerName" data-valmsg-replace="true">
+                        <span id="CustomerName-error">請輸入姓名</span>
+                    </div>
+                    @{
+                        if (ViewBag.ModelState != null && ViewBag.ModelState.ContainsKey("CustomerName"))
+                        {
+                            foreach (var error in ViewBag.ModelState["CustomerName"])
+                            {
+                                <span class="text-danger ps-3">@error</span>
+                            }
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerNickName" class="form-label ps-3 mb-1">暱稱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerNickName" name="CustomerNickName">
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required>
+                    <span id="EmailAvail"></span>
+                    <div class="invalid-feedback ps-3">
+                        請輸入有效的電子信箱
+                    </div>
+                    @{
+                        if (ViewBag.ModelState != null && ViewBag.ModelState.ContainsKey("CustomerEmail"))
+                        {
+                            foreach (var error in ViewBag.ModelState["CustomerEmail"])
+                            {
+                                <span class="text-danger ps-3">@error</span>
+                            }
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerCellPhone" class="form-label ps-3 mb-1">手機號碼</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerCellPhone" name="CustomerCellPhone">
+                    <div class="invalid-feedback ps-3">
+                        請輸入正確格式
+                    </div>
+                    @{
+                        if (ViewBag.ModelState != null && ViewBag.ModelState.ContainsKey("CustomerCellPhone"))
+                        {
+                            foreach (var error in ViewBag.ModelState["CustomerCellPhone"])
+                            {
+                                <span class="text-danger ps-3">@error</span>
+                            }
+                        }
+                    }
+                </div>
+                <div class="mb-3 position-relative">
+                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1">密碼</label>
+                    <input type="password" class="form-control text-dark rounded-pill" id="CustomerPassword" name="CustomerPassword" required>
+                    <div class="invalid-feedback ps-3">
+                        請輸入正確格式
+                    </div>
+                    @{
+                        if (ViewBag.ModelState != null && ViewBag.ModelState.ContainsKey("CustomerPassword"))
+                        {
+                            foreach (var error in ViewBag.ModelState["CustomerPassword"])
+                            {
+                                <span class="text-danger ps-3">@error</span>
+                            }
+                        }
+                    }
+                    <p class="psw-memo ps-3 mb-0">密碼8-20字元。</p>
+                    <p class="psw-memo ps-3 mb-0">至少有一個大寫英文、小寫英文及數字。</p>
+                </div>
+                <div class="mb-3 position-relative">
+                    <label for="ConfirmPassword" class="form-label is-required ps-3 mb-1">確認密碼</label>
+                    <input type="password" class="form-control text-dark rounded-pill" id="ConfirmPassword" name="ConfirmPassword" required>
+                    <div class="invalid-feedback ps-3">
+                        密碼不符
+                    </div>
+                </div>
+                <button type="submit" class="w-100 btn btn-success text-light rounded-pill mt-4">註冊</button>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+            // 名字驗證
+            $('#CustomerName').on('blur', function () {
+                $(this).removeClass('is-invalid');
+                if (!$(this).val()) {
+                    $(this).addClass('is-invalid');
+                }
+            });
+
+            // Email驗證
+            $('#CustomerEmail').on('blur', function () {
+                $(this).removeClass('is-invalid');
+                let emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                let CustomerEmail = $(this).val();
+                if (!emailPattern.test(CustomerEmail)) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    // 帳號是否重複
+                    $.ajax({
+                        url: '@Url.Action("IsEmailAvailable", "Register")',
+                        type: 'POST',
+                        data: { CustomerEmail: CustomerEmail },
+                        success: function (data) {
+                            if (data) {
+                                $('#EmailAvail').text('用戶Email可以使用');
+                                $('#EmailAvail').removeClass('text-danger').addClass('text-success ps-3');
+                            } else {
+                                $('#EmailAvail').text('此用戶Email已註冊');
+                                $('#EmailAvail').removeClass('text-success').addClass('text-danger ps-3');
+                            }
+                        }
+                    });
+                }
+            });
+
+            // 手機驗證
+            $('#CustomerCellPhone').on('blur', function () {
+                $(this).removeClass('is-invalid');
+                let phonePattern = /^09\d{8}$/
+                if ($(this).val()) {
+                    if (!phonePattern.test($(this).val())) {
+                        $(this).addClass('is-invalid');
+                    }
+                }
+            })
+
+            // 密碼驗證
+            $('#CustomerPassword').on('blur', function () {
+                $(this).removeClass('is-invalid');
+                let pwdPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/;
+                if (!pwdPattern.test($(this).val())) {
+                    $(this).addClass('is-invalid');
+                }
+            })
+
+            // 再次輸入密碼驗證
+            $('#ConfirmPassword').on('blur', function () {
+                $(this).removeClass('is-invalid');
+                if (($('#CustomerPassword').val() !== $('#ConfirmPassword').val())) {
+                    $('#ConfirmPassword').addClass('is-invalid');
+                }
+            })
+
+            let form = $('.needs-validation');
+            form.on('submit', function (e) {
+                if (!form[0].checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                form.addClass('was-validated');
+            })
+        })
+    </script>
+}
