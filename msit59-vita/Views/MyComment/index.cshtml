@@ -18,7 +18,8 @@
             double starRange = (Math.Round(review.ReviewRating, 1) / 5 * 100);
             string reviewTime = review.ReviewTime;
             string StoreReplyTime = review.StoreReplyTime;
-            string StoreReplyContent = String.IsNullOrEmpty(review.StoreReplyContent) ? "尚未回覆" : review.StoreReplyContent;
+            string StoreReplyContent = String.IsNullOrEmpty(review.StoreReplyContent) ? "該店家尚未回覆您的評論" : review.StoreReplyContent;
+            string ReviewContent = String.IsNullOrEmpty(review.ReviewContent) ? "您沒有留下任何評論" : review.StoreReplyContent;
             string storeImage = String.IsNullOrEmpty(review.StoreImage) ? "image/Common/300x300_default.png" : review.StoreImage;
             int count = 0;
 
@@ -52,7 +53,7 @@
                                     <dd >@review.ReviewTime</dd>
                                 </div>
                                 <div class="p-2 ms-auto">
-                                    <dd class="text-break">@review.ReviewContent</dd>
+                                    <dd class="text-break">@ReviewContent</dd>
                                 </div>
 
                                 <div class="d-flex justify-content-between">
