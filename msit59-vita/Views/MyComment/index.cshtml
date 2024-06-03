@@ -19,7 +19,7 @@
             string reviewTime = review.ReviewTime;
             string StoreReplyTime = review.StoreReplyTime;
             string StoreReplyContent = String.IsNullOrEmpty(review.StoreReplyContent) ? "該店家尚未回覆您的評論" : review.StoreReplyContent;
-            string ReviewContent = String.IsNullOrEmpty(review.ReviewContent) ? "您沒有留下任何評論" : review.StoreReplyContent;
+            string ReviewContent = String.IsNullOrEmpty(review.ReviewContent) ? "您沒有留下任何評論" : review.ReviewContent;
             string storeImage = String.IsNullOrEmpty(review.StoreImage) ? "image/Common/300x300_default.png" : review.StoreImage;
             int count = 0;
 

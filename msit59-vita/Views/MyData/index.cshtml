@@ -126,7 +126,7 @@
                         <div class="row">
                             <div class="col-6 col-lg-6 border-bottom border-dark CustomerAddressCity-span">
                                     
-                                <span class="">@CustomerAddressCity.Replace("台","臺")</span>
+                                <span class="">@CustomerAddressCity</span>
                                 @* <span class="">臺中市</span> *@
                             </div>
     
@@ -227,20 +227,21 @@
 <script>
     
     let isEdit = false;
-    let adressData;
+    let addressData;
     // 載入縣市名稱
     $(document).ready(async () => {
-        adressData = await getAdressData();
+        addressData = await getaddressData();
         let cityOptions = "";
-        adressData.forEach((v, i) => {
-            cityOptions += $(".CustomerAddressCity-span span").text() === v.CityName ? `<option selected>${v.CityName}</option> ` : `<option>${v.CityName}</option> `
+        addressData.forEach((v, i) => {
+            const cutryName = v.CityName.replace("臺", "台");
+                cityOptions += $(".CustomerAddressCity-span span").text() === cutryName ? `<option selected>${cutryName}</option> ` : `<option>${cutryName}</option> `
         })
         $("#CustomerAddressCity>select").html(cityOptions);
     })
     const showEdit = () => {
         isEdit ? $(".save-div").removeClass("visually-hidden"):"";
     }
-    const getAdressData = async () => {        
+    const getaddressData = async () => {        
         return await fetch("data/CityCountryData.json",
         {
             method: 'GET'
@@ -250,7 +251,7 @@
     }
     const setAddressDistrict = async() => {
         let districtOptions = "";
-        const city = adressData.find(v => v.CityName === $("#CustomerAddressCity>select option:selected").text());
+            const city = addressData.find(v => v.CityName.replace("臺", "台") === $("#CustomerAddressCity>select option:selected").text());
         city.AreaList.forEach(v => {
             districtOptions += $(".CustomerAddressDistrict-span span").text() === v.AreaName ? `<option selected>${v.AreaName}</option> ` : `<option>${v.AreaName}</option> `
         });
