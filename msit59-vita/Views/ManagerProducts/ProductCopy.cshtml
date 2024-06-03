@@ -1,0 +1,220 @@
+﻿@model msit59_vita.Models.ManagerProducts;
+
+@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+
+@section MyStyle {
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerProducts.css" asp-append-version="true" />
+    <style>
+        .content-area {
+            height: calc(100vh - 80px);
+        }
+    </style>
+}
+
+@section BreadCrumb {
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="/ManagerHome/Index"
+           class="text-dark text-decoration-none fw-bolder">首頁</a>
+    </li>
+    <li class="breadcrumb-item">菜單管理</li>
+}
+@section Content {
+    <div class="row">
+        <div class="col-lg-2 col-sm-12 pt-4">
+            <button class="btn btn-dark btn-lg" id="btnEditProductCategoriesModal">
+                @* data-bs-toggle="modal" data-bs-target="#EditProductCategoriesModal" *@
+                設定商品分類
+            </button>
+
+            <hr class="bg-dark text-dark">
+            <ul id="ProductsCategoryList" class="row list-unstyled ps-4">
+                @{
+                    foreach (var category in Model.Categories)
+                    {
+                        <li class="ps-4 text-start col-lg-12 col-sm-3 fs-5 custom-font-size-smaller-lg">
+                            @category.CategoryName
+                        </li>
+                    }
+                }
+
+            </ul>
+
+        </div>
+        <hr class="area-separator d-lg-none">
+
+
+        <div id="TableAreas" class="col-lg-10 col-sm-12 row pt-5 pb-4" style="height: calc(100vh - 200px);">
+
+
+            @{
+                foreach (var product in Model.Products)
+                {
+                    <form action="/ManagerProducts/ProductCopy" method="post">
+
+
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductName">商品名稱</label>
+                            <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="商品名稱" value="@product.ProductName" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
+                            <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="價格" value="@Convert.ToInt32(@product.ProductUnitPrice)" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
+                            <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
+                                   placeholder="庫存數" value="@product.ProductUnitsInStock" required />
+                        </div>
+                        <input type="hidden" id="ProductOnSell" name="ProductOnSell" value="True" />
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">商品分類</label>
+                            <select class="form-select" id="CategoryList" name="CategoryId" required>
+                                @foreach (ProductCategory category in Model.Categories)
+                                {
+                                    <!option value="@category.CategoryId" @(product.CategoryId == category.CategoryId ? "selected" : "")>@category.CategoryName</!option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label d-block mb-0 mt-2" for="ProductImage">商品圖片</label>
+                            <input class="form-control d-inline" type="file" id="ProductImage" name="ProductImage"
+                                   accept="image/*" />
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="新增" class="btn btn-success mt-3" />
+                            <a href="/ManagerProducts/Index" class="btn btn-danger mt-3">取消</a>
+                        </div>
+
+                    </form>
+
+                }
+            }
+
+        </div>
+
+
+        <!-- #region Modal: EditProductCategories -->
+
+        <div class="modal fade" id="EditProductCategoriesModal" aria-hidden="true"
+             aria-labelledby="EditProductCategoriesModalLabel" tabindex="-1">
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fs-2" id="EditProductCategoriesModalLabel">編輯商品分類</h5>
+                        @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:void(0)" id="btnProductCategoryCreate" class="btn btn-outline-dark me-2 mb-1"
+                           data-bs-target="#CreateProductCategoryModal" data-bs-toggle="modal"
+                           data-bs-dismiss="modal">新增分類</a>
+                        <a href="" class="btn btn-outline-danger me-2 mb-1">關閉視窗</a>
+                        <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Open second modal</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #endregion -->
+        <!-- #region Modal: CreateProductCategories -->
+
+        <div class="modal fade" id="CreateProductCategoryModal" aria-hidden="true"
+             aria-labelledby="CreateProductCategoryModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fs-2" id="CreateProductCategoryModal">新增商品分類</h5>
+                        @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+                    </div>
+                    <div class="modal-body">
+                        <div id="alertPlaceholderCategoryCreate" class="d-none">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <span>
+                                    <strong>警告: </strong><p class="d-inline"></p>
+                                    <button type="button" id="btnAlertClose" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <form action="/ManagerProducts/CategoryCreate" method="post">
+                            <label class="form-label" for="CreateCategoryName">商品分類名稱</label>
+                            <input class="form-control" id="CreateCategoryName" name="CreateCategoryName" type="text" />
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Back to first</button> -->
+                        <a href="" class="btn btn-success me-2 mb-1" id="ProductCategoryCreateEnsure"
+                           data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
+                           data-bs-dismiss="modal">新增分類</a>
+                        <a href="" class="btn btn-danger me-2 mb-1" id="ProductCategoryCreateCancel"
+                           data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
+                           data-bs-dismiss="modal">取消設定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #endregion -->
+
+    </div>
+}
+
+@section Scripts {
+    <script>
+
+        $(function () {
+
+            $("#btnEditProductCategoriesModal").on('click', function () {
+                $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                    $("#EditProductCategoriesModal").modal("show");
+                });
+
+            });
+
+            $('#btnProductEditEnsure').on('click', function () {
+                var ProductName = $('input[name = ProductName]').val();
+                var ProductId = $('input[name = ProductName]').val();
+                console.log(ProductName);
+            })
+        });
+
+
+        $('#ProductCategoryCreateEnsure').on('click', function () {
+            var CategoryName = $('#CreateCategoryName').val();
+            if (CategoryName.trim() !== "") {
+                $.ajax({
+                    url: '/ManagerProducts/CategoryCreate',
+                    method: 'POST',
+                    data: { CategoryName: CategoryName },
+                    success: function (response) {
+                        // 在成功刪除後，重新加載最新的產品類別資料
+                        $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                            $("#EditProductCategoriesModal").modal("show");
+                        });
+                    }
+
+
+                })
+            } else {
+                $('.').text("類別名稱不可為空");
+                $("#alertPlaceholderProductEdit").removeClass("d-none");
+            }
+
+        })
+
+
+    </script>
+}
+
+
