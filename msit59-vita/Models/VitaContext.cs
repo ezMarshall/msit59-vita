@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace msit59_vita.Models;
 
-public partial class VitaContext : DbContext
+public partial class VitaContext : IdentityDbContext<IdentityUser>
 {
     public VitaContext()
     {
@@ -39,6 +41,8 @@ public partial class VitaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
@@ -260,6 +264,14 @@ public partial class VitaContext : DbContext
                 .HasForeignKey(d => d.StoreId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoreOpeningHours_Stores");
+        });
+
+        modelBuilder.Entity<VitaUser>(entity =>
+        {
+            entity.ToTable("AspNetUsers");
+            entity.HasDiscriminator<string>("CusDis");
+            entity.Property(e => e.VitaUserName).HasColumnName("VitaUserName");
+            entity.Property(e => e.IsCustomer).HasColumnName("IsCustomer").HasDefaultValue(true);
         });
 
         OnModelCreatingPartial(modelBuilder);

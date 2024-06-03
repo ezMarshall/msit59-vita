@@ -1,0 +1,61 @@
+﻿@model msit59_vita.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "登入";
+}
+
+<section class="container-lg py-5 mx-auto min-h-custom">
+    <h2 class="text-center text-success fw-bold mb-3">登入</h2>
+    <div class="row container justify-content-center mx-auto">
+        <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
+            <form class="needs-validation" novalidate action="/Account/Login" method="post">
+                <div class="mb-3">
+                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required />
+                    <div class="invalid-feedback ps-3">
+                        請輸入電子信箱
+                    </div>
+                </div>
+                <div class="mb-3 position-relative">
+                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1">密碼</label>
+                    <a href="javascriot:void(0)" class="link-dark position-absolute end-0" data-bs-toggle="modal"
+                       data-bs-target="#modalForgetPwd">忘記密碼</a>
+                    <input type="password" class="form-control text-dark rounded-pill" id="CustomerPassword"
+                           name="CustomerPassword" required />
+                    <div class="invalid-feedback ps-3">
+                        請輸入密碼
+                    </div>
+                </div>
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <span class="text-danger ps-3">@ViewBag.ErrorMessage</span>
+                }
+                <button type="submit" class="w-100 btn btn-success text-light rounded-pill mt-4">登入</button>
+
+                <!-- 待加入 -->
+                <!-- 使用google登入 -->
+
+            </form>
+            <p class="mt-4 mb-0 text-center">
+                還沒有會員？
+                <a href="/Account/Register" class="link-dark">馬上註冊</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let form = $('.needs-validation');
+            form.on('submit', function (e) {
+                if (!form[0].checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                form.addClass('was-validated');
+            })
+        })
+    </script>
+}
