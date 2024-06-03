@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using msit59_vita.Models;
 
@@ -11,9 +12,11 @@ using msit59_vita.Models;
 namespace msit59_vita.Migrations
 {
     [DbContext(typeof(VitaContext))]
-    partial class VitaContextModelSnapshot : ModelSnapshot
+    [Migration("20240603072809_AddIsCustomerToVitaUser")]
+    partial class AddIsCustomerToVitaUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
