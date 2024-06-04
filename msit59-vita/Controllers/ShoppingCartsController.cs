@@ -80,7 +80,7 @@ namespace msit59_vita.Controllers
 				return Json(new { success = false, message = "請先登入" });
 			}
 
-			////取得使用者的購物車
+			//取得使用者的購物車
 			var cart = from s in _context.ShoppingCarts
 					   join c in _context.Customers on s.CustomerId equals c.CustomerId
 					   join p in _context.Products on s.ProductId equals p.ProductId
@@ -153,6 +153,50 @@ namespace msit59_vita.Controllers
 		}
 
 		[HttpPost]
+		public IActionResult AddToCartInput(int productId, int quantity, int storeId)
+		{
+			//取得使用者的購物車
+			var cart = from s in _context.ShoppingCarts
+					   join c in _context.Customers on s.CustomerId equals c.CustomerId
+					   join p in _context.Products on s.ProductId equals p.ProductId
+					   join t in _context.Stores on p.StoreId equals t.StoreId
+					   where s.CustomerId == 1
+					   select new
+					   {
+						   ShoppingCartId = s.ShoppingCartId,
+						   CustomerID = s.CustomerId,
+						   ProductId = s.ProductId,
+						   Quantity = s.ShoppingCartQuantity,
+						   StoreName = t.StoreName,
+						   ProductName = p.ProductName,
+						   ProductUnitsInStock = p.ProductUnitsInStock,
+						   Price = p.ProductUnitPrice,
+						   ProductImage = p.ProductImage
+					   };
+			var cartList = cart.ToList();
+
+			// 檢查購物車中是否已有相同商品
+			var cartItem = cartList.FirstOrDefault(ci => ci.ProductId == productId);
+			if (cartItem != null)
+			{
+				// 如果有相同商品，更新數量
+				var shoppingCart = _context.ShoppingCarts.FirstOrDefault(sc => sc.ShoppingCartId == cartItem.ShoppingCartId);
+				if (shoppingCart != null)
+				{
+					shoppingCart.ShoppingCartQuantity = (short)quantity;
+					if (shoppingCart.ShoppingCartQuantity >= 30)
+					{
+						shoppingCart.ShoppingCartQuantity = 30;
+					}            
+                    _context.SaveChanges();
+
+				}
+			}
+
+			return Json(new { success = true, message = "商品已加入購物車"});
+		}
+
+			[HttpPost]
 		public IActionResult Delete(int id)
 		{
 			var cartItem = _context.ShoppingCarts.FirstOrDefault(sc => sc.ShoppingCartId == id);
