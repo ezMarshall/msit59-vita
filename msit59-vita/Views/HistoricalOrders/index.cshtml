@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "歷史訂單";
+    string customerName = String.IsNullOrEmpty(ViewBag.customer.CustomerNickName) ? ViewBag.customer.CustomerName : ViewBag.customer.CustomerNickName;
+
 }
 <div class="container-fluid mt-3">
 
@@ -17,161 +19,187 @@
                 class="user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
             <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
         </div>
-        
-    @foreach (var order in Model)
+    </div>
+
+    @if(Model.Count != 0)
         {
-            string orderStatus = "";
-            string UniformInvoiceVia = "本店免用統一發票";
-            int count = 0;
-            switch (order.CustomerOrderStatus)
+
+            @foreach (var order in Model)
             {
-                case 0:
-                    orderStatus = "待接單";
-                    break;
-                case 1:
-                    orderStatus = "製作中";
-                    break;
-                case 2:
-                    orderStatus = order.OrderDeliveryVia == "自取" ? "等待自取" : "配送中";
-                    break;
-                case 3:
-                    orderStatus = "已完成";
-                    break;
-                case 4:
-                    orderStatus = "退單";
-                    break;
-                case 5:
-                    orderStatus = "客戶已取消";
-                    break;
-                default:
-                    break;
-            }
+                string orderStatus = "";
+                string UniformInvoiceVia = "本店免用統一發票";
+                int count = 0;
+                switch (order.CustomerOrderStatus)
+                {
+                    case 0:
+                        orderStatus = "待接單";
+                        break;
+                    case 1:
+                        orderStatus = "製作中";
+                        break;
+                    case 2:
+                        orderStatus = order.OrderDeliveryVia == "自取" ? "等待自取" : "配送中";
+                        break;
+                    case 3:
+                        orderStatus = "已完成";
+                        break;
+                    case 4:
+                        orderStatus = "退單";
+                        break;
+                    case 5:
+                        orderStatus = "客戶已取消";
+                        break;
+                    default:
+                        break;
+                }
 
-            <div class="container container-lg w-75 my-3 border-bottom border-dark" id="@($"order-{order.OrderId}")">
-                <div class="row">
-                    <dl class="row col-12 col-lg-8">
-
-                        
-                        <dt class="col-6">訂單編號:</dt>
-                        <dd class="col-6">@order.OrderId</dd>
-
-                        <dt class="col-6">店名:</dt>
-                        <dd class="col-6">@order.StoreName</dd>
+                <div class="container container-lg w-75 my-3 border-bottom border-dark" id="@($"order-{order.OrderId}")">
+                    <div class="row">
+                        <dl class="row col-12 col-lg-8">
 
 
-                        <dt class="col-6">取餐人:</dt>
-                        <dd class="col-6">@order.CustomerName</dd>
+                            <dt class="col-6">訂單編號:</dt>
+                            <dd class="col-6">@order.OrderId</dd>
 
-                        <dt class="col-6">連絡電話:</dt>
-                        <dd class="col-6">@order.OrderPhoneNumber</dd>
-
-
-                        <dt class="col-6">取餐方式:</dt>
-                        <dd class="col-6">@order.OrderDeliveryVia</dd>
-
-                        @if (@order.OrderDeliveryVia == "外送")
-                        {
-
-                            <dt class="col-6">取餐地址:</dt>
-                            <dd class="col-6">@order.OrderAddress</dd>
-                        }
-                        <dt class="col-6">訂餐時間:</dt>
-                        <dd class="col-6">@order.OrderTime</dd>
-
-                        <dt class="col-6">預計送達/取餐時間:</dt>
-                        <dd class="col-6">@order.PredictedArrivalTime</dd>
+                            <dt class="col-6">店名:</dt>
+                            <dd class="col-6">@order.StoreName</dd>
 
 
-                        <dt class="col-6">付款方式:</dt>
-                        <dd class="col-6">@order.OrderPayment</dd>
+                            <dt class="col-6">取餐人:</dt>
+                            <dd class="col-6">@order.CustomerName</dd>
 
-                        @if (order.OrderUniformInvoiceVia == 2)
-                        {
-                            UniformInvoiceVia = "手機載具";
-                            <dt class="col-6">開立發票方式:</dt>
-                            <dd class="col-6">@UniformInvoiceVia</dd>
-
-                            <dt class="col-6">手機載具:</dt>
-                            <dd class="col-6">@order.OrderEinvoiceNumber</dd>
-                        }
-                        else if (order.OrderUniformInvoiceVia == 1)
-                        {
-                            UniformInvoiceVia = "紙本發票";
-                            <dt class="col-6">開立發票方式:</dt>
-                            <dd class="col-6">@UniformInvoiceVia</dd>
-                        }
-                        else
-                        {
-
-                            <dt class="col-6">開立發票方式:</dt>
-                            <dd class="col-6">@UniformInvoiceVia</dd>
-                        }
+                            <dt class="col-6">連絡電話:</dt>
+                            <dd class="col-6">@order.OrderPhoneNumber</dd>
 
 
+                            <dt class="col-6">取餐方式:</dt>
+                            <dd class="col-6">@order.OrderDeliveryVia</dd>
 
-                        <dt class="col-6">內容/數量:</dt>
-                        <div class="col-6" id="@($"content-{order.OrderId}")">                            
-                            @for (int i = 0; i < ViewBag.products.Count; i++)
+                            @if (@order.OrderDeliveryVia == "外送")
                             {
-                                var product = ViewBag.products[i];
-                                if (order.OrderId != product.OrderId) continue;
-                                count++;
-                                <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
-                                if (count == 4)
-                                {
-                                    <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@order.OrderId)">更多</a></dd>
-                                }
+
+                                <dt class="col-6">取餐地址:</dt>
+                                <dd class="col-6">@order.OrderAddress</dd>
                             }
-                        </div>
+                            <dt class="col-6">訂餐時間:</dt>
+                            <dd class="col-6">@order.OrderTime</dd>
+
+                            <dt class="col-6">預計送達/取餐時間:</dt>
+                            <dd class="col-6">@order.PredictedArrivalTime</dd>
 
 
-                        <dt class="col-6">訂單金額:</dt>
-                        @for (int i = 0; i < ViewBag.price.Count; i++)
-                        {
-                            if (ViewBag.price[i].OrderId != order.OrderId) continue;
-                            <dd class="col-6">@($"${ViewBag.price[i].totalPrice}")</dd>
+                            <dt class="col-6">付款方式:</dt>
+                            <dd class="col-6">@order.OrderPayment</dd>
 
-                        }
-
-
-                        <dt class="col-6">給店家留言:</dt>
-                        <dd class="col-6">@order.OrderStoreMemo</dd>
-
-                    </dl>
-                    <div class="col-12 col-lg-4">
-
-                        <div class=" d-flex align-items-center h-75">
-                            @if(order.Reviews.Count >0)
+                            @if (order.OrderUniformInvoiceVia == 2)
                             {
-                                <button type="button" class="btn mx-auto text-info disabled" data-bs-toggle="modal"
-                                data-bs-target="#myModal">
-                                    <i class="fa-regular fa-message fa-flip-horizontal text-dark"></i>
-                                    <p class="d-inline-block pt-2 text-dark">已評論</p>
-                                </button>
+                                UniformInvoiceVia = "手機載具";
+                                <dt class="col-6">開立發票方式:</dt>
+                                <dd class="col-6">@UniformInvoiceVia</dd>
+
+                                <dt class="col-6">手機載具:</dt>
+                                <dd class="col-6">@order.OrderEinvoiceNumber</dd>
+                            }
+                            else if (order.OrderUniformInvoiceVia == 1)
+                            {
+                                UniformInvoiceVia = "紙本發票";
+                                <dt class="col-6">開立發票方式:</dt>
+                                <dd class="col-6">@UniformInvoiceVia</dd>
                             }
                             else
                             {
-                                <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
-                                        data-bs-target="#comment-modal" id="@($"comment-{order.OrderId}")" onclick="comment(@order.OrderId)">
-                                    <i class="fa-regular fa-message fa-flip-horizontal"></i>
-                                    <p class="d-inline-block pt-2 ">評論</p>
-                                </button>
+
+                                <dt class="col-6">開立發票方式:</dt>
+                                <dd class="col-6">@UniformInvoiceVia</dd>
                             }
-                            
-
-                        </div>
 
 
-                        <div class=" d-flex align-items-end   h-25">
-                            <p class=" mx-auto ">訂單狀態: <span class="text-success">@orderStatus</span></p>
+
+                            <dt class="col-6">內容/數量:</dt>
+                            <div class="col-6" id="@($"content-{order.OrderId}")">
+                                @for (int i = 0; i < ViewBag.products.Count; i++)
+                                {
+                                    var product = ViewBag.products[i];
+                                    if (order.OrderId != product.OrderId) continue;
+                                    count++;
+                                    <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
+                                    if (count == 4)
+                                    {
+                                        <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@order.OrderId)">更多</a></dd>
+                                    }
+                                }
+                            </div>
+
+
+                            <dt class="col-6">訂單金額:</dt>
+                            @for (int i = 0; i < ViewBag.price.Count; i++)
+                            {
+                                if (ViewBag.price[i].OrderId != order.OrderId) continue;
+                                <dd class="col-6">@($"${ViewBag.price[i].totalPrice}")</dd>
+
+                            }
+
+
+                            <dt class="col-6">給店家留言:</dt>
+                            <dd class="col-6">@order.OrderStoreMemo</dd>
+
+                        </dl>
+                        <div class="col-12 col-lg-4">
+
+                            <div class=" d-flex align-items-center h-75">
+                                @if (order.Reviews.Count > 0)
+                                {
+                                    <button type="button" class="btn mx-auto text-info disabled" >
+                                        <i class="fa-regular fa-message fa-flip-horizontal text-dark"></i>
+                                        <p class="d-inline-block pt-2 text-dark">已評論</p>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
+                                            data-bs-target="#comment-modal" id="@($"comment-{order.OrderId}")" onclick="comment(@order.OrderId)">
+                                        <i class="fa-regular fa-message fa-flip-horizontal"></i>
+                                        <p class="d-inline-block pt-2 ">評論</p>
+                                    </button>
+                                }
+
+
+                            </div>
+
+
+                            <div class=" d-flex align-items-end   h-25">
+                                <p class=" mx-auto ">訂單狀態: <span class="text-success">@orderStatus</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
+            }
+
+        }
+        else
+        {
+
+            <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3">
+                <div class="container-lg container row  ">
+
+
+                    <div class="col-12  d-flex justify-content-center">
+                        <p class="text-break">
+                            親愛的顧客 <span class="text-info">@(customerName)</span>  您還沒有歷史訂單，馬上前往
+                            <a href="/" class="text-info">首頁</a>
+                            進行下單吧！
+                        </p>
+                    </div>
+                    <div class="col-3 col-lg-4 mb-3 "></div>
+                    <div class="col-6 col-lg-4 mb-3">
+                        <a href="/">
+                            <img class="card-img-top bg-dark" src="~/image/logo/logo_150x150.png" alt="logo-picture">
+                        </a>
+                    </div>
+                    <div class="col-3 col-lg-4 mb-3 "></div>
+                </div>
             </div>
         }
-
-    </div>
-
 
 </div>
 
