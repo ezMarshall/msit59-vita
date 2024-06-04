@@ -42,7 +42,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=ManagerHome}/{action=Index}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chatHub");
 app.Run();
