@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using msit59_vita.Models;
 using System;
 
@@ -93,10 +94,10 @@ namespace msit59_vita.Controllers
 
 			// 取得星星平均
 			var averageReviewRating = from s in _context.Stores
-								join o in _context.Orders on s.StoreId equals o.StoreId
-								join r in _context.Reviews on o.OrderId equals r.OrderId
-								where s.StoreId == id && r.ReviewRating != null
-								select (decimal?)(r.ReviewRating);
+									  join o in _context.Orders on s.StoreId equals o.StoreId
+									  join r in _context.Reviews on o.OrderId equals r.OrderId
+									  where s.StoreId == id && r.ReviewRating != null
+									  select (decimal?)(r.ReviewRating);
 
 			//var averageRating = averageReviewRating.Average() != null ? Math.Round(averageReviewRating.Average()??0 , 1) : 0;
 			var averageRating = Math.Round(averageReviewRating.Average() ?? 0, 1);
@@ -110,22 +111,71 @@ namespace msit59_vita.Controllers
 							  join r in _context.Reviews on o.OrderId equals r.OrderId
 							  where s.StoreId == id
 							  select r;
+			var totalReviews = reviewCount.Count();
+			ViewBag.totalReviews = totalReviews;
 
-			var reviewCountSum = reviewCount.Count() != 0 ? reviewCount.Count().ToString()+ "評論" : "尚無評論";
+			var reviewCountSum = reviewCount.Count() != 0 ? reviewCount.Count().ToString() + "評論" : "尚無評論";
 			//Console.WriteLine(reviewCountSum);
 			// 取得評論總和
 			ViewBag.reviewCountSum = reviewCountSum;
 
-			//使用者id目前寫固定值和登入寫true
-			//判斷愛心數是否收藏
-			ViewBag.isFavorite = false;
+			// 取得各級評論統計
+			var reviewLevelCounts = from s in _context.Stores
+									join o in _context.Orders on s.StoreId equals o.StoreId
+									join r in _context.Reviews on o.OrderId equals r.OrderId
+									where s.StoreId == id
+									group r by r.ReviewRating into g
+									select new
+									{
+										ReviewRating = g.Key,
+										ReviewCount = g.Count()
+									};
+
+			var reviewLevelCountsList = reviewLevelCounts.ToList();
+			ViewBag.reviewLevelCounts = reviewLevelCountsList;
+
+			var reviewPercentages = new Dictionary<int, double>();
+			for (int i = 1; i <= 5; i++)
+			{
+				var count = reviewLevelCountsList.FirstOrDefault(x => x.ReviewRating == i)?.ReviewCount ?? 0;
+				var percentage = totalReviews > 0 ? (double)count / totalReviews * 100 : 0;
+				reviewPercentages[i] = percentage;
+			}
+			ViewBag.reviewPercentages = reviewPercentages;
+
+            //Console.WriteLine(ViewBag.reviewPercentages[1]);
+
+			// 取得店家每個人的評論
+			var customerReviewCounts = from s in _context.Stores
+									   join o in _context.Orders on s.StoreId equals o.StoreId
+									   join r in _context.Reviews on o.OrderId equals r.OrderId
+									   join c in _context.Customers on o.CustomerId equals c.CustomerId
+									   where s.StoreId == id
+									   orderby r.ReviewTime descending
+									   select new
+									   {
+										   CustomerName = c.CustomerName,
+										   ReviewTime = r.ReviewTime,
+										   ReviewText = r.ReviewContent,
+										   ReviewRating = r.ReviewRating,
+										   StoreReplyTime = r.StoreReplyTime,
+										   StoreReplyText = r.StoreReplyContent
+									   };
+
+			var customerReviewCountsList = customerReviewCounts.ToList();
+			ViewBag.customerReviewCounts = customerReviewCountsList;
+
+
+            //使用者id目前寫固定值和登入寫true
+            //判斷愛心數是否收藏
+            ViewBag.isFavorite = false;
 			if (true)
 			{
 				IsFavoriteStore favoriteStoreChecker = new IsFavoriteStore(_context);
 				bool isFavorite = favoriteStoreChecker.FavoriteStore(1, id);
 				ViewBag.isFavorite = isFavorite;
 			}
-			
+
 
 			return View();
 		}
@@ -136,9 +186,10 @@ namespace msit59_vita.Controllers
 		{
 			// 檢查用戶是否已登入
 			//!User.Identity.IsAuthenticated
-			if (false)
+			if (!User.Identity?.IsAuthenticated ?? false)
 			{
-				return Json(new { success = false, message = "請先登入" });
+                Console.WriteLine("請先登入");
+                return Json(new { success = false, message = "請先登入" });
 
 			}
 
@@ -148,10 +199,10 @@ namespace msit59_vita.Controllers
 			// 檢查當前用戶是否已收藏該商店
 			bool isFavorite = favoriteStoreChecker.FavoriteStore(customerId, storeId);/* 您的邏輯來檢查該商店是否已被收藏 */;
 
-            //Console.WriteLine(isFavorite);
-            //bool isFavorite =true;
-            // 切換收藏狀態
-            if (isFavorite)
+			//Console.WriteLine(isFavorite);
+			//bool isFavorite =true;
+			// 切換收藏狀態
+			if (isFavorite)
 			{
 				// 取消收藏
 				/* 您的邏輯來取消收藏 */
@@ -167,12 +218,13 @@ namespace msit59_vita.Controllers
 				/* 您的邏輯來添加收藏 */
 
 				_context.Favorites.Add(new Favorite { CustomerId = customerId, StoreId = storeId });
-				
+
 			}
 			_context.SaveChanges();
 
 			return Json(new { success = true, isFavorite = !isFavorite });
 		}
+
 
 	}
 

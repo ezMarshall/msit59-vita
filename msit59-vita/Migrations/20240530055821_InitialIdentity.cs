@@ -50,6 +50,7 @@ namespace msit59_vita.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
@@ -155,6 +156,7 @@ namespace msit59_vita.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

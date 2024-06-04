@@ -16,6 +16,10 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.js.map"
       ]
+    },
+    {
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/lib/toastr.js/"
     }
   ]
 }
