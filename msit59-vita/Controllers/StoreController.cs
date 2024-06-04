@@ -166,10 +166,16 @@ namespace msit59_vita.Controllers
 			ViewBag.customerReviewCounts = customerReviewCountsList;
 
 
-            //使用者id目前寫固定值和登入寫true
+            
             //判斷愛心數是否收藏
             ViewBag.isFavorite = false;
-			if (true)
+
+			//判斷使用者是否收藏該店家
+			var customer = from c in _context.Customers
+							select c;
+
+			var customerEmail = customer.FirstOrDefault();
+			if (customerEmail.CustomerEmail == @User.Identity.Name)
 			{
 				IsFavoriteStore favoriteStoreChecker = new IsFavoriteStore(_context);
 				bool isFavorite = favoriteStoreChecker.FavoriteStore(1, id);
