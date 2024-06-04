@@ -145,7 +145,7 @@
 
                 </dl>
                 <div class="col-12 col-lg-12  d-flex flex-column mb-2">
-                    <p class=" ms-auto ">訂單狀態: <span class="text-info">@orderStatus</span></p>
+                    <p class=" ms-auto " id="order-status">訂單狀態: <span class="text-info">@orderStatus</span></p>
                     @if (@orderStatus == "待接單")
                     {
                         <form class="ms-auto" action="/CurrentOrder/Canecl" method="post">
@@ -228,7 +228,10 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
         function showProducts(id) {
             event.preventDefault();
             $(`#${id}>dd`).removeClass("visually-hidden");
@@ -237,5 +240,31 @@
         $("#order-btns>button").click(function () {
             window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
         })
+
+        //接收訂單狀態更改
+        /*
+        確認消費者身分
+        比對訂單編號
+        更改訂單狀態
+        取消訂單按鈕
+        */
+        connection.on("StatusChange", function (CustomerId, OrderId, CustomerOrderStatus) {
+            const targetOrder = $(`#order${OrderId}`);
+            if (!targetOrder) return;
+            targetOrder.find("#order-status>span").text(CustomerOrderStatus);
+            if (CustomerOrderStatus !== "待接單") targetOrder.find("#order-status~form").remove();
+            
+            console.log(CustomerId, OrderId, CustomerOrderStatus);
+        })
+
+        /**
+         * 啟動signIR連線
+         * 
+         */
+        connection.start().then(function () {
+            console.log("start chat");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
     </script>
 }

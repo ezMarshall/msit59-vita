@@ -14,6 +14,8 @@ namespace msit59_vita.Controllers
             _context = context;
         }
 
+        public IActionResult chat() { return View(); }
+
         /*
          * 經使用者id取得資料
          * 
