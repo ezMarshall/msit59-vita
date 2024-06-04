@@ -21,9 +21,10 @@ namespace msit59_vita.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-
+        // 首頁
         public IActionResult Index()
         {
+            TempData["currentPageIndex"] = 1;
 
             return View(GetProducts(1));
         }
@@ -32,10 +33,35 @@ namespace msit59_vita.Controllers
         [HttpPost]
         public IActionResult Index(int currentPageIndex)
         {
+            TempData["currentPageIndex"] = currentPageIndex;
+
             return View(GetProducts(currentPageIndex));
 
         }
 
+        [HttpPost]
+        public IActionResult ProductOnSellSwitch(int ProductId, bool ProductOnSell)
+        {
+            Product item = _context.Products.Find(ProductId);
+            ProductCategory category = _context.ProductCategories.Find(item.CategoryId);
+
+            if (category.CategoryOnDelete == true && ProductOnSell == true)
+            {
+                return Json(new { success = false, message = "此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別" });
+            }
+            else
+            {
+                item.ProductOnSell = ProductOnSell;
+                _context.SaveChanges();
+
+                return Json(new { success = true,  message="修改上架狀態成功" });
+            }
+
+
+        }
+
+
+        //商品分類彈窗
         public ActionResult CategoryDetails()
         {
             var categories = GetProductCategories();
@@ -82,9 +108,6 @@ namespace msit59_vita.Controllers
             item.CategoryOnDelete = true;
             _context.SaveChanges();
 
-            //var categories = GetProductCategories();
-            //return PartialView("CategoryDetails", categories);
-
             return Json(new { success = true, message = "刪除成功" });
         }
 
@@ -104,38 +127,19 @@ namespace msit59_vita.Controllers
             return PartialView("CategoryDetails", categories);
         }
 
-        [HttpPost]
-        public IActionResult ProductOnSellSwitch(int ProductId, bool ProductOnSell)
-        {
-            Product item = _context.Products.Find(ProductId);
-            ProductCategory category = _context.ProductCategories.Find(item.CategoryId);
 
-            if (category.CategoryOnDelete == true && ProductOnSell == true)
-            {
-                return Json(new { success = false, message = "此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別" });
-            }
-            else
-            {
-                item.ProductOnSell = ProductOnSell;
-                _context.SaveChanges();
 
-                return Json(new { success = true });
-            }
-
-               
-           
-        }
-
-        //[HttpGet("ManagerProducts/ProductCopy/{id}")]
+       
+    // ProductCopy頁面
         public IActionResult ProductCopy(int id)
         {
 
             return View(GetSpecificProduct(id));
         }
 
-        //[HttpPost("ManagerProducts/ProductCopy/{id}")]
+   
         [HttpPost]
-        public IActionResult ProductCopy(string ProductName, decimal ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
+        public IActionResult ProductCopy(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
         {
 
             Product item = new Product()
@@ -165,40 +169,41 @@ namespace msit59_vita.Controllers
                 _context.SaveChanges();
             }
 
+            int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
 
-            return View("Index", GetProducts(1));
+            return View("Index", GetProducts(currentPageIndex));
 
 
         }
 
-        //[HttpGet("ManagerProducts/ProductEdit/{id}")]
+
+        // ProductEdit頁面
         public IActionResult ProductEdit(int id)
         {
-
-
             return View(GetSpecificProduct(id));
         }
 
-
-        /* [HttpPost("ManagerProducts/ProductEdit/{id}")]*/
         [HttpPost]
-        public IActionResult ProductEdit(ProductViewModel clientItem)
+        public IActionResult ProductEdit(int ProductId, string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId)
         {
 
-            Product product = _context.Products.Find(clientItem.ProductId);
+            Product product = _context.Products.Find(ProductId);
             if (product != null)
             {
 
-                product.ProductName = clientItem.ProductName;
-                product.ProductUnitPrice = clientItem.ProductUnitPrice;
-                product.ProductUnitsInStock = clientItem.ProductUnitsInStock;
-                product.CategoryId = clientItem.CategoryId;
+                product.ProductName = ProductName;
+                product.ProductUnitPrice = ProductUnitPrice;
+                product.ProductUnitsInStock = ProductUnitsInStock;
+                product.CategoryId = CategoryId;
 
                 _context.SaveChanges();
 
             }
 
-            return View("ProductEdit", clientItem.ProductId);
+            int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
+
+            //return Redirect("/ManagerProducts/Index"); 
+            return View("Index", GetProducts(currentPageIndex));
         }
 
         [HttpPost]
@@ -218,14 +223,15 @@ namespace msit59_vita.Controllers
                 }
 
                 product.ProductImage = "image/Store/" + fileName;
+                _context.SaveChanges();
 
+                return Json(new { success = true, message = "圖片成功上傳" });
             }
-
-            _context.SaveChanges();
-
-
-
-            return View("Index", GetProducts(1));
+            else
+            {
+                return Json(new { success = false, message = "圖片無法上傳，請稍後再試" });
+            }
+            
         }
 
         [HttpPost]
@@ -244,13 +250,18 @@ namespace msit59_vita.Controllers
                 }
 
             }
+
             product.ProductImage = string.Empty;
             _context.SaveChanges();
 
 
-            return Redirect("/ManagerProducts/Index");
+            return Json(new { success = true, message = "圖片成功刪除" });
 
         }
+
+
+        //用到的函數
+
         private List<ProductCategory> GetProductCategories()
         {
             var queryProductCategories = from c in _context.ProductCategories

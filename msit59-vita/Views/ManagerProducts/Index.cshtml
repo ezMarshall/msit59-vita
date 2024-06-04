@@ -362,8 +362,6 @@
 
             });
 
-
-
         });
 
 
@@ -401,7 +399,6 @@
             if (!AllCategories.includes(ProductCategory)) {
                 $(this).prop("checked", false);
                 $('#WarningModal').modal('show');
-                console.log($('#WarningModal'))
                 $('#WarningModal .modal-body').text("此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別");
                 return;
                 
@@ -419,7 +416,8 @@
                         $(this).prop("checked",false);
                         $('#WarningModal').modal('show');
                         $('#WarningModal .modal-body').text(response.message);
-
+                    }else{
+                            location.reload();
                     }
                     
                 }

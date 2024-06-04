@@ -7,21 +7,50 @@
 
 @section MyStyle {
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Manager/ManagerProducts.css" asp-append-version="true" />
     <style>
         .content-area {
             height: calc(100vh - 80px);
         }
+
+        .category-font {
+            font-size: larger !important;
+        }
+
+        @@media (min-width: 992px) and (max-width: 1400px) {
+            .category-font {
+                font-size: large !important;
+            }
+        }
+
+        @@media (max-width: 992px) {
+
+            .category-font {
+                font-size: medium !important;
+            }
+        }
+
+        #TableAreas {
+            padding-top: 45px;
+        }
+
+        @@media (max-width: 992px) {
+
+            #TableAreas {
+                padding-top: 0;
+            }
+        }
+
     </style>
 }
 
 @section BreadCrumb {
     <li class="breadcrumb-item" aria-current="page">
-        <a href="/ManagerHome/Index"
+        <a href="~/ManagerHome/index"
            class="text-dark text-decoration-none fw-bolder">首頁</a>
     </li>
     <li class="breadcrumb-item">菜單管理</li>
 }
+
 @section Content {
     <div class="row">
         <div class="col-lg-2 pt-4 text-center">
@@ -33,9 +62,9 @@
                     foreach (var category in Model.Categories)
                     {
 
-                        <li class="pb-1 text-center col-lg-12 col-3 category-font">
-                            @category.CategoryName
-                        </li>
+                                                    <li class="pb-1 text-center col-lg-12 col-3 category-font">
+                                                        @category.CategoryName
+                                                    </li>
                     }
                 }
 
@@ -44,63 +73,63 @@
         </div>
 
 
-        <div id="TableAreas" class="col-lg-10 col-sm-12 row pt-5 pb-4" style="height: calc(100vh - 200px);">
+        <div id="TableAreas" class="col-lg-10 col-sm-12 row pt-5 pb-4" >
           
 
                 @{
                     foreach (var product in Model.Products)
                     {
-                        <form action="/ManagerProducts/ProductEdit" method="post">
+                                                    <form action="/ManagerProducts/ProductEdit" method="post" >
 
-                                <input type="hidden" id="ProductId" name="ProductId" value="@product.ProductId" />
-                                <div class="form-group">
-                                    <label class="form-label mb-0 mt-2" for="ProductName">商家名稱</label>
-                                    <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="商品名稱" value="@product.ProductName" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
-                                    <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="價格" value="@Convert.ToInt32(@product.ProductUnitPrice)" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
-                                    <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
-                                           placeholder="庫存數" value="@product.ProductUnitsInStock" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">商品分類</label>
-                                    <select class="form-select" id="CategoryList" name="CategoryId">
-                                @foreach (ProductCategory category in Model.Categories)
+                                                            <input type="hidden" id="ProductId" name="ProductId" value="@product.ProductId" />
+                                                            <div class="form-group">
+                                                                <label class="form-label mb-0 mt-2" for="ProductName">商家名稱</label>
+                                                                <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="商品名稱" value="@product.ProductName" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
+                                                                <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="價格" value="@Convert.ToInt32(product.ProductUnitPrice)" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
+                                                                <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
+                                                                       placeholder="庫存數" value="@product.ProductUnitsInStock" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">商品分類</label>
+                                                                <select class="form-select" id="CategoryList" name="CategoryId">
+                                                            @foreach (ProductCategory category in Model.Categories)
                     {
-                                    <!option value="@category.CategoryId" @(product.CategoryId == category.CategoryId ? "selected" : "")>@category.CategoryName</!option>
+                                                                <!option value="@category.CategoryId" @(product.CategoryId == category.CategoryId ? "selected" : "")>@category.CategoryName</!option>
                     }
 
-                                    </select>
-                                </div>
+                                                                </select>
+                                                            </div>
 
-                                <div class="form-group">
-                                    <input type="submit" value="確定" class="btn btn-success mt-3" />
-                                    <a href="/ManagerProducts/Index" class="btn btn-danger mt-3">取消</a>
-                                </div>
+                                                            <div class="form-group">
+                                                                <input type="submit" value="確定" class="btn btn-success mt-3" />
+                                                                <a href="/ManagerProducts/Index" class="btn btn-danger mt-3">取消</a>
+                                                            </div>
 
-                            </form>
+                                                        </form>
 
-                            <form>
-                                 <div class="form-group">
-                                    <label class="form-label d-block mb-0 mt-2" for="ProductImageDoc">商品圖片</label>
-                                    <div class="row align-items-center">
-                                        <div class="col-9">
-                                            <input class="form-control d-inline" type="file" id="ProductImageDoc" name="ProductImageDoc" 
-                                                   accept="image/*" style="width:-webkit-fit-content\ " required/>
-                                        </div>
-                                        <div class="col-3">
-                                        <a href="/ManagerProducts/Index" class="btn btn-success mt-3 d-inline" id="btnUploadPicture">上傳</a>
-                                         <a href="/ManagerProducts/Index" class=" btn btn-danger mt-3 d-inline" id="btnDeletePricture">刪除</a>
-                                        </div>
-                                    </div>
-                                    <span> @(string.IsNullOrEmpty(product.ProductImage) ? "尚未上傳圖片" : $"目前已上傳： {product.ProductImage.Split('/')[2]}")</span>
-                                    <p class="input-picture-warning d-none fw-bolder text-danger"> 警告: 請放入合適的圖片</p>
-                                </div>
-                            </form>
+                                                    <form enctype = "multipart/form-data">
+                                        <div class="form-group  mt-5">
+                                            <label class="form-label d-block mb-0 mt-2" for="ProductImageDoc">商品圖片</label>
+                                                            <div class="row align-items-center">
+                                                                <div class="col-9">
+                                                                    <input class="form-control d-inline" type="file" id="ProductImageDoc" name="ProductImageDoc" 
+                                                                           accept="image/*"  required/>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                <a href="/ManagerProducts/Index" class="btn btn-success mt-3 d-inline" id="btnUploadPicture">上傳</a>
+                                                                 <a href="/ManagerProducts/Index" class=" btn btn-danger mt-3 d-inline" id="btnDeletePricture">刪除</a>
+                                                                </div>
+                                                            </div>
+                                                            <span> @(string.IsNullOrEmpty(product.ProductImage) ? "尚未上傳圖片" : $"目前已上傳： {product.ProductImage.Split('/')[2]}")</span>
+                                                           
+                                                        </div>
+                                                    </form>
 
                     }
                 }          
@@ -175,8 +204,27 @@
         </div>
 
         <!-- #endregion -->
+        <!-- #region Modal: Warning -->
 
-    </div>
+        <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">警告</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #endregion -->
+
+
 }
 
 @section Scripts {
@@ -187,16 +235,12 @@
             $("#btnEditProductCategoriesModal").on('click', function () {
                 $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
                     $("#EditProductCategoriesModal").modal("show");
+
                 });
 
             });
-            $('#btnProductEditEnsure').on('click', function () {
-                var ProductName = $('input[name = ProductName]').val();
-                var ProductId = $('input[name = ProductName]').val();
-                console.log(ProductName);
-            })
         });
-        });
+
 
 
         $('#ProductCategoryCreateEnsure').on('click', function () {
@@ -230,13 +274,14 @@
             // var ProductImage = $("input[name='ProductImageDoc']").val().split('/').pop(); //只能得到檔案名稱
             var ProductImage = $("input[name='ProductImageDoc']").prop('files')[0]; //獲取文件本身
 
+               console.log(ProductImage == null);
+              console.log("我的id是${ProductId}");
+
+
             if (ProductImage != null && ProductImage != undefined) {
                 var formData = new FormData();
                 formData.append('ProductId', ProductId);
                 formData.append('ProductImage', ProductImage);
-
-                console.log(ProductImage.name)
-                console.log(ProductImage)
 
                 $.ajax({
                     url: '/ManagerProducts/PictureUpload',
@@ -244,18 +289,23 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function () {
-                        console.log("上傳成功");
+                    success: function (response) {
+                        if (!response.success) {
+                            $('#WarningModal').modal('show');
+                            $('#WarningModal .modal-body').text(response.message);
+                        } else {
+                            location.reload();
+                        }
                     },
                     error: function (xhr, status, error) {
-                        console.log("請放入合法的圖片檔案");
+                            $('#WarningModal').modal('show');
+                            $('#WarningModal .modal-body').text("上傳失敗，請提供合適的圖片檔案");
                     }
                 })
 
-                window.location.href = '/ManagerProducts/Index';
-
             }else {
-                $('.input-picture-warning').removeClass("d-none")
+                    $('#WarningModal').modal('show');
+                    $('#WarningModal .modal-body').text("請先放入圖片");
             }
         })
 
@@ -268,9 +318,15 @@
                 url: '/ManagerProducts/PictureDelete',
                 method: 'POST',
                 data: { ProductId: ProductId },
-                success: function () {
-                    console.log("刪除成功");
+                success: function (response) {
+                        if (!response.success) {
+                            $('#WarningModal').modal('show');
+                            $('#WarningModal .modal-body').text("刪除失敗，請稍後再試");
+                        } else {
+                            location.reload();
+                        }
                 }
+                
             })
 
         })

@@ -11,7 +11,7 @@
         public class ProductViewModel
         {
             public int ProductId { get; set; }
-            public string ProductImage { get; set; }
+            public string? ProductImage { get; set; }
             public required string ProductName { get; set; }
             public required decimal ProductUnitPrice { get; set; }
             public required short ProductUnitsInStock { get; set; }
