@@ -15,6 +15,20 @@ namespace msit59_vita.Controllers
         }
         public IActionResult Index()
         {
+
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated ?? false)
+            {
+                return Redirect("/");
+            }
+
+
+            //取得使用者ID
+            var queryCustomerID = from c in _context.Customers
+                                  where c.CustomerEmail == User.Identity.Name
+                                  select c.CustomerId;
+            _customerId = queryCustomerID.Single();
+
             var queryOrder = from o in _context.Orders
                              where o.CustomerOrderStatus > 2 && o.CustomerId == _customerId
                              orderby o.OrderTime descending
@@ -66,6 +80,13 @@ namespace msit59_vita.Controllers
         [HttpPost]
         public IActionResult Comment(int OrderId,string ReviewContent,byte ReviewRating)
         {
+
+
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated ?? false)
+            {
+                return Redirect("/");
+            }
 
 
             Review review = new Review();

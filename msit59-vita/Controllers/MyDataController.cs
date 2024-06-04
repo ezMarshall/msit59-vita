@@ -14,7 +14,11 @@ namespace msit59_vita.Controllers
             _context = context;
         }
 
-        public IActionResult chat() { return View(); }
+        //測試用
+        public IActionResult chat() 
+        { 
+            return View(); 
+        }
 
         /*
          * 經使用者id取得資料
@@ -22,7 +26,17 @@ namespace msit59_vita.Controllers
          */
         public IActionResult Index()
         {
-            ViewBag.CustomerID = _customerId;
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated?? false)
+            {
+                return Redirect("/");
+            }
+
+            //取得使用者ID
+            var queryCustomerID = from c in _context.Customers
+                                  where c.CustomerEmail == User.Identity.Name
+                                  select c.CustomerId;
+            _customerId = queryCustomerID.Single();
 
             var queryCustomerData = from c in _context.Customers
                                     where c.CustomerId == _customerId

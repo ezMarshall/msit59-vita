@@ -23,6 +23,13 @@ namespace msit59_vita.Controllers
 
         public IActionResult Canecl(int orderId) {
 
+
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated ?? false)
+            {
+                return Redirect("/");
+            }
+
             Order order = _context.Orders.Find(orderId);
             order.CustomerOrderStatus = 5;
             _context.SaveChanges();
@@ -32,6 +39,21 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
+
+
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated ?? false)
+            {
+                return Redirect("/");
+            }
+
+            //取得使用者ID
+            var queryCustomerID = from c in _context.Customers
+                                  where c.CustomerEmail == User.Identity.Name
+                                  select c.CustomerId;
+            _customerId = queryCustomerID.Single();
+
+
             var queryOrder = from o in _context.Orders
                              where o.CustomerOrderStatus < 3 && o.CustomerId == _customerId 
                              orderby o.OrderTime descending

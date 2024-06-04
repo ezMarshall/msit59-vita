@@ -41,6 +41,21 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
+
+
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated ?? false)
+            {
+                return Redirect("/");
+            }
+
+
+            //取得使用者ID
+            var queryCustomerID = from c in _context.Customers
+                                  where c.CustomerEmail == User.Identity.Name
+                                  select c.CustomerId;
+            _customerId = queryCustomerID.Single();
+
             var queryComment = from r in _context.Reviews
                                where r.Order.CustomerId == _customerId
                                orderby r.ReviewTime descending
