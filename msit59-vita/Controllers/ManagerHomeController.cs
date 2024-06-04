@@ -6,7 +6,14 @@ namespace msit59_vita.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (!User.Identity?.IsAuthenticated ?? false) //只是多加個驚嘆號為了能夠看到登入頁面
+            {
+                return View();
+            }
+            else {
+                return Redirect("Account/Login/");
+            }
+           
         }
     }
 }
