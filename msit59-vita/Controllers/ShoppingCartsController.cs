@@ -75,7 +75,7 @@ namespace msit59_vita.Controllers
 
 			// 檢查使用者是否已登入
 			//!User.Identity.IsAuthenticated
-			if (false)
+			if (!User.Identity?.IsAuthenticated ?? false)
 			{
 				return Json(new { success = false, message = "請先登入" });
 			}
