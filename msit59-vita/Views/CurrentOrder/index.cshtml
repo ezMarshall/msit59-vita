@@ -205,7 +205,7 @@
             $(`#${id}>dd>a`).remove();
         }       
         $("#order-btns>button").click(function () {
-            window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
+            window.location.href = !$(this).hasClass("user-center-order-btn") ? "/CurrentOrder" : "/HistoricalOrders";
         })
 
         //接收訂單狀態更改

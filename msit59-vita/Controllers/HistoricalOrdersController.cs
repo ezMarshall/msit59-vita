@@ -79,6 +79,14 @@ namespace msit59_vita.Controllers
                                  OrderId = g.Key,
                                  totalPrice = (int)g.Sum(p => (p.UnitPrice * p.Quantity))
                              };
+            var queryReviews = from r in _context.Reviews
+                               where r.Order.CustomerId == _customerId
+                               select new
+                               {
+                                   r.ReviewId,
+                                   r.OrderId
+                               };
+            ViewBag.reviews = queryReviews.ToList();
             ViewBag.customer = queryCustomer.Single();
             ViewBag.products = queryProducts.ToList();
             ViewBag.price = queryPrice.ToList();
