@@ -1,0 +1,77 @@
+﻿@model msit59_vita.Models.ManagerReviews;
+
+
+
+<thead class="border-dark">
+    <tr>
+        <th scope="col" style="width: 8%">#</th>
+        <th scope="col" style="width: 13%">發佈人</th>
+        <th scope="col" style="width: 17%">發佈時間</th>
+        <th scope="col" style="width: 18%">發佈內容</th>
+        <th scope="col" style="width: 18%">評論星級</th>
+        <th scope="col" style="width: 10%">回覆狀態</th>
+        <th scope="col" style="width: 13%">操作</th>
+        <th scope="col" style="width: 3%"></th>
+    </tr>
+</thead>
+
+<tbody>
+    @{
+        int counter = (Model.CurrentPageIndex - 1) * Model.MaxRows+1;
+        foreach (var item in Model.Reviews)
+        {
+            <tr>
+                <th class="align-middle" scope="row">@counter</th>
+                <td class="align-middle">@item.CustomerName</td>
+                <td class="align-middle">@item.ReviewTime.ToString("yyyy/MM/dd HH:mm")</td>
+                <td class="align-middle">@item.ReviewContent</td>
+                <td class="align-middle rating">
+                    <i class="fa fa-star @((item.ReviewRating>=1)?"fill":"")"></i>
+                    <i class="fa fa-star @((item.ReviewRating>=2)?"fill":"")"></i>
+                    <i class="fa fa-star @((item.ReviewRating>=3)?"fill":"")"></i>
+                    <i class="fa fa-star @((item.ReviewRating>=4)?"fill":"")"></i>
+                    <i class="fa fa-star @((item.ReviewRating>=5)?"fill":"") "></i>
+                </td>
+                <td class="align-middle">
+                    @((item.StoreReplyContent != null) ? "已回覆" : "未回覆")
+                </td>
+                <td class="align-middle">
+                    <button class="btn btn-dark me-1 fw-bold btn-accept show-alert"
+                            data-review-content="@item.ReviewContent"
+                            data-review-id="@item.ReviewId"
+                            data-store-reply-content="@(item.StoreReplyContent ?? "")">
+                        回覆
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target=@($"#accordion-{counter}") aria-expanded="false" aria-controls="accordion-1">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </td>
+            </tr>
+            // accordion start
+            <tr class="comment-tr">
+                <td colspan="8" class=" p-0">
+                    <div class="collapse" id=@($"accordion-{counter}")>
+                        <div class="d-lg-flex">
+                            <div class="col-lg-6 card card-body">
+                                <p class="fw-bold">發佈內容：</p>
+                                <p>@item.ReviewContent</p>
+                            </div>
+                            <div class="col-lg-6 card card-body">
+                                <p class="fw-bold">訂購品項：</p>
+                                <p>@item.ProductName</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            // accordion end
+            <input type="hidden" id="hfCurrentPageIndex" name="currentPage" value="@Model.CurrentPageIndex" />
+            <input type="hidden" id="hfPageCount" value="@Model.PageCount" />
+            counter++;
+
+        }
+    }
+</tbody>
+
