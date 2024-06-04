@@ -142,54 +142,57 @@
 	</footer>
 	<!-- footer end -->
 	<!-- 購物車頁面開始 -->
-	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-		<div class="offcanvas-header justify-content-end">
-			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
-					aria-label="Close"></button>
-		</div>
-		<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
-
-			<div class="cart-container overflow-auto">
-				@* <div class="cart-item d-flex justify-content-between pb-3">
-				<img src="./image/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
-				<div class="cart-details">
-				<div class="cart-info d-flex justify-content-between mb-1">
-				<div class="me-3">
-				<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
-				<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
-				</div>
-				<div class="product-delate text-success fs-4 mt-1">
-				<i class="fa-solid fa-trash"></i>
-				</div>
-				</div>
-				<div class="shop-price d-flex justify-content-around align-items-center">
-				<div class="input-group w-50">
-				<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
-				<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
-				</button>
-				<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="1" id="number">
-				<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
-				<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
-				</button>
-				</div>
-				<div class="fs-5 fw-bold text-center product-price" data-price="100">$100</div>
-				</div>
-
-				</div>
-				</div> *@
-
+	<form action="/CheckedPayment/Index" method="post">
+		<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+			<div class="offcanvas-header justify-content-end">
+				<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+						aria-label="Close"></button>
 			</div>
+			<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
+
+				<div class="cart-container overflow-auto">
+					@* <div class="cart-item d-flex justify-content-between pb-3">
+					<img src="./image/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
+					<div class="cart-details">
+					<div class="cart-info d-flex justify-content-between mb-1">
+					<div class="me-3">
+					<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
+					<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
+					</div>
+					<div class="product-delate text-success fs-4 mt-1">
+					<i class="fa-solid fa-trash"></i>
+					</div>
+					</div>
+					<div class="shop-price d-flex justify-content-around align-items-center">
+					<div class="input-group w-50">
+					<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
+					<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
+					</button>
+					<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="1" id="number">
+					<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
+					<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
+					</button>
+					</div>
+					<div class="fs-5 fw-bold text-center product-price" data-price="100">$100</div>
+					</div>
+
+					</div>
+					</div> *@
+
+				</div>
 
 
-			<div class="total-price pt-3">
-				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+				<div class="total-price pt-3">
+					<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
 
-				<div class="d-grid col-10 mx-auto">
-					<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="button">立即結帳</button>
+					<div class="d-grid col-10 mx-auto">
+						<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
+	
 	<!-- 購物車頁面結束 -->
 	<!-- 手機版購物車開始 -->
 	@* <div class="offcanvas offcanvas-bottom bg-light h-75" tabindex="-1" id="offcanvasCartMobile"
