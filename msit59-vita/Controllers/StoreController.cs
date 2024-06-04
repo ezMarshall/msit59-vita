@@ -170,15 +170,19 @@ namespace msit59_vita.Controllers
             //判斷愛心數是否收藏
             ViewBag.isFavorite = false;
 
+
 			//判斷使用者是否收藏該店家
 			var customer = from c in _context.Customers
-							select c;
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
 
-			var customerEmail = customer.FirstOrDefault();
-			if (customerEmail.CustomerEmail == @User.Identity.Name)
+			var customerId = customer.FirstOrDefault();
+
+			// 檢查用戶是否已登入，已登入狀況
+			if (User.Identity?.IsAuthenticated ?? false)
 			{
 				IsFavoriteStore favoriteStoreChecker = new IsFavoriteStore(_context);
-				bool isFavorite = favoriteStoreChecker.FavoriteStore(1, id);
+				bool isFavorite = favoriteStoreChecker.FavoriteStore(customerId.CustomerId, id);
 				ViewBag.isFavorite = isFavorite;
 			}
 
@@ -186,11 +190,11 @@ namespace msit59_vita.Controllers
 			return View();
 		}
 
-		//登入驗證部分還未完成
+		// 收藏店家
 		[HttpPost]
 		public JsonResult ToggleFavorite(int storeId)
 		{
-			// 檢查用戶是否已登入
+			// 檢查用戶是否已登入 t
 			//!User.Identity.IsAuthenticated
 			if (!User.Identity?.IsAuthenticated ?? false)
 			{
@@ -199,11 +203,18 @@ namespace msit59_vita.Controllers
 
 			}
 
-			int customerId = 1;/* 獲取當前用戶的CustomerID */
 
-			IsFavoriteStore favoriteStoreChecker = new IsFavoriteStore(_context);
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+
+			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
+
+            IsFavoriteStore favoriteStoreChecker = new IsFavoriteStore(_context);
 			// 檢查當前用戶是否已收藏該商店
-			bool isFavorite = favoriteStoreChecker.FavoriteStore(customerId, storeId);/* 您的邏輯來檢查該商店是否已被收藏 */;
+			bool isFavorite = favoriteStoreChecker.FavoriteStore(customerID, storeId);/* 您的邏輯來檢查該商店是否已被收藏 */;
 
 			//Console.WriteLine(isFavorite);
 			//bool isFavorite =true;
@@ -212,7 +223,7 @@ namespace msit59_vita.Controllers
 			{
 				// 取消收藏
 				/* 您的邏輯來取消收藏 */
-				var favorite = _context.Favorites.FirstOrDefault(f => f.CustomerId == customerId && f.StoreId == storeId);
+				var favorite = _context.Favorites.FirstOrDefault(f => f.CustomerId == customerID && f.StoreId == storeId);
 				if (favorite != null)
 				{
 					_context.Favorites.Remove(favorite);
@@ -223,7 +234,7 @@ namespace msit59_vita.Controllers
 				// 添加收藏
 				/* 您的邏輯來添加收藏 */
 
-				_context.Favorites.Add(new Favorite { CustomerId = customerId, StoreId = storeId });
+				_context.Favorites.Add(new Favorite { CustomerId = customerID, StoreId = storeId });
 
 			}
 			_context.SaveChanges();

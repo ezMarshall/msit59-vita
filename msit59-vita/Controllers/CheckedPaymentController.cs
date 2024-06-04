@@ -13,9 +13,12 @@ namespace msit59_vita.Controllers
 		{
 			_context = context;
 		}
-		public IActionResult Index()
+		public IActionResult Payment()
         {
-			// 取得目前的訂單資料
+			//先判段使用者是否有登入，若無登入則導向登入頁面
+
+
+			// 取得目前的訂單資料，透過購物車資料表查詢
 
             return View();
         }

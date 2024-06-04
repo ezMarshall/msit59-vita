@@ -254,6 +254,7 @@
 
 		});
 
+
 		function productAdjustValue(button, increment) {
 			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
 			var cartItemId = inputField.closest('.product-item').data('id');
@@ -274,19 +275,21 @@
 			inputField.val(newValue);
 		}
 
+
 		// 加入購物車
+
 		$('#product-list').on('click', '.product-btn', function () {
 			var productId = $(this).attr('id');
 			var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
-			var storeId = @store.StoreId;
+			var storeId = $('.product-item').data('store');
 
 
 			// $('.product-item').data('store')
 			// $('.cart-item').data('storeid')
 
-			if ($('.product-item').data('store') != $('.cart-item').data('storeid') && $('.cart-item').data('storeid')!= null) {
+			if ($('.product-item').data('store') != $('.cart-item').data('storeid') && $('.cart-item').data('storeid') != null) {
 				return addSameStoreProdouctMessage();
-			} 
+			}
 
 			// 發送 AJAX 請求
 			$.ajax({
@@ -295,25 +298,30 @@
 				data: { productId: productId, quantity: quantity, storeId: storeId },
 				success: function (data) {
 					// 在這裡處理從控制器返回的數據
-					// console.log(data);
-					if (data.success) {
-						getCart();
+	
+					if (data.success) {						
+						getCart();						
 						AddCartSuccess();
 						countCartItems();
-
+					
+		
 					} else {
 						if (data.message == '請先登入') {
 							showLoginModal(data.message);
 						}
-						alert('商品數量不足');
+						// alert('商品數量不足');
 					}
-					
+
 				},
 				error: function () {
 					alert('發生錯誤');
 				}
 			});
 		});
+
+
+
+
 
 		// 顯示加入購物車成功訊息
 		function AddCartSuccess() {
@@ -422,16 +430,17 @@
 			$('[data-category]').each(function () {
 				var categoryValue = $(this).data('category');
 				if (selectedCategories.length === 0) {
-					$(this).show(); 
+					$(this).show();
 				} else {
 					if (selectedCategories.includes(categoryValue.toString())) {
-						$(this).show(); 
+						$(this).show();
 					} else {
-						$(this).hide(); 
+						$(this).hide();
 					}
 				}
 			});
 		});
+
 
 	</script>
 

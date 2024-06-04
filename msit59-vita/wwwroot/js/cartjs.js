@@ -5,61 +5,69 @@
 });
 
 
-// 商品數量改變時
-$('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
-    var inputField = $(this);
-    var cartItemId = inputField.closest('.cart-item').data('id');
-    var maxStock = inputField.closest('.cart-item').data('stock');
-    var productId = inputField.closest('.cart-item').data('productid');
-    var storeId = inputField.closest('.cart-item').data('storeid');
+//商品數量改變時
+$(document).ready(function () {
 
-    var currentValue = parseInt(inputField.val());
-    // console.log(currentValue);
-    var newValue = currentValue;
+    $('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
+        console.log('fsdfsdfds')
+        var inputField = $(this);
+        var cartItemId = inputField.closest('.cart-item').data('id');
+        var maxStock = inputField.closest('.cart-item').data('stock');
+        var productId = inputField.closest('.cart-item').data('productid');
+        var storeId = inputField.closest('.cart-item').data('storeid');
 
-    if (isNaN(newValue) || newValue < 1) {
-        newValue = 1;
-    } else if (newValue > maxStock) {
-        newValue = maxStock;
-        maxQuantity()
-    } else if (newValue > 30) {
-        newValue = 30;
-        maxQuantity()
-    }
+        var currentValue = parseInt(inputField.val());
 
-    inputField.val(newValue);
-    
-    calculateTotalPrice();
-    countCartItems();
+        var newValue = currentValue;
 
-    // 發送 AJAX 請求
-    $.ajax({
-        url: '/ShoppingCarts/AddToCartInput', // 你的控制器方法的路徑
-        type: 'POST',
-        data: { productId: productId, quantity: newValue, storeId: storeId },
-        success: function (data) {
-            // 在這裡處理從控制器返回的數據
-            
-            if (data.success) {
-                //console.log("Item added successfully.");
-
-            } 
-
-        },
-        error: function () {
-            alert('發生錯誤');
+        if (isNaN(newValue) || newValue < 1) {
+            newValue = 1;
+        } else if (newValue > maxStock) {
+            newValue = maxStock;
+            maxQuantity()
+        } else if (newValue > 30) {
+            newValue = 30;
+            maxQuantity()
         }
+
+        inputField.val(newValue);
+
+        calculateTotalPrice();
+        countCartItems();
+
+        // 發送 AJAX 請求
+        $.ajax({
+            url: '/ShoppingCarts/AddToCartInput', // 你的控制器方法的路徑
+            type: 'POST',
+            data: { productId: productId, quantity: newValue, storeId: storeId },
+            success: function (data) {
+                // 在這裡處理從控制器返回的數據
+
+            },
+            error: function () {
+                alert('發生錯誤');
+            }
+        });
+
     });
 
 });
+
+
+
+
+
 
 function getCart() {
     $.ajax({
         type: "GET",
         url: "/ShoppingCarts/Index",
         success: function (data) {
-            //console.log(data);
-            renderCartItems(data);
+            if (!data.success) {
+                return;
+            }
+            /*console.log(data.cart);*/
+            renderCartItems(data.cart);
 
         },
         error: function (xhr, status, error) {
@@ -170,6 +178,9 @@ function adjustValue(button, increment, cartItemId, maxStock) {
     calculateTotalPrice();
     countCartItems();
 
+    //console.log(productId);
+    //console.log(newValue);
+    //console.log(storeId);
     // 發送 AJAX 請求
     $.ajax({
         url: '/ShoppingCarts/AddToCartInput', // 你的控制器方法的路徑
@@ -178,10 +189,7 @@ function adjustValue(button, increment, cartItemId, maxStock) {
         success: function (data) {
             // 在這裡處理從控制器返回的數據
 
-            if (data.success) {
-                //console.log("Item added successfully.");
-
-            }
+            //console.log(data);
 
         },
         error: function () {
