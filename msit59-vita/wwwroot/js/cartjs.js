@@ -9,7 +9,7 @@
 $(document).ready(function () {
 
     $('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
-        console.log('fsdfsdfds')
+        
         var inputField = $(this);
         var cartItemId = inputField.closest('.cart-item').data('id');
         var maxStock = inputField.closest('.cart-item').data('stock');
@@ -244,3 +244,45 @@ function deleteCartItem(cartItemId) {
     });
 }
 
+// 結帳
+$(document).ready(function () {
+    $('#checkoutBtn').click(function () {
+        checkout();
+    });
+
+    function checkout() {
+        var totalPrice = $('.totalPriceNum').text().replace('$', '');
+
+        $.ajax({
+            type: "POST",
+            url: "/CheckedPayment/PaymentConfirm",
+            success: function (data) {
+                //console.log(data);
+                if (data.success) {
+                    if (totalPrice > 0) {
+                        window.location.href = "/CheckedPayment/Payment";
+                    }
+                    return;
+                } else {
+                    //跳出登入視窗
+                    showLoginModal(data.message);
+                    console.error("Error: ", data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching cart data: ", error);
+            }
+        });
+    }
+});
+
+function showLoginModal(message) {
+    // 您的代碼,用於顯示登入視窗
+    // 可以在這裡顯示錯誤消息
+    // alert(message);
+    // 設置錯誤消息
+    $('#loginMessage').text(message);
+
+    // 顯示模態對話框
+    $('#loginModal').modal('show');
+}

@@ -1,4 +1,10 @@
-﻿<section class="container-lg">
+﻿@{
+    var paymentInfo = ViewBag.PaymentInfo;
+}
+
+
+
+<section class="container-lg">
 
     <div class="order mt-3 row mb-3">
         <div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
@@ -14,7 +20,7 @@
         <div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
             <form method="post">
                 <div class="order-store-info my-3">
-                    <div class="store-name fs-3 fw-bold mb-1">萬波島嶼紅茶Wanpo Tea Shop(草屯中正店)</div>
+                    <div class="store-name fs-3 fw-bold mb-1">店家名稱</div>
                     <div class="store-phone fs-5 fw-bold"><i class="fa-solid fa-phone"></i>&nbsp 0492312425</div>
                 </div>
 
@@ -214,3 +220,194 @@
         </div>
     </div>
 </section>
+
+
+<!-- 地址填寫開始 -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addressModalLabel">地址</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="address-form needs-validation">
+                    <div class="fs-6 fw-bold mb-2">填寫地址</div>
+
+                    <div class="city-selector-set d-flex mb-2 justify-content-between address-style-selector"
+                         role="tw-city-selector">
+
+                        <select id="county" class="county" required></select>
+                        <select id="district" class="district" required></select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="addressNameInput" class="form-label fw-bold">地址</label>
+                        <input type="text" class="form-control addressName" id="addressNameInput"
+                               aria-describedby="addressName" placeholder="請輸入正確格式，範例如上" autocomplete="off" required>
+                        <div id="addressName" class="form-text">範例格式：新安路一段5號</div>
+                    </div>
+
+                    <!-- <div class="mb-2">
+                        <label for="addressNameRemarkInput" class="form-label fw-bold">地址備註</label>
+                        <input type="text" class="form-control addressName" id="addressNameRemarkInput"
+                            aria-describedby="addressNameRemark" placeholder="公司/樓層" autocomplete="off">
+                    </div> -->
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="address-button btn btn-dark col-6 mx-auto"
+                        data-bs-dismiss="modal">
+                    確定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 地址填寫結束 -->
+<!-- 取餐時間開始 -->
+<div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="timeModalLabel">預計取餐時間</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="date-time-form ">
+                    <input id="datepicker" class="form-control mb-2" type="text" placeholder="當天日期"
+                           aria-label="default input date" readonly="readonly">
+                    <div class="dropdown">
+
+                        <input class="form-control dropdown-toggle" type="text" placeholder="HH:mm"
+                               aria-label="default input time" id="timepicker" readonly="readonly"
+                               data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+
+
+                        <div class="dropdown-menu w-100" aria-labelledby="timepicker">
+
+                            <div class="select-list d-flex justify-content-between ">
+                                <ul id="hours" class="hours text-center flex-grow-1 list-group rounded-0">
+                                </ul>
+
+
+                                <ul id="minutes" class="minutes text-center flex-grow-1 list-group rounded-0">
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="date-time-button btn btn-dark col-6 mx-auto "
+                        data-bs-dismiss="modal">
+                    確定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 取餐結束開始 -->
+
+@section Scripts{
+    <script src="~/js/tw-city-selector.js"></script>
+    <script src="~/js/data-time.js"></script>
+    <script>
+        // 地址填寫開始
+        new TwCitySelector({
+            el: '.city-selector-set',
+            elCounty: '.county',
+            elDistrict: '.district',
+            bootstrapStyle: true
+        });
+
+        var countySelect = document.getElementById("county");
+        var districtSelect = document.getElementById("district");
+        let selectedCountyValue;
+        let selectedDistrictValue;
+        let combinedValue;
+
+        countySelect.addEventListener("change", function () {
+
+            let selectedCountyIndex = countySelect.selectedIndex;
+            selectedCountyValue = document.getElementsByTagName("option")[selectedCountyIndex].value
+            // console.log(selectedCountyValue);
+        }, false);
+
+        // 此方法不行，原因未知
+        // districtSelect.addEventListener("change", function () {
+        //     let selectedDistrictIndex = districtSelect.selectedIndex;
+        //     console.log(selectedDistrictIndex);
+        //     console.log(document.getElementsByTagName("option")[selectedDistrictIndex].text);
+        // }, false);
+
+        districtSelect.addEventListener("change", function () {
+            let selectedZipcode = districtSelect.options[districtSelect.selectedIndex].dataset.zipcode;
+
+            // 遍歷所有option,匹配data-zipcode找到對應value值
+            for (let i = 0; i < districtSelect.options.length; i++) {
+                if (districtSelect.options[i].dataset.zipcode === selectedZipcode) {
+                    selectedDistrictValue = districtSelect.options[i].value;
+                    break;
+                }
+            }
+
+            combinedValue = selectedCountyValue + selectedDistrictValue;
+        }, false);
+
+        let addressName = document.getElementById("addressNameInput");
+        let addressNameValue = "";
+
+        addressName.addEventListener("blur", function () {
+            addressNameValue = addressName.value;
+            // console.log(addressNameValue);
+
+        }, false);
+
+        // let addressNameRemark = document.getElementById("addressNameRemarkInput");
+        // let addressNameRemarkValue = "";
+
+        // addressNameRemark.addEventListener("blur", function () {
+        //     addressNameRemarkValue = addressNameRemark.value;
+        //     // console.log(addressNameRemarkValue);
+        // }, false);
+
+        var confirmAddressButton = document.querySelector('.address-button');
+        confirmAddressButton.addEventListener("click", function () {
+
+            let addressInput = document.getElementById("addressInput");
+            // addressInput.value = combinedValue + " " + addressNameValue + " " + addressNameRemarkValue;
+            addressInput.value = combinedValue + " " + addressNameValue;
+
+        }, false);
+
+
+        // 地址填寫結束
+
+
+        function focusInput(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.focus();
+            }
+        }
+
+        function focusRadio(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.checked = true;
+            }
+        }
+
+
+
+    </script>
+
+}

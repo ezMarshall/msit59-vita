@@ -197,8 +197,8 @@
 </section>
 
 
-@* 跳轉登入頁面需要調整 *@
-<form method="get" action="/Account/Login">
+
+@* <form method="get" action="/Account/Login">
 	<!-- 登入模態對話框 -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,7 +219,7 @@
 		</div>
 	</div>
 
-</form>
+</form> *@
 
 <partial name="_StoreCommentPartial" model="store" />
 <script src="~/js/cartjs.js"></script>
@@ -365,25 +365,25 @@
 		}
 
 		//顯示商品可以購買的最大數量
-		function addMaxQuantityMessage() {
-			toastr.options = {
-				"closeButton": false,
-				"debug": false,
-				"newestOnTop": false,
-				"progressBar": false,
-				"positionClass": "toast-top-center",
-				"preventDuplicates": false,
-				"showDuration": "300",
-				"hideDuration": "1000",
-				"timeOut": "3000",
-				"extendedTimeOut": "1000",
-				"showEasing": "swing",
-				"hideEasing": "linear",
-				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
-			}
-			toastr["warning"]("已達到商品可以購買的最大數量！")
-		}
+		// function addMaxQuantityMessage() {
+		// 	toastr.options = {
+		// 		"closeButton": false,
+		// 		"debug": false,
+		// 		"newestOnTop": false,
+		// 		"progressBar": false,
+		// 		"positionClass": "toast-top-center",
+		// 		"preventDuplicates": false,
+		// 		"showDuration": "300",
+		// 		"hideDuration": "1000",
+		// 		"timeOut": "3000",
+		// 		"extendedTimeOut": "1000",
+		// 		"showEasing": "swing",
+		// 		"hideEasing": "linear",
+		// 		"showMethod": "fadeIn",
+		// 		"hideMethod": "fadeOut"
+		// 	}
+		// 	toastr["warning"]("已達到商品可以購買的最大數量！")
+		// }
 
 		// 點擊心心按鈕
 		$(function () {
@@ -407,16 +407,16 @@
 			});
 		});
 
-		function showLoginModal(message) {
-			// 您的代碼,用於顯示登入視窗
-			// 可以在這裡顯示錯誤消息
-			// alert(message);
-			// 設置錯誤消息
-			$('#loginMessage').text(message);
+		// function showLoginModal(message) {
+		// 	// 您的代碼,用於顯示登入視窗
+		// 	// 可以在這裡顯示錯誤消息
+		// 	// alert(message);
+		// 	// 設置錯誤消息
+		// 	$('#loginMessage').text(message);
 
-			// 顯示模態對話框
-			$('#loginModal').modal('show');
-		}
+		// 	// 顯示模態對話框
+		// 	$('#loginModal').modal('show');
+		// }
 
 		//商品分類篩選
 		$('.category-checkbox').change(function () {
