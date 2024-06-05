@@ -26,6 +26,10 @@ namespace msit59_vita.Controllers
 
             var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
 
+			ViewBag.CustomerName = customerId.CustomerName;
+
+
+
             // 獲取當前星期幾
             string shortDayOfWeekString = DateTime.Today.DayOfWeek.ToString().Substring(0, 3);
 
