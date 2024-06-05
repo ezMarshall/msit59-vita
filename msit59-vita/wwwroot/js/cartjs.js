@@ -8,48 +8,48 @@
 //商品數量改變時
 $(document).ready(function () {
 
-    $('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
+$('.cart-container').on('input change paste keyup', '.product-quantity-input', function () {
         
-        var inputField = $(this);
-        var cartItemId = inputField.closest('.cart-item').data('id');
-        var maxStock = inputField.closest('.cart-item').data('stock');
-        var productId = inputField.closest('.cart-item').data('productid');
-        var storeId = inputField.closest('.cart-item').data('storeid');
+    var inputField = $(this);
+    var cartItemId = inputField.closest('.cart-item').data('id');
+    var maxStock = inputField.closest('.cart-item').data('stock');
+    var productId = inputField.closest('.cart-item').data('productid');
+    var storeId = inputField.closest('.cart-item').data('storeid');
 
-        var currentValue = parseInt(inputField.val());
+    var currentValue = parseInt(inputField.val());
 
-        var newValue = currentValue;
+    var newValue = currentValue;
 
-        if (isNaN(newValue) || newValue < 1) {
-            newValue = 1;
-        } else if (newValue > maxStock) {
-            newValue = maxStock;
-            maxQuantity()
-        } else if (newValue > 30) {
-            newValue = 30;
-            maxQuantity()
+    if (isNaN(newValue) || newValue < 1) {
+        newValue = 1;
+    } else if (newValue > maxStock) {
+        newValue = maxStock;
+        maxQuantity()
+    } else if (newValue > 30) {
+        newValue = 30;
+        maxQuantity()
+    }
+
+    inputField.val(newValue);
+    
+    calculateTotalPrice();
+    countCartItems();
+
+    // 發送 AJAX 請求
+    $.ajax({
+        url: '/ShoppingCarts/AddToCartInput', // 你的控制器方法的路徑
+        type: 'POST',
+        data: { productId: productId, quantity: newValue, storeId: storeId },
+        success: function (data) {
+            // 在這裡處理從控制器返回的數據
+            
+        },
+        error: function () {
+            alert('發生錯誤');
         }
-
-        inputField.val(newValue);
-
-        calculateTotalPrice();
-        countCartItems();
-
-        // 發送 AJAX 請求
-        $.ajax({
-            url: '/ShoppingCarts/AddToCartInput', // 你的控制器方法的路徑
-            type: 'POST',
-            data: { productId: productId, quantity: newValue, storeId: storeId },
-            success: function (data) {
-                // 在這裡處理從控制器返回的數據
-
-            },
-            error: function () {
-                alert('發生錯誤');
-            }
-        });
-
     });
+
+});
 
 });
 
@@ -272,8 +272,8 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error("Error fetching cart data: ", error);
             }
-        });
-    }
+    });
+}
 });
 
 function showLoginModal(message) {

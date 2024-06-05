@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "OrderDetails";
+}
+
+@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+@section MyStyle {
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Manager/ManagerOrders.css" asp-append-version="true" />
+}
+
+
+@section Content{
+    @foreach(var item in ViewBag.OrderDetails)
+    {
+    <div class=" row justify-content-center ">
+        <div class="col-11">
+            <h3 class="pt-4 fw-bold">訂單詳細資訊</h3>
+            <hr>
+            <div class="d-lg-flex">
+                <p class="fw-bold">訂單編號：</p>
+                <p>@item.OrderId</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">訂單狀態：</p>
+                <p>
+                        @((int)item.CustomerOrderStatus switch
+                        {
+                            0 => "待接單",
+                            1 => "製作中",
+                            2 => (item.OrderDeliveryVia) ? "配送中" : "等待自取",
+                            3 => "已完成",
+                            4 => "已退單",
+                            5 => "已取消",
+                        })
+                </p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">訂單種類：</p>
+                    <p>@((item.OrderDeliveryVia) ? "外送" : "自取")</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">取貨人：</p>
+                <p>@item.CustomerName</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">預計取餐時間：</p>
+                <p>@item.PredictedArrivalTime.ToString("yyyy/MM/dd HH:mm")</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">外送地址：</p>
+                    <p>@((@item.OrderAddressCity!="")?$"{item.OrderAddressCity}{item.OrderAddressDistrict}{item.OrderAddressDetails}":"無")</p>
+            </div>
+            <div class=" pt-2">
+                <p class="fw-bold">訂購內容/數量：</p>
+                <p>@item.ProductName</p>
+               
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">給店家留言：</p>
+                <p>餐點放門口謝謝！</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">開立發票方式：</p>
+                <p>紙本發票</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">付款方式：</p>
+                <p>現金</p>
+            </div>
+            <div class="d-lg-flex pt-2">
+                <p class="fw-bold">訂單金額：</p>
+                <p>$480</p>
+            </div>
+            <hr>
+
+
+        </div>
+    </div>
+    }
+
+}
+
+
+
+<h1>OrderDetails</h1>
+

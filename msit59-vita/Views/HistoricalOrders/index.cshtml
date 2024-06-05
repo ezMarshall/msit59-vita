@@ -12,232 +12,171 @@
     </nav>
     <div class="container container-lg ">
         <h4 class="text-dark">歷史訂單</h4>
-        <div class="container container-lg w-75 mt-4 px-0">
-            <button type="submit"
-                class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
-            <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
+        <div class="container container-lg w-75 mt-4 px-0 " id="order-btns">
+            <button type="button"
+                class="user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">當前訂單</button>
+            <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">歷史訂單</button>
         </div>
+        
+    @foreach (var order in Model)
+        {
+            string orderStatus = "";
+            string UniformInvoiceVia = "本店免用統一發票";
+            int count = 0;
+            switch (order.CustomerOrderStatus)
+            {
+                case 0:
+                    orderStatus = "待接單";
+                    break;
+                case 1:
+                    orderStatus = "製作中";
+                    break;
+                case 2:
+                    orderStatus = order.OrderDeliveryVia == "自取" ? "等待自取" : "配送中";
+                    break;
+                case 3:
+                    orderStatus = "已完成";
+                    break;
+                case 4:
+                    orderStatus = "退單";
+                    break;
+                case 5:
+                    orderStatus = "客戶已取消";
+                    break;
+                default:
+                    break;
+            }
 
-        <div class="container container-lg w-75 my-3 border-bottom border-dark">
-            <div class="row">
-                <dl class="row col-12 col-lg-8">
+            <div class="container container-lg w-75 my-3 border-bottom border-dark" id="@($"order-{order.OrderId}")">
+                <div class="row">
+                    <dl class="row col-12 col-lg-8">
 
-                    <dt class="col-6">訂單編號:</dt>
-                    <dd class="col-6">12345678</dd>
+                        
+                        <dt class="col-6">訂單編號:</dt>
+                        <dd class="col-6">@order.OrderId</dd>
 
-                    <dt class="col-6">店名:</dt>
-                    <dd class="col-6">優輕食</dd>
-
-
-                    <dt class="col-6">取貨人:</dt>
-                    <dd class="col-6">關二哥</dd>
-
-                    <dt class="col-6">連絡電話:</dt>
-                    <dd class="col-6">09123456789</dd>
-
-
-                    <dt class="col-6">取貨方式:</dt>
-                    <dd class="col-6">自取</dd>
-
-                    <dt class="col-6">訂餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-                    <dt class="col-6">預計送達/取餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-
-                    <dt class="col-6">付款方式:</dt>
-                    <dd class="col-6">現金</dd>
-
-                    <dt class="col-6">開立發票方式:</dt>
-                    <dd class="col-6">紙本發票</dd>
-
-
-                    <dt class="col-6">內容/數量:</dt>
-                    <div class="col-6 ">
-
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
-                    </div>
+                        <dt class="col-6">店名:</dt>
+                        <dd class="col-6">@order.StoreName</dd>
 
 
-                    <dt class="col-6">訂單金額:</dt>
-                    <dd class="col-6">$230</dd>
+                        <dt class="col-6">取餐人:</dt>
+                        <dd class="col-6">@order.CustomerName</dd>
+
+                        <dt class="col-6">連絡電話:</dt>
+                        <dd class="col-6">@order.OrderPhoneNumber</dd>
 
 
-                    <dt class="col-6">給店家留言:</dt>
-                    <dd class="col-6">無</dd>
+                        <dt class="col-6">取餐方式:</dt>
+                        <dd class="col-6">@order.OrderDeliveryVia</dd>
 
-                </dl>
-                <div class="col-12 col-lg-4">
+                        @if (@order.OrderDeliveryVia == "外送")
+                        {
 
-                    <div class=" d-flex align-items-center h-75">
-                        <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
-                            data-bs-target="#myModal">
-                            <i class="fa-regular fa-message fa-flip-horizontal"></i>
-                            <p class="d-inline-block pt-2 ">評論</p>
-                        </button>
+                            <dt class="col-6">取餐地址:</dt>
+                            <dd class="col-6">@order.OrderAddress</dd>
+                        }
+                        <dt class="col-6">訂餐時間:</dt>
+                        <dd class="col-6">@order.OrderTime</dd>
 
-                    </div>
+                        <dt class="col-6">預計送達/取餐時間:</dt>
+                        <dd class="col-6">@order.PredictedArrivalTime</dd>
 
 
-                    <div class=" d-flex align-items-end   h-25">
-                        <p class=" mx-auto ">訂單狀態: <span class="text-success">已完成</span></p>
+                        <dt class="col-6">付款方式:</dt>
+                        <dd class="col-6">@order.OrderPayment</dd>
+
+                        @if (order.OrderUniformInvoiceVia == 2)
+                        {
+                            UniformInvoiceVia = "手機載具";
+                            <dt class="col-6">開立發票方式:</dt>
+                            <dd class="col-6">@UniformInvoiceVia</dd>
+
+                            <dt class="col-6">手機載具:</dt>
+                            <dd class="col-6">@order.OrderEinvoiceNumber</dd>
+                        }
+                        else if (order.OrderUniformInvoiceVia == 1)
+                        {
+                            UniformInvoiceVia = "紙本發票";
+                            <dt class="col-6">開立發票方式:</dt>
+                            <dd class="col-6">@UniformInvoiceVia</dd>
+                        }
+                        else
+                        {
+
+                            <dt class="col-6">開立發票方式:</dt>
+                            <dd class="col-6">@UniformInvoiceVia</dd>
+                        }
+
+
+
+                        <dt class="col-6">內容/數量:</dt>
+                        <div class="col-6" id="@($"content-{order.OrderId}")">                            
+                            @for (int i = 0; i < ViewBag.products.Count; i++)
+                            {
+                                var product = ViewBag.products[i];
+                                if (order.OrderId != product.OrderId) continue;
+                                count++;
+                                <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
+                                if (count == 4)
+                                {
+                                    <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@order.OrderId)">更多</a></dd>
+                                }
+                            }
+                        </div>
+
+
+                        <dt class="col-6">訂單金額:</dt>
+                        @for (int i = 0; i < ViewBag.price.Count; i++)
+                        {
+                            if (ViewBag.price[i].OrderId != order.OrderId) continue;
+                            <dd class="col-6">@($"${ViewBag.price[i].totalPrice}")</dd>
+
+                        }
+
+
+                        <dt class="col-6">給店家留言:</dt>
+                        <dd class="col-6">@order.OrderStoreMemo</dd>
+
+                    </dl>
+                    <div class="col-12 col-lg-4">
+
+                        <div class=" d-flex align-items-center h-75">
+                            @if(order.Reviews.Count >0)
+                            {
+                                <button type="button" class="btn mx-auto text-info disabled" data-bs-toggle="modal"
+                                data-bs-target="#myModal">
+                                    <i class="fa-regular fa-message fa-flip-horizontal text-dark"></i>
+                                    <p class="d-inline-block pt-2 text-dark">已評論</p>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
+                                        data-bs-target="#comment-modal" id="@($"comment-{order.OrderId}")" onclick="comment(@order.OrderId)">
+                                    <i class="fa-regular fa-message fa-flip-horizontal"></i>
+                                    <p class="d-inline-block pt-2 ">評論</p>
+                                </button>
+                            }
+                            
+
+                        </div>
+
+
+                        <div class=" d-flex align-items-end   h-25">
+                            <p class=" mx-auto ">訂單狀態: <span class="text-success">@orderStatus</span></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container container-lg w-75 my-3 border-bottom border-dark">
-            <div class="row">
-                <dl class="row col-12 col-lg-8">
+        }
 
-                    <dt class="col-6">訂單編號:</dt>
-                    <dd class="col-6">12345678</dd>
-
-                    <dt class="col-6">店名:</dt>
-                    <dd class="col-6">優輕食</dd>
-
-
-                    <dt class="col-6">取貨人:</dt>
-                    <dd class="col-6">關二哥</dd>
-
-                    <dt class="col-6">連絡電話:</dt>
-                    <dd class="col-6">09123456789</dd>
-
-
-                    <dt class="col-6">取貨方式:</dt>
-                    <dd class="col-6">自取</dd>
-
-                    <dt class="col-6">訂餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-                    <dt class="col-6">預計送達/取餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-
-                    <dt class="col-6">付款方式:</dt>
-                    <dd class="col-6">現金</dd>
-
-                    <dt class="col-6">開立發票方式:</dt>
-                    <dd class="col-6">紙本發票</dd>
-
-
-                    <dt class="col-6">內容/數量:</dt>
-                    <div class="col-6 ">
-
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
-                    </div>
-
-
-                    <dt class="col-6">訂單金額:</dt>
-                    <dd class="col-6">$230</dd>
-
-
-                    <dt class="col-6">給店家留言:</dt>
-                    <dd class="col-6">無</dd>
-
-                </dl>
-                <div class="col-12 col-lg-4">
-
-                    <div class=" d-flex align-items-center h-75">
-                        <button type="button" class="btn mx-auto text-info disabled" data-bs-toggle="modal"
-                            data-bs-target="#myModal">
-                            <i class="fa-regular fa-message fa-flip-horizontal"></i>
-                            <p class="d-inline-block pt-2 ">已評論</p>
-                        </button>
-
-                    </div>
-
-
-                    <div class=" d-flex align-items-end   h-25">
-                        <p class=" mx-auto ">訂單狀態: <span class="text-success">已完成</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container container-lg w-75 my-3 border-bottom border-dark">
-            <div class="row">
-                <dl class="row col-12 col-lg-8">
-
-                    <dt class="col-6">訂單編號:</dt>
-                    <dd class="col-6">12345678</dd>
-
-                    <dt class="col-6">店名:</dt>
-                    <dd class="col-6">優輕食</dd>
-
-
-                    <dt class="col-6">取貨人:</dt>
-                    <dd class="col-6">關二哥</dd>
-
-                    <dt class="col-6">連絡電話:</dt>
-                    <dd class="col-6">09123456789</dd>
-
-
-                    <dt class="col-6">取貨方式:</dt>
-                    <dd class="col-6">自取</dd>
-
-                    <dt class="col-6">訂餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-                    <dt class="col-6">預計送達/取餐時間:</dt>
-                    <dd class="col-6">2024/05/22 11:00</dd>
-
-
-                    <dt class="col-6">付款方式:</dt>
-                    <dd class="col-6">現金</dd>
-
-                    <dt class="col-6">開立發票方式:</dt>
-                    <dd class="col-6">紙本發票</dd>
-
-
-                    <dt class="col-6">內容/數量:</dt>
-                    <div class="col-6 ">
-
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd>雞胸肉餐盒*1</dd>
-                        <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
-                    </div>
-
-
-                    <dt class="col-6">訂單金額:</dt>
-                    <dd class="col-6">$230</dd>
-
-
-                    <dt class="col-6">給店家留言:</dt>
-                    <dd class="col-6">無</dd>
-
-                </dl>
-                <div class="col-12 col-lg-4">
-
-                    <div class=" d-flex align-items-center h-75">
-                        <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
-                            data-bs-target="#myModal">
-                            <i class="fa-regular fa-message fa-flip-horizontal"></i>
-                            <p class="d-inline-block pt-2 ">評論</p>
-                        </button>
-
-                    </div>
-
-
-                    <div class=" d-flex align-items-end   h-25">
-                        <p class=" mx-auto ">訂單狀態: <span class="text-success">已完成</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
 </div>
 
 <!-- The Modal -->
-<div class="modal fade " id="myModal">
+<div class="modal fade " id="comment-modal">
     <div class="modal-dialog  modal-lg modal-dialog-centered ">
         <div class="modal-content d-flex flex-column">
 
@@ -247,28 +186,35 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body d-flex flex-column ">
-                <!-- bug沒有開新分頁星星數會保留 但文字沒更改 -->
-                <div class="user-center-rating d-flex flex-row-reverse justify-content-center">
-                    <input type="radio" name="rating" value="5" id="5" checked><label class="fs-1" for="5">☆</label>
-                    <input type="radio" name="rating" value="4" id="4"><label class="fs-1" for="4">☆</label>
-                    <input type="radio" name="rating" value="3" id="3"><label class="fs-1" for="3">☆</label>
-                    <input type="radio" name="rating" value="2" id="2"><label class="fs-1" for="2">☆</label>
-                    <input type="radio" name="rating" value="1" id="1"><label class="fs-1" for="1">☆</label>
+            <form action="/HistoricalOrders/Comment" method="post">
+                <div class="modal-body d-flex flex-column ">
+                    
+                
+                
+                    <!-- bug沒有開新分頁星星數會保留 但文字沒更改 -->
+                    <div class="user-center-rating d-flex flex-row-reverse justify-content-center">
+
+                        <input type="text" name="OrderId" value="OMGOMG" class="form-control bg-primary py-0 " />
+                        <input type="radio" name="ReviewRating" value="5" id="5" checked><label class="fs-1" for="5">☆</label>
+                        <input type="radio" name="ReviewRating" value="4" id="4"><label class="fs-1" for="4">☆</label>
+                        <input type="radio" name="ReviewRating" value="3" id="3"><label class="fs-1" for="3">☆</label>
+                        <input type="radio" name="ReviewRating" value="2" id="2"><label class="fs-1" for="2">☆</label>
+                        <input type="radio" name="ReviewRating" value="1" id="1"><label class="fs-1" for="1">☆</label>
+                    </div>
+                    <small class="align-self-center">您評價餐廳為5顆星<span class="text-info">(必填)</span></small>
+                    <textarea rows="10" name="ReviewContent" placeholder="可輸入兩百字評論(非必填)"
+                        class="align-self-center form-control mt-2 w-75"></textarea>
+
                 </div>
-                <small class="align-self-center">您評價餐廳為5顆星<span class="text-info">(必填)</span></small>
-                <textarea rows="10" name="" id="" placeholder="可輸入兩百字評論(非必填)"
-                    class="align-self-center form-control mt-2 w-75"></textarea>
 
-            </div>
+                <!-- Modal footer -->
+                <div class="modal-footer d-flex justify-content-evenly border-0">
+                    <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill"
+                        data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-outline-success px-4 py-2 rounded-pill">確認</button>
+                </div>
 
-            <!-- Modal footer -->
-            <div class="modal-footer d-flex justify-content-evenly border-0">
-                <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill"
-                    data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill">確認</button>
-            </div>
-
+            </form>
         </div>
     </div>
 </div>
@@ -277,5 +223,17 @@
         $(".user-center-rating>input").click(function () {
                 $("small").html(`您評價餐廳為${this.value}顆星<span class="text-info">(必填)</span>`);
             })
+
+        function showProducts(id) {
+            event.preventDefault();
+            $(`#content-${id}>dd`).removeClass("visually-hidden");
+            $(`#content-${id}>dd>a`).remove();
+        }
+        function comment(id) {
+            $(`#comment-modal input[name="OrderId"]`).val(id);
+        }
+        $("#order-btns>button").click(function () {
+            window.location.href = $(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
+        })
     </script>
 }

@@ -35,46 +35,53 @@ namespace msit59_vita.Controllers
 			var customerId = customer.FirstOrDefault();
 			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
 
-			// 取得目前登入的使用者，顯示他的購物車內容
-			var cart = from s in _context.ShoppingCarts
-					   join c in _context.Customers on s.CustomerId equals c.CustomerId
-					   join p in _context.Products on s.ProductId equals p.ProductId
-					   join t in _context.Stores on p.StoreId equals t.StoreId
+				// 取得目前登入的使用者，顯示他的購物車內容
+				var cart = from s in _context.ShoppingCarts
+                           join c in _context.Customers on s.CustomerId equals c.CustomerId
+                           join p in _context.Products on s.ProductId equals p.ProductId
+						   join t in _context.Stores on p.StoreId equals t.StoreId
 					   where s.CustomerId == customerID
-					   select new
-					   {
-						   ShoppingCartId = s.ShoppingCartId,
-						   CustomerID = s.CustomerId,
-						   ProductId = s.ProductId,
-						   Quantity = s.ShoppingCartQuantity,
+                           select new
+                           {
+							   ShoppingCartId = s.ShoppingCartId,
+                               CustomerID = s.CustomerId,
+                               ProductId = s.ProductId,
+                               Quantity = s.ShoppingCartQuantity,
 						   StoreID = p.StoreId,
-						   StoreName = t.StoreName,
-						   ProductName = p.ProductName,
-						   ProductUnitsInStock = p.ProductUnitsInStock,
-						   Price = p.ProductUnitPrice,
-						   ProductImage = p.ProductImage
-					   };
+							   StoreName = t.StoreName,
+                               ProductName = p.ProductName,
+							   ProductUnitsInStock = p.ProductUnitsInStock,
+							   Price = p.ProductUnitPrice,
+                               ProductImage = p.ProductImage
+                           };
 
-			var cartList = cart.ToList();
+				var cartList = cart.ToList();
 
 			//return Json(cartList);
 			return Json(new { success = true, message = "已登入購物車狀態", cart = cartList.ToList() });
 
-
-		}
+			            
+        }
 
 
 		[HttpPost]
 		public IActionResult AddToCart(int productId, int quantity, int storeId)
 		{
-            //加入商品到購物車
-            //判斷是否登入，如果登入，則把購物車資料存入資料庫
-            //判斷是否有相同商品，如果有相同商品，會覆蓋原先購物車的數量，否則新增商品到購物車
+			//加入商品到購物車
+			//判斷是否登入，如果登入，則把購物車資料存入資料庫
+			//判斷是否有相同商品，如果有相同商品，會覆蓋原先購物車的數量，否則新增商品到購物車
 
-            // 檢查使用者是否已登入
-            //!User.Identity.IsAuthenticated
+
+
+			//加入商品時要判斷購物車商品是否為同一家，用戶一次因為只能購買同一家店商品做結帳
+
+
+
+
+			// 檢查使用者是否已登入
+			//!User.Identity.IsAuthenticated
            
-            if (!User.Identity?.IsAuthenticated ?? false)
+			if (!User.Identity?.IsAuthenticated ?? false)
 			{
 				Console.WriteLine("未登入sdfsdfsdffg");
 				return Json(new { success = false, message = "請先登入" });
@@ -107,7 +114,7 @@ namespace msit59_vita.Controllers
 						   ProductImage = p.ProductImage
 					   };
 			var cartList = cart.ToList();
-			
+
 			// 檢查購物車中是否已有相同商品
 			var cartItem = cartList.FirstOrDefault(ci => ci.ProductId == productId);
 			if (cartItem != null)
@@ -129,7 +136,7 @@ namespace msit59_vita.Controllers
 			{
 				// 如果沒有相同商品,新增商品到購物車
 				var newCartItem = new ShoppingCart
-				{				
+				{
 					CustomerId = customerID,//CustomerId = customerId,
 					ProductId = productId,
 					ShoppingCartQuantity = (short)quantity
@@ -210,16 +217,16 @@ namespace msit59_vita.Controllers
 					if (shoppingCart.ShoppingCartQuantity >= 30)
 					{
 						shoppingCart.ShoppingCartQuantity = 30;
-					}
-					_context.SaveChanges();
+					}            
+                    _context.SaveChanges();
 
 				}
 			}
-			
+
 			return Json(new { success = true, message = "商品已加入購物車" });
 		}
 
-		[HttpPost]
+			[HttpPost]
 		public IActionResult Delete(int id)
 		{
 			var cartItem = _context.ShoppingCarts.FirstOrDefault(sc => sc.ShoppingCartId == id);

@@ -441,6 +441,28 @@
 			});
 		});
 
+		//商品分類篩選
+		$('.category-checkbox').change(function () {
+			var selectedCategories = [];
+			$('.category-checkbox:checked').each(function () {
+				selectedCategories.push($(this).val());
+			});
+			// console.log(selectedCategories);
+
+			// 顯示勾選的分類商品
+			$('[data-category]').each(function () {
+				var categoryValue = $(this).data('category');
+				if (selectedCategories.length === 0) {
+					$(this).show(); 
+				} else {
+					if (selectedCategories.includes(categoryValue.toString())) {
+						$(this).show(); 
+					} else {
+						$(this).hide(); 
+					}
+				}
+			});
+		});
 
 	</script>
 

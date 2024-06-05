@@ -1,0 +1,85 @@
+﻿@model msit59_vita.Models.ManagerOrders;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<thead class="border-dark">
+    <tr>
+        <th scope="col" style="width: 10%">#</th>
+        <th scope="col" style="width: 16%">訂單編號</th>
+        <th scope="col" style="width: 17%">訂餐時間</th>
+        <th scope="col" style="width: 13%">付款方式</th>
+        <th scope="col" style="width: 13%">訂單種類</th>
+        <th scope="col" style="width: 13%">訂單狀態</th>
+        <th scope="col" style="width: 18%">操作</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        int counter = (Model.CurrentPageIndex - 1) * Model.MaxRows + 1;
+        foreach (var item in Model.Orders)
+        {
+              <tr data-row-id=@($"{counter}") class="order-tr" data-order-id="@item.OrderId">
+                  <th class="align-middle" scope="row">@counter</th>
+                  <td class="align-middle" scope="row">@item.OrderId</td>
+                  <td class="align-middle">@item.OrderTime.ToString("yyyy/MM/dd HH:mm")</td>
+                  <td class="align-middle">@((item.OrderPayment) ? "linepay" : "現金")</td>
+                  <td class="align-middle">@((item.OrderDeliveryVia) ? "外送" : "自取")</td>
+                  <td class="align-middle">
+                      @(item.CustomerOrderStatus switch
+                      {
+                          0 => "待接單",
+                          1 => "製作中",
+                          2 => (item.OrderDeliveryVia)?"配送中":"等待自取",
+                          3 => "已完成",
+                          4 => "已退單",
+                          5 => "已取消",
+                      })
+                  </td>
+                  <td class="align-middle update-status">
+                      <button class="btn @((item.CustomerOrderStatus==0)?"btn-success":"btn-dark") @((item.CustomerOrderStatus>=3)?"d-none":"") me-1 fw-bold btn-accept show-alert"
+                              id="@((item.CustomerOrderStatus == 0) ? "acceptOrder" : "dishUp")"
+                              data-bs-toggle="modal" data-bs-target="#orderModal"
+                              data-action="@((item.CustomerOrderStatus == 0) ? "接單" : "出餐")"
+                              data-order-id="@item.OrderId"
+                              @((item.CustomerOrderStatus == 2) ? "disabled" : "")>
+                          @((item.CustomerOrderStatus == 0) ? "接單" : "出餐")
+                      </button>
+                      <button class="btn @((item.CustomerOrderStatus==0)?"btn-danger":"btn-dark") @((item.CustomerOrderStatus>=3)?"d-none":"") fw-bold btn-decline show-alert"
+                              id="@((item.CustomerOrderStatus == 0) ? "diclineOrder" : "finishOrder")"
+                              data-bs-toggle="modal" data-bs-target="#orderModal"
+                              data-action="@((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")"
+                              data-order-id="@item.OrderId"
+                              @((item.CustomerOrderStatus == 1) ? "disabled" : "")>
+                          @((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")
+                      </button>
+                  </td>
+              </tr>
+            <input type="hidden" id="hfCurrentPageIndex" name="currentPage" value="@Model.CurrentPageIndex" />
+            <input type="hidden" id="hfPageCount" value="@Model.PageCount" />
+            counter++;
+        }
+    }
+
+
+</tbody>
+@* modal *@
+<div class="modal" id="orderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  w-25">
+        <div class="modal-content">
+            <div class="modal-header order-modal-header bg-dark text-primary">
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel">訂單操作確認</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body order-modal-body ">
+                <p class="align-middle fw-bold fs-5 py-2">
+                  <span id="actionText"></span>
+                </p>
+            </div>
+            <div class="modal-footer order-modal-footer bg-dark text-primary py-0">
+                <button type="button" class="btn btn-secondary fw-bold btn-modal py-0" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary fw-bold btn-modal py-0" id="confirmAction">確認</button>
+            </div>
+        </div>
+    </div>
+</div>

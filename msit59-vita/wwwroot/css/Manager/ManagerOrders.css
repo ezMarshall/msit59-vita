@@ -36,6 +36,11 @@
     border: none;
 }
 
+.btn-primary:hover {
+    background-color: #FF6700;
+    border: none;
+}
+
 .btn {
     border: none;
 }
@@ -48,4 +53,18 @@
 .order-tr {
     height: 65px;
     cursor: pointer;
+}
+.order-modal-header{
+    height:50px;
+}
+.order-modal-footer {
+    height: 55px;
+}
+
+.order-modal-body {
+    height: 80px;
+}
+
+.btn-modal{
+    height:30px
 }

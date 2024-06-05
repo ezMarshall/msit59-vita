@@ -1,7 +1,13 @@
+@{
+
+    ViewData["Title"] = "當前訂單";
+}
+
+
 <div class="container-fluid mt-3">
 
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-        <ol class="breadcrumb ms-5">
+        <ol class="breadcrumb ms-5" >
             <li class="breadcrumb-item active text-dark">會員中心</li>
             <li class="breadcrumb-item active text-dark">我的訂單</li>
             <li class="breadcrumb-item active text-info" aria-current="page">當前訂單</li>
@@ -9,77 +15,190 @@
     </nav>
     <div class="container container-lg ">
         <h4 class="text-dark">當前訂單</h4>
-        <div class="container container-lg w-75 mt-4 px-0">
-            <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill ">當前訂單</button>
-            <button type="submit"
+        <div class="container container-lg w-75 mt-4 px-0" id="order-btns">
+            <button type="button" class="btn btn-dark px-4 py-2 rounded-pill ">當前訂單</button>
+            <button type="button"
                 class=" user-center-order-btn btn btn-outline-info  px-4 py-2 rounded-pill">歷史訂單</button>
         </div>
     </div>
-    <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3">
-        <div class="container-lg container row  ">
-            <!-- 店家照片 -->
-            <div class="col-12 col-lg-4 mb-3">
-                <img class="card-img-top"  src="../img/home_banner.png" alt="店家照片">
-            </div>
-            <!-- 訂單明細 -->
-            <dl class="row col-12 col-lg-8 ">
+    @foreach (var order in Model)
+    {
+        string orderStatus = "";
+        string UniformInvoiceVia = "本店免用統一發票";
+        int count = 0;
+        switch (order.CustomerOrderStatus)
+        {
+            case 0:
+                orderStatus = "待接單";
+                break;
+            case 1:
+                orderStatus = "製作中";
+                break;
+            case 2:
+                orderStatus = order.OrderDeliveryVia == "自取" ? "等待自取" : "配送中";
+                break;
+            case 3:
+                orderStatus = "已完成";
+                break;
+            case 4:
+                orderStatus = "退單";
+                break;
+            case 5:
+                orderStatus = "客戶已取消";
+                break;
+            default:
+                break;
+        }
 
-                <dt class="col-6">訂單編號:</dt>
-                <dd class="col-6">12345678</dd>
-
-                <dt class="col-6">店名:</dt>
-                <dd class="col-6">優輕食</dd>
-
-
-                <dt class="col-6">取貨人:</dt>
-                <dd class="col-6">關二哥</dd>
-
-                <dt class="col-6">連絡電話:</dt>
-                <dd class="col-6">09123456789</dd>
-
-
-                <dt class="col-6">取貨方式:</dt>
-                <dd class="col-6">自取</dd>
-
-                <dt class="col-6">訂餐時間:</dt>
-                <dd class="col-6">2024/05/22 11:00</dd>
-
-                <dt class="col-6">預計送達/取餐時間:</dt>
-                <dd class="col-6">2024/05/22 11:00</dd>
-
-
-                <dt class="col-6">付款方式:</dt>
-                <dd class="col-6">現金</dd>
-
-                <dt class="col-6">開立發票方式:</dt>
-                <dd class="col-6">紙本發票</dd>
-
-
-                <dt class="col-6">內容/數量:</dt>
-                <div class="col-6 ">
-
-                    <dd>雞胸肉餐盒*1</dd>
-                    <dd>雞胸肉餐盒*1</dd>
-                    <dd>雞胸肉餐盒*1</dd>
-                    <dd><a class="bg-primary fs-6 link-info" href="#">更多</a></dd>
+        <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3" id="@($"order{order.OrderId}")">
+            <div class="container-lg container row  ">
+                <!-- 店家照片 -->
+                <div class="col-12 col-lg-4 mb-3">
+                    <img class="card-img-top user-center-image h-50" src="~/@order.StoreImage" alt="@($"store{order.StoreId}_picture")">
                 </div>
+                <!-- 訂單明細 -->
+                <dl class="row col-12 col-lg-8 ">
+
+                    <dt class="col-6">訂單編號:</dt>
+                    <dd class="col-6">@order.OrderId</dd>
+
+                    <dt class="col-6">店名:</dt>
+                    <dd class="col-6">@order.StoreName</dd>
 
 
-                <dt class="col-6">訂單金額:</dt>
-                <dd class="col-6">$230</dd>
+                    <dt class="col-6">取餐人:</dt>
+                    <dd class="col-6">@order.CustomerName</dd>
+
+                    <dt class="col-6">連絡電話:</dt>
+                    <dd class="col-6">@order.OrderPhoneNumber</dd>
 
 
-                <dt class="col-6">給店家留言:</dt>
-                <dd class="col-6">無</dd>
+                    <dt class="col-6">取餐方式:</dt>
+                    <dd class="col-6">@order.OrderDeliveryVia</dd>
 
-            </dl>
-            <div class="col-12 col-lg-12  d-flex flex-column mb-2">
-                    <p class=" ms-auto ">訂單狀態: <span class="text-info">待接單</span></p>
-                    <button type="submit" class="ms-auto btn btn-outline-success text-dark px-4 py-2 rounded-pill">取消訂單</button>
-                    <button type="submit" class="ms-auto btn btn-outline-success text-dark px-4 py-2 rounded-pill" hidden>取消訂單</button>
+                    @if (@order.OrderDeliveryVia == "外送")
+                    {
 
+                        <dt class="col-6">取餐地址:</dt>
+                        <dd class="col-6">@order.OrderAddress</dd>
+                    }
+                    <dt class="col-6">訂餐時間:</dt>
+                    <dd class="col-6">@order.OrderTime</dd>
+
+                    <dt class="col-6">預計送達/取餐時間:</dt>
+                    <dd class="col-6">@order.PredictedArrivalTime</dd>
+
+
+                    <dt class="col-6">付款方式:</dt>
+                    <dd class="col-6">@order.OrderPayment</dd>
+
+                    @if (order.OrderUniformInvoiceVia == 2)
+                    {
+                        UniformInvoiceVia = "手機載具";
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+
+                        <dt class="col-6">手機載具:</dt>
+                        <dd class="col-6">@order.OrderEinvoiceNumber</dd>
+                    }
+                    else if (order.OrderUniformInvoiceVia == 1)
+                    {
+                        UniformInvoiceVia = "紙本發票";
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+                    }else{
+
+                        <dt class="col-6">開立發票方式:</dt>
+                        <dd class="col-6">@UniformInvoiceVia</dd>
+                    }
+
+
+
+                    <dt class="col-6">內容/數量:</dt>
+                    <div class="col-6" id="@order.OrderId">
+
+                        @for (int i = 0; i < ViewBag.products.Count; i++)
+                        {
+                            var product = ViewBag.products[i];
+                            if (order.OrderId != product.OrderId) continue;
+                            count++;
+                            <dd class="@(count>3?"visually-hidden":"")">@($"{product.ProductName} * {product.Quantity}")</dd>
+                            if (count == 4)
+                            {
+                                <dd><a class="bg-primary fs-6 link-info" href="#" onclick="showProducts(@order.OrderId)">更多</a></dd>
+                            }
+                        }
+                    </div>
+
+
+                    <dt class="col-6">訂單金額:</dt>
+                    @for (int i = 0; i < ViewBag.price.Count;i++)
+                    {
+                        if (ViewBag.price[i].OrderId != order.OrderId) continue;
+                        <dd class="col-6">@($"${ViewBag.price[i].totalPrice}")</dd>
+
+                    }
+                    
+
+                    <dt class="col-6">給店家留言:</dt>
+                    <dd class="col-6">@order.OrderStoreMemo</dd>
+
+                </dl>
+                <div class="col-12 col-lg-12  d-flex flex-column mb-2">
+                    <p class=" ms-auto " id="order-status">訂單狀態: <span class="text-info">@orderStatus</span></p>
+                    @if (@orderStatus == "待接單")
+                    {
+                        <form class="ms-auto" action="/CurrentOrder/Canecl" method="post">
+                            <input class=" visually-hidden" name="orderId" value="@order.OrderId">
+                            <button type="submit" class="btn btn-outline-success text-dark px-4 py-2 rounded-pill" >取消訂單</button>
+                        </form>
+                    }
+
+                </div>
             </div>
         </div>
-    </div>
-
+    }
+   
 </div>
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        function showProducts(id) {
+            event.preventDefault();
+            $(`#${id}>dd`).removeClass("visually-hidden");
+            $(`#${id}>dd>a`).remove();
+        }       
+        $("#order-btns>button").click(function () {
+            window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
+        })
+
+        //接收訂單狀態更改
+        /*
+        確認消費者身分
+        比對訂單編號
+        更改訂單狀態
+        取消訂單按鈕
+        */
+        connection.on("StatusChange", function (CustomerId, OrderId, CustomerOrderStatus) {
+            const targetOrder = $(`#order${OrderId}`);
+            if (!targetOrder) return;
+            targetOrder.find("#order-status>span").text(CustomerOrderStatus);
+            if (CustomerOrderStatus !== "待接單") targetOrder.find("#order-status~form").remove();
+            
+            console.log(CustomerId, OrderId, CustomerOrderStatus);
+        })
+
+        /**
+         * 啟動signIR連線
+         * 
+         */
+        connection.start().then(function () {
+            console.log("start chat");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+    </script>
+}
