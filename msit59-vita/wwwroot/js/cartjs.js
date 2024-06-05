@@ -91,7 +91,7 @@ function renderCartItems(cartItems) {
 											<div class="shop-name fs-6 fw-bold">${item.storeName}</div>
 											<div class="product-name fs-5 fw-bold">${item.productName}</div>
 										</div>
-										<div class="product-delate text-success fs-4 mt-1" onclick="deleteCartItem(${item.shoppingCartId})">
+										<div class="product-delete text-success fs-4 mt-1" onclick="deleteCartItem(${item.shoppingCartId})">
 											<i class="fa-solid fa-trash"></i>
 										</div>
 									</div>

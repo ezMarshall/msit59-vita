@@ -44,7 +44,19 @@ namespace msit59_vita.Controllers
 					   join s in _context.Stores on p.StoreId equals s.StoreId
 					   join o in _context.StoreOpeningHours on s.StoreId equals o.StoreId
 					   where c.CustomerId == customerID && o.MyWeekDay == shortDayOfWeekString
-                       select c;
+                       select new 
+					   {
+						   ShoppingCartId = c.ShoppingCartId,
+						   ShoppingCartQuantity = c.ShoppingCartQuantity,
+						   StoreId = s.StoreId,
+						   StoreName = s.StoreName,
+						   StorePhoneNumber = s.StorePhoneNumber,
+						   CustomerName = ct.CustomerName,
+						   ProductId = p.ProductId,
+						   ProductName = p.ProductName,
+						   ProductUnitPrice = p.ProductUnitPrice,
+						   ProductUnitsInStock = p.ProductUnitsInStock,
+					   };
 
 			var paymentInfo = cart.ToList();
 
