@@ -7,11 +7,17 @@ namespace msit59_vita.Controllers
     {
         private VitaContext _context;
 
-        private int _customerId = 3;
+        private int _customerId = 31;
 
         public MyDataController(VitaContext context)
         {
             _context = context;
+        }
+
+        //測試用
+        public IActionResult chat() 
+        { 
+            return View(); 
         }
 
         /*
@@ -20,7 +26,17 @@ namespace msit59_vita.Controllers
          */
         public IActionResult Index()
         {
-            ViewBag.CustomerID = _customerId;
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated?? false)
+            {
+                return Redirect("/");
+            }
+
+            //取得使用者ID
+            var queryCustomerID = from c in _context.Customers
+                                  where c.CustomerEmail == User.Identity.Name
+                                  select c.CustomerId;
+            _customerId = queryCustomerID.Single();
 
             var queryCustomerData = from c in _context.Customers
                                     where c.CustomerId == _customerId
@@ -50,13 +66,16 @@ namespace msit59_vita.Controllers
         {
 
             Customer customer = _context.Customers.Find(id);
-            //密碼不一樣
-            if(customer.CustomerPassword != originPassword)
+            //沒有該id
+            if (customer == null)
             {
+
                 return View();
             }
-            if (customer == null) { 
-            
+            //密碼不一樣
+            if (customer.CustomerPassword != originPassword)
+            {
+                return View();
             }
             //必填項目
             customer.CustomerPassword = String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword : CustomerPassword; 

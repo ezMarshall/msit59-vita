@@ -1,5 +1,5 @@
-
 @{
+    ViewData["Title"] = "會員資料";
     string defaultValue = "未填";
     string CustomerName = Model.CustomerName;
     string CustomerEmail = Model.CustomerEmail;
@@ -117,8 +117,8 @@
                             <label for="Address" class="form-label ">常用地址</label>
                         </div>
                         <div class="col-2 ">
-                            <button class=" bg-primary float-end  btn py-0 CustomerAddress-btn" type="button" onclick="editAdress()"><i
-                                    class="fa-regular fa-pen-to-square"></i></button>
+                            <button class=" bg-primary float-end  btn py-0 CustomerAddress-btn" id=" CustomerAddress-btn" type="button" onclick="editAdress()">
+                                <i class="fa-regular fa-pen-to-square"></i></button>
                         </div>
                     </div>
                     <div class="mb-3 g-6  ">
@@ -127,22 +127,23 @@
                             <div class="col-6 col-lg-6 border-bottom border-dark CustomerAddressCity-span">
                                     
                                 <span class="">@CustomerAddressCity</span>
+                                @* <span class="">臺中市</span> *@
                             </div>
     
                             <div class="col-6 col-lg-6  border-bottom border-dark CustomerAddressDistrict-span">                                
-                                <span class="">@CustomerAddressDistrict</span>
+                                <span class="">@CustomerAddressDistrict</span>                                 
                             </div>
 
                             <!-- todo動態生成 -->
-                            <div class="col-6 col-lg-6  CustomerAddressCity-select visually-hidden px-0">
-                                <select class="form-select  form-select-sm  bg-primary  " name="CustomerAddressCity">
+                            <div class="col-6 col-lg-6  CustomerAddressCity-select visually-hidden px-0" id="CustomerAddressCity">
+                                <select class="form-select  form-select-sm  bg-primary " name="CustomerAddressCity">
                                     <option selected>@CustomerAddressCity</option>
                                     <option >彰化市</option>
                                     <option >雲林縣</option>
                                 </select>
                             </div>
                             <!-- todo動態生成 -->
-                            <div class="col-6 col-lg-6  CustomerAddressDistrict-select visually-hidden px-0">
+                            <div class="col-6 col-lg-6  CustomerAddressDistrict-select visually-hidden px-0" id="CustomerAddressDistrict">
                                 <select class="form-select  form-select-sm bg-primary " name ="CustomerAddressDistrict">
                                     <option selected>@CustomerAddressDistrict</option>
                                     <option>南區</option>
@@ -224,25 +225,59 @@
 
 @section Scripts{
 <script>
+    
     let isEdit = false;
+    let addressData;
+    // 載入縣市名稱
+    $(document).ready(async () => {
+        addressData = await getaddressData();
+        let cityOptions = "";
+        addressData.forEach((v, i) => {
+            const cutryName = v.CityName.replace("臺", "台");
+                cityOptions += $(".CustomerAddressCity-span span").text() === cutryName ? `<option selected>${cutryName}</option> ` : `<option>${cutryName}</option> `
+        })
+        $("#CustomerAddressCity>select").html(cityOptions);
+    })
     const showEdit = () => {
         isEdit ? $(".save-div").removeClass("visually-hidden"):"";
     }
-    function editAdress(){
+    const getaddressData = async () => {        
+        return await fetch("data/CityCountryData.json",
+        {
+            method: 'GET'
+        })               
+        .then(res => res.json())
+        .then(data => data)
+    }
+    const setAddressDistrict = async() => {
+        let districtOptions = "";
+            const city = addressData.find(v => v.CityName.replace("臺", "台") === $("#CustomerAddressCity>select option:selected").text());
+        city.AreaList.forEach(v => {
+            districtOptions += $(".CustomerAddressDistrict-span span").text() === v.AreaName ? `<option selected>${v.AreaName}</option> ` : `<option>${v.AreaName}</option> `
+        });
+        $("#CustomerAddressDistrict>select").html(districtOptions);
+    }    
+    //根據選到的城市 放區CustomerAddressDistrict的選項
+    $("#CustomerAddressCity>select").change(async function(){
+            await setAddressDistrict();
+    })
+    async function editAdress(){
 
         let originText = "";
+        //隱藏文字
         $(".CustomerAddress-btn").addClass("visually-hidden");
         $(".CustomerAddressCity-span").addClass("visually-hidden");
         $(".CustomerAddressDistrict-span").addClass("visually-hidden");
         $(".CustomerAddressDetails-span").addClass("visually-hidden");
 
-        originText = $(".CustomerAddressDetails-span span").text() === '@defaultValue' ? "" : $(".CustomerAddressDetails-span span").text();
+        originText = $(".CustomerAddressDetails-span span").text() === '未填' ? "" : $(".CustomerAddressDetails-span span").text();
+        //顯示input
         $(".CustomerAddressCity-select").removeClass("visually-hidden");
         $(".CustomerAddressDistrict-select").removeClass("visually-hidden");
         $(".CustomerAddressDetails-input").removeClass("visually-hidden");
         $(".CustomerAddressCity-select select").focus();
         $(".CustomerAddressDetails-input>input").val(originText);
-            
+        await setAddressDistrict();
         isEdit = true;
         showEdit();
         console.log(originText);

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using msit59_vita.Models;
+using SignalRChat.Hubs;
+
+
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -21,6 +24,7 @@ builder.Services.AddDefaultIdentity<VitaUser>(options =>
 
 builder.Services.AddScoped<UserManager<VitaUser>, UserManager<VitaUser>>();
 builder.Services.AddScoped<SignInManager<VitaUser>, SignInManager<VitaUser>>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -40,4 +44,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

@@ -39,13 +39,12 @@ namespace msit59_vita.Controllers
                     VitaUserName = model.CustomerNickName ?? model.CustomerName,
                     Email = model.CustomerEmail,
                     PhoneNumber = model.CustomerCellPhone,
+                    IsCustomer = true,
                 };
                 var result = await _userManager.CreateAsync(user, model.CustomerPassword);
 
                 if (result.Succeeded)
                 {
-                    // await _signInManager.SignInAsync(user, isPersistent: false);
-
                     Customer customer = new Customer
                     {
                         CustomerName = model.CustomerName,
@@ -56,8 +55,8 @@ namespace msit59_vita.Controllers
                     };
                     _context.Customers.Add(customer);
                     _context.SaveChanges();
-
                     
+            
                     // 創建自定義聲明
                     var claims = new List<Claim>
                     {
@@ -74,7 +73,7 @@ namespace msit59_vita.Controllers
                         return Redirect("/Home");
                     }
                     
-                    return Redirect("/Account/Login");
+                    return Redirect("/Home");
                 }
 
                 foreach (var error in result.Errors)
@@ -108,7 +107,9 @@ namespace msit59_vita.Controllers
             if (ModelState.IsValid)
             {
                 VitaUser? user = await _userManager.FindByEmailAsync(model.CustomerEmail);
-                if (user != null) {
+                if (user != null && user.IsCustomer) {
+
+
                     var result = await _signInManager.PasswordSignInAsync(user, model.CustomerPassword, false, false);
                     if (result.Succeeded)
                     {
@@ -122,6 +123,8 @@ namespace msit59_vita.Controllers
                         {
                             var userIdentity = (ClaimsIdentity)User.Identity!;
                             userIdentity.AddClaims(claims);
+                            await _signInManager.SignOutAsync();
+                            await _signInManager.SignInAsync(user, isPersistent: false);
                             return RedirectToAction("Index","Home");
                         }
                         return RedirectToAction("Index", "Home");

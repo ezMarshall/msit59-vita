@@ -3,10 +3,157 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< ManagerOrderView
     <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+=======
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+
+    <style>
+        .nav-area {
+            height: 80px;
+            z-index: 1000;
+        }
+
+            .nav-area .nav {
+                height: 80px;
+            }
+
+                .nav-area .nav .logout-link:hover {
+                    color: #FF6700;
+                }
+
+                .nav-area .nav .header-logo {
+                    height: 70px;
+                }
+
+
+        .content-area{
+            height: calc(100vh - 80px);
+            background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
+        }        
+
+        .sidebar {
+            padding: 120px 0px 70px 0px;
+            position: fixed;
+            top: 0;            
+        }
+        
+        .sidebar ul{
+            display: flex;
+            flex-direction:column;
+            align-items: center;
+            line-height:3;
+        }
+
+            .sidebar ul li a{
+                font-size: x-large;
+            }
+
+                .sidemenu-link:hover {
+                    color: #FF6700;
+                }
+
+            .sidebar ul li .btn-xlarge {
+                padding: 10px 15px;
+                font-size: x-large;
+                line-height: normal;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+
+        .suspend-order {
+            margin-top: auto;
+        }
+
+        @@media (max-width: 576px){
+            .content-area{
+                position: sticky;
+                top: 0;
+            }
+                
+            .sidebar {
+/*                 position: sticky;
+                top: 0;
+ */
+                padding: 0px;
+                background-color: #F1F0CC !important;
+                max-height: 80px;
+                width:100%; 
+            }
+
+                .sidebar ul {
+/*                     position: sticky;
+                    top: 0; */
+                   display: flex;
+                   flex-direction:row;
+                   justify-content:space-around;
+                   align-items: center;
+
+                }
+                    .sidebar ul li a{
+                        font-size: larger;
+                    }
+
+                    .sidebar ul li img {
+                            display: none;
+                    }
+
+                    .sidebar ul li .btn-xlarge {
+                        padding:  0;
+                        font-size: large;
+                        border-radius: 0px;
+                        background-color: transparent;
+                        color: black;
+                        font-weight: bolder;
+                        border: 0;
+                    }
+
+                    .suspend-order {
+                        margin: 0;
+                overflow: visible;
+                    }
+
+                    .suspend-order a{
+                    position: relative;
+                }
+
+                    .suspend-order a:hover {
+                        transform: scale(1.4);
+                        color: red !important;
+                    }
+
+            .sidebar ul li:last-child a:before {
+                        content: '';
+                        position: absolute;
+                        top: 0
+                        left:0;
+                        width: 100%;
+                        height: 100%;
+                        background: #399E5A;
+                        opacity: 0.6;
+                        transition: 0.5s;
+                        transform-origin: right;
+                        transform: scaleX(0);
+                        z-index: -1;
+                    }
+
+            .sidebar ul li:last-child a:hover:before {
+                        transition: transform 0.5s;
+                        transform-origin: left;
+                        transform: scaleX(1);
+                    }
+
+
+                    
+
+        }
+    </style>
+>>>>>>> main
     @RenderSection("MyStyle", required: false)
 
 
@@ -31,6 +178,7 @@
             </ul>
 
         </header>
+<<<<<<< ManagerOrderView
 
 
 
@@ -42,24 +190,46 @@
                             <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
                                 <span>訂單管理</span>
+=======
+        <div class="row content-area m-0">
+            <div class="col-lg-2 col-sm-3 bg-primary d-flex justify-content-center">
+                <div id="sidebar-wrapper" class="sidebar sidebar-dark vh-100 bg-primary">
+                    <ul class="h-100 list-unstyled">
+                        <li>
+                            <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
+                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
+                                <span class="sidemenu-link">訂單管理</span>
+>>>>>>> main
                             </a>
                         </li>
                         <li>
                             <a href="/ManagerProducts/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
+<<<<<<< ManagerOrderView
                                 <span>菜單管理</span>
+=======
+                                <span class="sidemenu-link">菜單管理</span>
+>>>>>>> main
                             </a>
                         </li>
                         <li>
                             <a href="/ManagerStores/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
+<<<<<<< ManagerOrderView
                                 <span>店家資訊</span>
+=======
+                                <span class="sidemenu-link">店家資訊</span>
+>>>>>>> main
                             </a>
                         </li>
                         <li>
                             <a href="/ManagerReviews/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
+<<<<<<< ManagerOrderView
                                 <span>評論管理</span>
+=======
+                                <span class="sidemenu-link">評論管理</span>
+>>>>>>> main
                             </a>
                         </li>
                         <li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger">暫停接單</a></li>
@@ -95,4 +265,8 @@
     </div>
 
 </body>
+<<<<<<< ManagerOrderView
 </html>
+=======
+</html>
+>>>>>>> main

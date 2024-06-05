@@ -2,12 +2,18 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VITA | @ViewData["Title"]</title>
-    <link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
-    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>VITA | @ViewData["Title"]</title>
+	<link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/toastr.js/toastr.css" asp-append-version="true" />
+	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<script src="~/lib/toastr.js/toastr.min.js"></script>
+	<!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
+	<!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
+
 </head>
 
 <body>
@@ -70,15 +76,28 @@
                         @* 分隔線 *@
                         <li class="d-lg-none border-light border-top opacity-25 my-3"></li>
 
-                        @* 購物車 *@
-                        <li>
-                            <a href="javascript:void(0)" class="position-relative ms-4 d-none d-lg-block">
-                                <i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
-                                <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="cartNum">1</span>
-                            </a>
-                            <a href="javascript:void(0)" class="d-block d-lg-none text-decoration-none p-2">購物車</a>
-                        </li>
 
+							<!-- 購物車 -->
+
+
+						<li>
+							<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
+							   class="position-relative ms-4 d-none d-lg-block">
+								<i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
+								<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold"
+									  id="cartNum"></span>
+							</a>
+
+							<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
+							   class="d-block d-lg-none text-decoration-none p-2">購物車</a>
+
+						</li>
+						<!-- 購物車 end -->
+						
+
+
+					
+                        
                         @* 通知 *@
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
@@ -92,35 +111,35 @@
                         }
                     </ul>
 
-                </div>
-            </div>
-        </nav>
-    
-    </header>
+				</div>
+			</div>
+		</nav>
 
-   @RenderBody()
+	</header>
 
-    <footer class="bg-dark pt-5">
-        <div class="container-lg row mx-auto">
-            <div class="d-none d-md-block col-md-4 mb-3 mb-md-0">
-                <p class="footer-slogan text-primary">
-                    集結200家健康餐盒，你的健康，我們守護！<br>
-                    首選VITA，百搭你的味蕾。
-                </p>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="text-primary fw-bold fs-5">聯絡我們</p>
-                <a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
-                <a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
-                <div class="mt-4">
-                    <a href="#" class="footer-link d-inline-block link-primary">
-                        <i class="fa-brands fa-facebook fs-3"></i>
-                    </a>
-                    <a href="#" class="footer-link link-primary">
-                        <i class="fa-brands fa-instagram fs-3 ms-3"></i>
-                    </a>
-                </div>
-            </div>
+	@RenderBody()
+
+	<footer class="bg-dark pt-5">
+		<div class="container-lg row mx-auto">
+			<div class="d-none d-md-block col-md-4 mb-3 mb-md-0">
+				<p class="footer-slogan text-primary">
+					集結200家健康餐盒，你的健康，我們守護！<br>
+					首選VITA，百搭你的味蕾。
+				</p>
+			</div>
+			<div class="col-6 col-md-4">
+				<p class="text-primary fw-bold fs-5">聯絡我們</p>
+				<a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
+				<a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
+				<div class="mt-4">
+					<a href="#" class="footer-link d-inline-block link-primary">
+						<i class="fa-brands fa-facebook fs-3"></i>
+					</a>
+					<a href="#" class="footer-link link-primary">
+						<i class="fa-brands fa-instagram fs-3 ms-3"></i>
+					</a>
+				</div>
+			</div>
 
             <div class="col-6 col-md-4">
                 <a href="/JoinUs" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
@@ -135,6 +154,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/cartjs.js" asp-append-version="true"></script>
     <script>
         function logout() {
             $.ajax({
@@ -154,6 +174,88 @@
         }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
+			
+	<!-- 購物車頁面開始 -->
+	<form action="/CheckedPayment/Index" method="post">
+		<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+			<div class="offcanvas-header justify-content-end">
+				<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+						aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
+
+				<div class="cart-container overflow-auto">
+					@* <div class="cart-item d-flex justify-content-between pb-3">
+					<img src="./image/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
+					<div class="cart-details">
+					<div class="cart-info d-flex justify-content-between mb-1">
+					<div class="me-3">
+					<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
+					<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
+					</div>
+					<div class="product-delate text-success fs-4 mt-1">
+					<i class="fa-solid fa-trash"></i>
+					</div>
+					</div>
+					<div class="shop-price d-flex justify-content-around align-items-center">
+					<div class="input-group w-50">
+					<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
+					<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
+					</button>
+					<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="1" id="number">
+					<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
+					<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
+					</button>
+					</div>
+					<div class="fs-5 fw-bold text-center product-price" data-price="100">$100</div>
+					</div>
+
+					</div>
+					</div> *@
+
+				</div>
+
+
+				<div class="total-price pt-3">
+					<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+
+					<div class="d-grid col-10 mx-auto">
+						<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	
+	<!-- 購物車頁面結束 -->
+	<!-- 手機版購物車開始 -->
+	@* <div class="offcanvas offcanvas-bottom bg-light h-75" tabindex="-1" id="offcanvasCartMobile"
+		 aria-labelledby="offcanvasCart MobileLabel">
+		<div class="offcanvas-header justify-content-end">
+			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+					aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body cart-list">
+
+			<div class="cart-container">
+				
+
+			</div>
+
+			<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+
+			<div class="d-grid col-10 mx-auto">
+				<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="button">立即結帳</button>
+			</div> 
+
+		</div>
+	</div> *@
+	<!-- 手機版購物車結束 -->
+
+		
+
+
+
 </body>
 
 </html>
