@@ -83,7 +83,7 @@ namespace msit59_vita.Controllers
            
 			if (!User.Identity?.IsAuthenticated ?? false)
 			{
-				Console.WriteLine("未登入sdfsdfsdffg");
+				//未登入狀態
 				return Json(new { success = false, message = "請先登入" });
 			}
 
