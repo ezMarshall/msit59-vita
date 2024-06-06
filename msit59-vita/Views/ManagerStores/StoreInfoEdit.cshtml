@@ -51,38 +51,38 @@
 </div>
 
 <div class="row">
-    <div class="mb-3 col-8">
+    <div class="mb-3 col-lg-8 col-12">
         <label class="form-label" for="StoreOpeningHours">營業時間</label>
         <!-- 週日 -->
         <div class="row align-items-center  weekday-area">
             <label class="form-label col-2 mb-0">週日</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox"
                        id="StoreSunday" name="clientOpeningHours[0].StoreOpenOrNot" value="true" @((clientOpeningHours[0].StoreOpenOrNot == true) ? "checked" : "") />
                 <label class="form-label mb-0" for="StoreSunday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeSunday" value="@(StoreOpeningTime[0] !=null ? StoreOpeningTime[0]:"")"
                        type="time" name="clientOpeningHours[0].StoreOpeningTime" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeSunday" value="@(StoreClosingTime[0] !=null ? StoreClosingTime[0]: "" )"
                        type="time" name="clientOpeningHours[0].StoreClosingTime" />
             </div>
         </div>
         <!-- 週一 -->
         <div class="row align-items-center  weekday-area">
-            <label class="form-label col-2 mb-0">週一</label>
-            <div class="col-2">
+            <label class="form-label  col-2 mb-0">週一</label>
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox"
                        id="StoreMonday" name="clientOpeningHours[1].StoreOpenOrNot" value="true" @((clientOpeningHours[1].StoreOpenOrNot == true) ? "checked" : "") )>
                 <label class="form-label mb-0" for="StoreMonday">有營業</label>
             </div>
-            <div class="col-3 shown-is-open">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeMonday" value="@(StoreOpeningTime[1] !=null ? StoreOpeningTime[1]: "" )"
                        type="time" name="clientOpeningHours[1].StoreOpeningTime" />
             </div>
-            <div class="col-3 shown-is-open">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeMonday" value="@(StoreClosingTime[1] !=null ? StoreClosingTime[1]: "" )"
                        type="time" name="clientOpeningHours[1].StoreClosingTime" />
             </div>
@@ -90,16 +90,16 @@
         <!-- 週二 -->
         <div class="row align-items-center weekday-area">
             <label class="form-label col-2 mb-0">週二</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox"
                        id="StoreTuesday" name="clientOpeningHours[2].StoreOpenOrNot" value="true" @((clientOpeningHours[2].StoreOpenOrNot == true) ? "checked" : "") )>
                 <label class="form-label mb-0" for="StoreTuesday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeTuesday" value="@(StoreOpeningTime[2] !=null ? StoreOpeningTime[2]: "" )"
                        type="time" name="clientOpeningHours[2].StoreOpeningTime" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeTuesday" value="@(StoreClosingTime[2] !=null ? StoreClosingTime[2]: "" )"
                        type="time" name="clientOpeningHours[2].StoreClosingTime" />
             </div>
@@ -107,16 +107,16 @@
         <!-- 週三 -->
         <div class="row align-items-center  weekday-area">
             <label class="form-label col-2 mb-0">週三</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox" value="true"
                        id="StoreWednesday" name="clientOpeningHours[3].StoreOpenOrNot" @((clientOpeningHours[3].StoreOpenOrNot == true) ? "checked" : "") )>
                 <label class="form-label mb-0" for="StoreWednesday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeWednesday" value="@(StoreOpeningTime[3] !=null ? StoreOpeningTime[3]: "" )"
                        name="clientOpeningHours[3].StoreOpeningTime" type="time" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeWednesday" value="@(StoreClosingTime[3] !=null ? StoreClosingTime[3]: "" )"
                        name="clientOpeningHours[3].StoreClosingTime" type="time" />
             </div>
@@ -124,16 +124,16 @@
         <!-- 週四 -->
         <div class="row align-items-center  weekday-area">
             <label class="form-label col-2 mb-0">週四</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox" value="true"
                        id="StoreThursday" name="clientOpeningHours[4].StoreOpenOrNot" @((clientOpeningHours[4].StoreOpenOrNot == true) ? "checked" : "") )>
                 <label class="form-label mb-0" for="StoreThursday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control  invisible" id="StoreOpeningTimeThursday" value="@(StoreOpeningTime[4] !=null ? StoreOpeningTime[4]: "" )"
                        name="clientOpeningHours[4].StoreOpeningTime" type="time" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeThursday" value="@(StoreClosingTime[4] !=null ? StoreClosingTime[4]: "" )"
                        name="clientOpeningHours[4].StoreClosingTime" type="time" />
             </div>
@@ -141,16 +141,16 @@
         <!-- 週五 -->
         <div class="row align-items-center  weekday-area">
             <label class="form-label col-2 mb-0">週五</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox" value="true"
                        id="StoreFriday" name="clientOpeningHours[5].StoreOpenOrNot" @((clientOpeningHours[5].StoreOpenOrNot == true) ? "checked" : "") )>
                 <label class="form-label mb-0" for="StoreFriday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeFriday" value="@(StoreOpeningTime[5] !=null ? StoreOpeningTime[5]: "" )"
                        type="time" name="clientOpeningHours[5].StoreOpeningTime" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control  invisible" id="StoreClosingTimeFriday" value="@(StoreClosingTime[5] !=null ? StoreClosingTime[5]: "" )"
                        type="time" name="clientOpeningHours[5].StoreClosingTime" />
             </div>
@@ -158,23 +158,23 @@
         <!-- 週六 -->
         <div class="row align-items-center  weekday-area">
             <label class="form-label col-2 mb-0">週六</label>
-            <div class="col-2">
+            <div class="col-lg-2 col-3">
                 <input class="form-check-input weekday-checkbox" type="checkbox"
                        id="StoreSaturday" name="clientOpeningHours[6].StoreOpenOrNot" value="true" @((clientOpeningHours[6].StoreOpenOrNot == true) ? "checked" : "") ) />
                 <label class="form-label mb-0" for="StoreSaturday">有營業</label>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreOpeningTimeSaturday" value="@(StoreOpeningTime[6] !=null ? StoreOpeningTime[6]: "" )"
                        name="clientOpeningHours[6].StoreOpeningTime" type="time" />
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-3">
                 <input class="form-control invisible" id="StoreClosingTimeSaturday" value="@(StoreClosingTime[6] !=null ? StoreClosingTime[6]: "" )"
                        name="clientOpeningHours[6].StoreClosingTime" type="time" />
             </div>
         </div>
     </div>
 
-    <div class="mb-3 col-4">
+    <div class="mb-3 col-lg-4">
         <div class="mb-3">
             <label class="form-label d-block">開立發票方式</label>
             <div class="form-check form-check-inline">
@@ -187,7 +187,7 @@
             </div>
 
         </div>
-        <div class="mb-3">
+        <div class="mb-3 ">
             <label class="form-label d-block">接受LINEPAY</label>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" id="LinePayYes" type="radio" name="StoreLinePay" value="true" required @((Model.StoreLinePay == true) ? "checked" : "") />

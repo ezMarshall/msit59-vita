@@ -1,0 +1,24 @@
+body section * {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid lightgray;
+}
+
+.bgColor{
+    background-color: lightcoral;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.Jigglypuff{
+    background-color: aquamarine;
+    font-style: italic;
+    
+}
+
+button:hover{
+    background-color: aqua;
+    cursor: pointer;
+}
