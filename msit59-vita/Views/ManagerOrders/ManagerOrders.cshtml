@@ -205,6 +205,10 @@
         });
 
         // pagenation start
+        // 在文件就緒時調用 updatePaginationButtons 函數
+        $(document).ready(function () {
+            updatePaginationButtons(parseInt($('#hfCurrentPageIndex').val()));
+        });
         function PagerClick(currentPage) {
             if ($('#searchString').val() || $('#startDate').val() || $('#endDate').val() || $('#deliveryVia').val() || $('#orderStatus').val()) {
                 // 如果有篩選條件，使用篩選函數
