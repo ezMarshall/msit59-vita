@@ -11833,6 +11833,7 @@ body {
     bottom: 10px;
     opacity: 0;
     transition: all 0.3s;
+    z-index:3;
 }
 
     .home-fixed a {
@@ -11853,7 +11854,7 @@ body {
 @media (min-width: 576px) {
     .home-fixed {
         right: 10px;
-        bottom: 150px;
+        top: 40%;
     }
 }
 
@@ -11898,7 +11899,7 @@ body {
 
 .home-banner {
     height: 500px;
-    background-image: url("../img/home_banner.png");
+    background-image: url("../image/Common/banner.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

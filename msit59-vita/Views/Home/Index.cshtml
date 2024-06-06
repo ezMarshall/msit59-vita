@@ -1,10 +1,82 @@
-﻿@{
+﻿@model msit59_vita.Models.ViewModels.StoreSearchViewModel
+@{
     ViewData["Title"] = "Home Page";
-    // Layout = "_ManagerLayout";
+    Layout = "_LayoutHome";
 }
 
-<div class="text-center">
-    <i class="fa-solid fa-house"></i>
-    <h1 class="display-4 text-info">Welcome 1</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- banner -->
+<section class="home-banner">
+    <div class="container-lg row align-items-center justify-content-end h-100 mx-auto">
+        <div class="bg-light rounded-3 p-4 col-12 col-md-6">
+            <ul class="list-unstyled text-center fs-0 fw-bold text-dark border-bottom border-2 border-dark" id="bannerForm">
+                <li class="d-inline-block w-50 fs-6 deliver-hover" data-deliver="Delivery">
+                    <i class="fa-solid fa-car-side"></i>
+                    <p>外送</p>
+                </li>
+                <li class="d-inline-block w-50 fs-6" data-deliver="Self-pickup">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <p>自取</p>
+                </li>
+            </ul>
+            <form class="p-1">
+                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
+                    預計送達時間
+                </label>
+                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-3" value="2024/05/16 17:30">
+                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
+                    在哪裡附近
+                </label>
+                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4">
+                <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill w-100 border-0" id="bannerSearchBtn">開始尋找美食</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- search bar -->
+<section class="bg-success py-3 py-sm-2 search-panel">
+    <div class="container-lg row mx-auto g-3">
+        <div class="col-12 col-sm-4">
+            <button type="button" class="btn btn-light border-1 border-dark w-100 rounded-pill fw-bold" id="recommendBtn">精選推薦</button>
+        </div>
+        <div class="col-12 col-sm-8 position-relative">
+            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="searchInput" placeholder="餐廳或料理">
+            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="startSearch">
+                <i class="fa-solid fa-magnifying-glass fs-4"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("_StoreListPartial", Model);
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // banner deliver via
+            $('#bannerForm').find('li').on('click', function (e) {
+                $(this).addClass('deliver-hover').siblings().removeClass('deliver-hover');
+                if ($(this).data('deliver') == "Delivery") {
+                    $('#ArrivalTimeLabel').text('預計送達時間');
+                } else if ($(this).data('deliver') == "Self-pickup") {
+                    $('#ArrivalTimeLabel').text('預計取貨時間');
+                }
+            })
+
+            // click to store page
+            $('.home-store').each(function (index, item) {
+                $(item).on('click', function (e) {
+                    e.preventDefault();
+                    if ($(e.target).hasClass('fa-heart')) {
+                        // favorite store toggle
+                        $(e.target).removeClass('home-favorite-checked').siblings().addClass('home-favorite-checked');
+                    } else {
+                        // go to store page
+                        console.log("go to store page");
+                    }
+                })
+            })
+        })
+    </script>
+}

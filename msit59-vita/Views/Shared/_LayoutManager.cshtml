@@ -3,12 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< ManagerOrderView
-    <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-=======
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 
@@ -32,9 +26,13 @@
 
 
         .content-area{
-            height: calc(100vh - 80px);
             background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
-        }        
+        }
+
+        .sidebar-wrapper{
+            display: flex;
+            justify-content: center;
+        }
 
         .sidebar {
             padding: 120px 0px 70px 0px;
@@ -71,15 +69,17 @@
         }
 
         @@media (max-width: 576px){
-            .content-area{
+            .sidebar-wrapper {
+                display: block;
                 position: sticky;
                 top: 0;
+                z-index: 1000;
             }
                 
             .sidebar {
-/*                 position: sticky;
-                top: 0;
- */
+                position: static;
+                top:auto;
+
                 padding: 0px;
                 background-color: #F1F0CC !important;
                 max-height: 80px;
@@ -87,8 +87,6 @@
             }
 
                 .sidebar ul {
-/*                     position: sticky;
-                    top: 0; */
                    display: flex;
                    flex-direction:row;
                    justify-content:space-around;
@@ -130,7 +128,7 @@
             .sidebar ul li:last-child a:before {
                         content: '';
                         position: absolute;
-                        top: 0
+                        top: 0;
                         left:0;
                         width: 100%;
                         height: 100%;
@@ -153,16 +151,13 @@
 
         }
     </style>
->>>>>>> main
     @RenderSection("MyStyle", required: false)
 
 
 </head>
 <body>
-    <div class="body-container">
-        @* 為了讓position-sticky可用而存在的div *@
 
-        <header class="nav-area bg-dark sticky-sm-top">
+       <header class="nav-area bg-dark sticky-sm-top">
             <ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
                 <li class="nav-item">
                     <a href="/ManagerHome/Index">
@@ -178,61 +173,36 @@
             </ul>
 
         </header>
-<<<<<<< ManagerOrderView
-
-
-
-        <div class="row content-area m-0">
-            <div class="col-lg-2 col-sm-3 bg-primary d-flex justify-content-center sidebar-area">
-                <div id="sidebar-wrapper" class="sidebar sidebar-dark vh-100 bg-primary">
-                    <ul class="h-100 list-unstyled ">
-                        <li>
-                            <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
-                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
-                                <span>訂單管理</span>
-=======
-        <div class="row content-area m-0">
-            <div class="col-lg-2 col-sm-3 bg-primary d-flex justify-content-center">
-                <div id="sidebar-wrapper" class="sidebar sidebar-dark vh-100 bg-primary">
+        <div class="row content-area m-0 bg-primary">
+            <div class="sidebar-wrapper col-lg-2 col-sm-3 bg-primary" >
+                <div class="sidebar sidebar-dark vh-100 bg-primary">
                     <ul class="h-100 list-unstyled">
                         <li>
                             <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
                                 <span class="sidemenu-link">訂單管理</span>
->>>>>>> main
                             </a>
                         </li>
                         <li>
                             <a href="/ManagerProducts/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
-<<<<<<< ManagerOrderView
-                                <span>菜單管理</span>
-=======
                                 <span class="sidemenu-link">菜單管理</span>
->>>>>>> main
                             </a>
                         </li>
                         <li>
                             <a href="/ManagerStores/Index" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
-<<<<<<< ManagerOrderView
-                                <span>店家資訊</span>
-=======
                                 <span class="sidemenu-link">店家資訊</span>
->>>>>>> main
                             </a>
                         </li>
                         <li>
-                            <a href="/ManagerReviews/Index" class="text-decoration-none text-dark fw-bolder">
+                            <a href="/ManagerComments/ManagerComments" class="text-decoration-none text-dark fw-bolder">
                                 <img src="~/image/logo/logo_30x30_dark.png" alt="">
-<<<<<<< ManagerOrderView
-                                <span>評論管理</span>
-=======
                                 <span class="sidemenu-link">評論管理</span>
->>>>>>> main
                             </a>
                         </li>
                         <li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger">暫停接單</a></li>
+
 
                     </ul>
                 </div>
@@ -253,7 +223,8 @@
                     }
 
                 </div>
-
+            </div>
+        </div>
                 <script src="~/lib/jquery/dist/jquery.min.js"></script>
                 <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
                 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -276,15 +247,6 @@
                     }
                 </script>
                 @await RenderSectionAsync("Scripts", required: false)
-            </div>
-        </div>
-
-
-    </div>
 
 </body>
-<<<<<<< ManagerOrderView
 </html>
-=======
-</html>
->>>>>>> main
