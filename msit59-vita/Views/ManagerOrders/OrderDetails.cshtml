@@ -21,16 +21,16 @@
             <hr>
             <div class="d-lg-flex">
                 <p class="fw-bold">訂單編號：</p>
-                <p>@item.OrderId</p>
+                    <p>@item.OrderInfo.OrderId</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">訂單狀態：</p>
                 <p>
-                        @((int)item.CustomerOrderStatus switch
+                        @((int)item.OrderInfo.CustomerOrderStatus switch
                         {
                             0 => "待接單",
                             1 => "製作中",
-                            2 => (item.OrderDeliveryVia) ? "配送中" : "等待自取",
+                            2 => (item.OrderInfo.OrderDeliveryVia) ? "配送中" : "等待自取",
                             3 => "已完成",
                             4 => "已退單",
                             5 => "已取消",
@@ -39,40 +39,50 @@
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">訂單種類：</p>
-                    <p>@((item.OrderDeliveryVia) ? "外送" : "自取")</p>
+                    <p>@((item.OrderInfo.OrderDeliveryVia) ? "外送" : "自取")</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">取貨人：</p>
-                <p>@item.CustomerName</p>
+                <p>@item.OrderInfo.CustomerName</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">預計取餐時間：</p>
-                <p>@item.PredictedArrivalTime.ToString("yyyy/MM/dd HH:mm")</p>
+                <p>@item.OrderInfo.PredictedArrivalTime.ToString("yyyy/MM/dd HH:mm")</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">外送地址：</p>
-                    <p>@((@item.OrderAddressCity!="")?$"{item.OrderAddressCity}{item.OrderAddressDistrict}{item.OrderAddressDetails}":"無")</p>
+                <p>@((@item.OrderInfo.OrderAddressCity != "") ? $"{item.OrderInfo.OrderAddressCity}{item.OrderInfo.OrderAddressDistrict}{item.OrderInfo.OrderAddressDetails}" : "無")</p>
             </div>
             <div class=" pt-2">
                 <p class="fw-bold">訂購內容/數量：</p>
-                <p>@item.ProductName</p>
+                @foreach (var product in item.Products)
+                {
+                    <p>@product.ProductName x @product.Quantity</p>
+                }
                
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">給店家留言：</p>
-                <p>餐點放門口謝謝！</p>
+                <p>@((item.OrderInfo.OrderStoreMemo != "") ? @item.OrderInfo.OrderStoreMemo : "無")</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">開立發票方式：</p>
-                <p>紙本發票</p>
+                <p>
+                    @((int)item.OrderInfo.OrderUniformInvoiceVia switch
+                    {
+                        0 => "不開立發票",
+                        1 => "紙本發票",
+                        2 => "手機載具",
+                    })
+                </p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">付款方式：</p>
-                <p>現金</p>
+                <p>@((item.OrderInfo.OrderPayment) ? "linepay" : "現金")</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">訂單金額：</p>
-                <p>$480</p>
+                <p>$@item.TotalPrice.ToString("0")</p>
             </div>
             <hr>
 
@@ -84,6 +94,4 @@
 }
 
 
-
-<h1>OrderDetails</h1>
 

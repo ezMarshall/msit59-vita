@@ -37,10 +37,16 @@ namespace msit59_vita.Controllers
 
 
             //取得使用者ID
-            var queryCustomerID = from c in _context.Customers
-                                  where c.CustomerEmail == User.Identity.Name
-                                  select c.CustomerId;
-            _customerId = queryCustomerID.Single();
+            var queryCustomer = from c in _context.Customers
+                                where c.CustomerEmail == User.Identity.Name
+                                select new
+                                {
+                                    c.CustomerId,
+                                    c.CustomerName,
+                                    c.CustomerNickName
+                                };
+
+            _customerId = queryCustomer.Single().CustomerId;
 
             ViewBag.CustomerID = _customerId;
             var query = from o in _context.Favorites
@@ -81,6 +87,7 @@ namespace msit59_vita.Controllers
                                     countOfRating= g.Count(re => re.ReviewId != 0 ).ToString()
                                 };
             
+            ViewBag.customer = queryCustomer.Single();
             ViewBag.queryComments = queryComments.ToList();
             //queryOpeningHours.ToList().FindAll(i => i.StoreId == 1);
             ViewBag.openHours = queryOpeningHours.ToList();
