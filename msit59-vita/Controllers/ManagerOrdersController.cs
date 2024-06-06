@@ -55,6 +55,7 @@ namespace msit59_vita.Controllers
             return viewModel;
         }
 
+        // 篩選
         [HttpPost]
         public PartialViewResult FilterOrders(string searchString, string deliveryVia, string orderStatus, string startDate, string endDate, int currentPage = 1)
         {
@@ -197,9 +198,11 @@ namespace msit59_vita.Controllers
                 return StatusCode(500, new { success = false, message = "更新訂單狀態時發生錯誤" });
             }
         }
+
+        // Order Details
         public IActionResult OrderDetails(int id)
         {
-            var queryDetails = from o in _context.Orders
+            var queryDetails = (from o in _context.Orders
                                join c in _context.Customers on o.CustomerId equals c.CustomerId
                                join od in _context.OrderDetails on o.OrderId equals od.OrderId
                                join p in _context.Products on od.ProductId equals p.ProductId
@@ -221,7 +224,16 @@ namespace msit59_vita.Controllers
                                    OrderStoreMemo = o.OrderStoreMemo,
                                    OrderUniformInvoiceVia = o.OrderUniformInvoiceVia,
                                    OrderPayment = o.OrderPayment,
-                               };
+                                   ProductInfo = new { ProductName = p.ProductName, Quantity = od.Quantity ,UnitPrice=od.UnitPrice}
+
+                               })
+                                .GroupBy(x => x.OrderId)
+                                .Select(g => new
+                                {
+                                    OrderInfo = g.First(),
+                                    Products = g.Select(x => x.ProductInfo),
+                                    TotalPrice = g.Sum(x => x.ProductInfo.Quantity * x.ProductInfo.UnitPrice)
+                                }); 
             ViewBag.OrderDetails = queryDetails.ToList();
             return View(); 
         }
