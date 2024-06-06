@@ -21,7 +21,7 @@
 		<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
 			<form method="post">
 				<div class="order-store-info my-3">
-					@if (paymentInfo != null && paymentInfo.Count > 0  && paymentInfo[0].StoreName != null)
+					@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
 					{
 						<div class="store-name fs-3 fw-bold mb-1">@paymentInfo[0].StoreName </div>
 						<div class="store-phone fs-5 fw-bold"><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;@paymentInfo[0].StorePhoneNumber</div>
@@ -30,7 +30,7 @@
 					{
 						<div class="store-name fs-3 fw-bold mb-1">未選擇店家</div>
 					}
-					
+
 				</div>
 
 				<div class="order-list mb-2">
@@ -39,7 +39,7 @@
 					<div class="userInfo px-3 d-flex align-items-center mb-2">
 						<img src="/image/Common/user.png" class="rounded-circle img-fluid me-3" alt="用戶頭像">
 
-						@if (paymentInfo != null && paymentInfo.Count > 0  && paymentInfo[0].CustomerName != null)
+						@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].CustomerName != null)
 						{
 							<div class="fs-5 fw-bold">@paymentInfo[0].CustomerName</div>
 						}
@@ -116,18 +116,27 @@
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPay" id="flexRadioPay1"
-							   value="0">
+							   value="0" checked required>
 						<label class="form-check-label" for="flexRadioPay1">
 							現金
 						</label>
 					</div>
-					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPay" id="flexRadioPay2"
-							   value="1">
-						<label class="form-check-label" for="flexRadioPay2">
-							LINE PAY
-						</label>
-					</div>
+
+					@if (paymentInfo != null && paymentInfo.Count > 0)
+					{
+						@if (paymentInfo[0].StoreLinePay == true)
+						{
+							<div class="form-check ms-3">
+								<input class="form-check-input" type="radio" name="flexRadioPay" id="flexRadioPay2"
+									   value="1">
+								<label class="form-check-label" for="flexRadioPay2">
+									LINE PAY
+								</label>
+							</div>
+						}
+						
+					}
+
 				</div>
 
 				<div class="order-pick-up mb-2">
@@ -175,28 +184,33 @@
 				<div class="order-invoice mb-2">
 					<div class="fs-5 fw-bold">開立發票方式</div>
 
-					<div class="form-check ms-3 d-none">
-						<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt0"
-							   value="0">
-						<label class="form-check-label" for="flexRadioReceipt0">不開立發票</label>
-					</div>
+					@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreUniformInvoiceVia != true)
+					{
+						<div class="form-check ms-3">
+							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt0"
+							value="0" checked required>
+							<label class="form-check-label" for="flexRadioReceipt0">不開立發票</label>
+						</div>
+					}
+					else
+					{
+						<div class="form-check ms-3">
+							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt1"
+								   value="1" onclick="handleReceiptTypeChange('paper')" checked required>
+							<label class="form-check-label" for="flexRadioReceipt1">紙本發票</label>
+						</div>
 
-					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt1"
-							   value="1">
-						<label class="form-check-label" for="flexRadioReceipt1">紙本發票</label>
-					</div>
-
-					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt2"
-							   onclick="focusInput('inputCarrier')" value="2">
-						<label class="form-check-label" for="flexRadioReceipt2" onclick="focusInput('inputCarrier')"
-							   data-bs-focus="inputCarrier">手機載具</label>
-						<input id="inputCarrier" class="form-control" type="text" placeholder="首位為 / ，英文字母為大寫"
-							   aria-label="default input carrier" onfocus="focusRadio('flexRadioReceipt2')"
-							   autocomplete="off">
-					</div>
-
+						<div class="form-check ms-3">
+							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt2"
+								   onclick="focusInput('inputCarrier')" value="2">
+							<label class="form-check-label" for="flexRadioReceipt2" onclick="handleReceiptTypeChange('paper')"
+								   data-bs-focus="inputCarrier">手機載具</label>
+							<input id="inputCarrier" class="form-control" type="text" placeholder="首位為 / ，英文字母為大寫"
+								   aria-label="default input carrier" onfocus="focusRadio('flexRadioReceipt2')"
+								   autocomplete="off" oninput="validateCarrier()">
+							<div id="carrierFeedback" class="invalid-feedback">請輸入有效的手機載具，首位應為 / ，英文字母需為大寫</div>
+						</div>
+					}
 				</div>
 
 				<div class="order-phone-number mb-2">
@@ -366,9 +380,9 @@
 					if (!data.success) {
 						return;
 					}
-	
+
 					renderOrderCartItems(data.cart);
-					
+
 
 				},
 				error: function (xhr, status, error) {
@@ -378,34 +392,34 @@
 		}
 
 		function renderOrderCartItems(orderProductItems) {
-			var orderProductList= $(".order-product-list");
+			var orderProductList = $(".order-product-list");
 			orderProductList.empty();
 
 			orderProductItems.forEach(function (item) {
 				var orderProductItemsHtml = `
-									<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
-										<div class="product-info col-6">
-											<div class="product-name fw-bold">
-												<div class="fs-5">${item.productName}</div>
-												<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+											<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
+												<div class="product-info col-6">
+													<div class="product-name fw-bold">
+														<div class="fs-5">${item.productName}</div>
+														<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+													</div>
+												</div>
+												<div class="col-6 d-flex justify-content-around align-items-center">
+													<div class="input-group w-50">
+														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+															<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
+														</button>
+														<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="${item.quantity}"
+																id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
+															<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
+														</button>
+													</div>
+													<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
+													<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
+												</div>
 											</div>
-										</div>
-										<div class="col-6 d-flex justify-content-around align-items-center">
-											<div class="input-group w-50">
-												<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-													<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
-												</button>
-												<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="${item.quantity}"
-													   id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-												<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
-													<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
-												</button>
-											</div>
-											<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
-											<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
-										</div>
-									</div>
-								`;
+														`;
 				orderProductList.append(orderProductItemsHtml);
 			});
 
@@ -540,7 +554,7 @@
 					$(this).find('.product-item-total-price').text('$' + totalPrice);
 				}
 			});
-			
+
 		}
 
 		//統計商品數量
@@ -594,15 +608,52 @@
 
 
 
+		function focusInput(elementId) {
+			const element = document.getElementById(elementId);
+			if (element) {
+				element.focus();
+			}
+		}
+
+		function focusRadio(elementId) {
+			const element = document.getElementById(elementId);
+			if (element) {
+				element.checked = true;
+			}
+		}
 
 
 
+		//手機載具驗證
+		/*
+		* 第 1 碼為 /
+		* 其餘 7 碼為 0-9 A-Z . - +
+		*/
+		function validateCarrier() {
+			const input = document.getElementById('inputCarrier');
+			const feedback = document.getElementById('carrierFeedback');
+			const pattern = /^\/[0-9A-Z.+-]{7}$/; // 請輸入有效的手機載具，首位應為 / ，英文字母需為大寫
+			if (pattern.test(input.value)) {
+				input.classList.remove('is-invalid');
+				input.classList.add('is-valid');
+				feedback.style.display = 'none';
+			} else {
+				input.classList.remove('is-valid');
+				input.classList.add('is-invalid');
+				feedback.style.display = 'block';
+			}
+		}
 
-
-
-
-
-
+		//如果原先手機載具輸入框有值，則切換到紙本發票後清空手機載具輸入框的值
+		function handleReceiptTypeChange(type) {
+			const input = document.getElementById('inputCarrier');
+			if (type === 'paper') {
+				input.value = '';
+				input.classList.remove('is-valid', 'is-invalid');				
+			} else if (type === 'carrier') {				
+				focusInput('inputCarrier');
+			}
+		}
 
 
 
@@ -696,19 +747,7 @@
 		// 地址填寫結束
 
 
-		function focusInput(elementId) {
-			const element = document.getElementById(elementId);
-			if (element) {
-				element.focus();
-			}
-		}
 
-		function focusRadio(elementId) {
-			const element = document.getElementById(elementId);
-			if (element) {
-				element.checked = true;
-			}
-		}
 
 
 
