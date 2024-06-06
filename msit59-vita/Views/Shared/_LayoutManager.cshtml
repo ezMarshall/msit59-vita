@@ -164,7 +164,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/ManagerLogin/"
+                    <a href="javascript:void(0)" onclick="logout()"
                        class="logout-link fs-5 fw-bolder link-light text-decoration-none">
                         會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
                     </a>
@@ -225,6 +225,24 @@
                 <script src="~/lib/jquery/dist/jquery.min.js"></script>
                 <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
                 <script src="~/js/site.js" asp-append-version="true"></script>
+                <script>
+                    function logout() {
+                        $.ajax({
+                            type: "post",
+                            url: "@Url.Action("Logout", "ManagerLogin")",
+                            success: function (data) {
+                                if (data == "ok") {
+                                    window.location.href = "@Url.Action("Index", "ManagerLogin")";
+                                } else {
+                                    alert(data);
+                                }
+                            },
+                            error: function () {
+                                alert("發生未預期的錯誤,請稍後再試。");
+                            }
+                        })
+                    }
+                </script>
                 @await RenderSectionAsync("Scripts", required: false)
             </div>
         </div>
