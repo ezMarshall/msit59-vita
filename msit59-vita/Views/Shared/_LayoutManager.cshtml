@@ -26,9 +26,13 @@
 
 
         .content-area{
-            height: calc(100vh - 80px);
             background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
-        }        
+        }
+
+        .sidebar-wrapper{
+            display: flex;
+            justify-content: center;
+        }
 
         .sidebar {
             padding: 120px 0px 70px 0px;
@@ -65,15 +69,17 @@
         }
 
         @@media (max-width: 576px){
-            .content-area{
+            .sidebar-wrapper {
+                display: block;
                 position: sticky;
                 top: 0;
+                z-index: 1000;
             }
                 
             .sidebar {
-/*                 position: sticky;
-                top: 0;
- */
+                position: static;
+                top:auto;
+
                 padding: 0px;
                 background-color: #F1F0CC !important;
                 max-height: 80px;
@@ -81,8 +87,6 @@
             }
 
                 .sidebar ul {
-/*                     position: sticky;
-                    top: 0; */
                    display: flex;
                    flex-direction:row;
                    justify-content:space-around;
@@ -124,7 +128,7 @@
             .sidebar ul li:last-child a:before {
                         content: '';
                         position: absolute;
-                        top: 0
+                        top: 0;
                         left:0;
                         width: 100%;
                         height: 100%;
@@ -171,9 +175,9 @@
             </ul>
 
         </header>
-        <div class="row content-area m-0">
-            <div class="col-lg-2 col-sm-3 bg-primary d-flex justify-content-center">
-                <div id="sidebar-wrapper" class="sidebar sidebar-dark vh-100 bg-primary">
+        <div class="row content-area m-0 bg-primary">
+            <div class="sidebar-wrapper col-lg-2 col-sm-3 bg-primary" >
+                <div class="sidebar sidebar-dark vh-100 bg-primary">
                     <ul class="h-100 list-unstyled">
                         <li>
                             <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
