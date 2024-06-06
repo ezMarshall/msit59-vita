@@ -153,7 +153,7 @@
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPickUp" id="flexRadioPickUp1"
-							   value="0">
+							   value="0" checked required>
 						<label class="form-check-label" for="flexRadioPickUp1">
 							自取 (約 15 分鐘)
 						</label>
@@ -242,7 +242,7 @@
 				</div>
 
 				<div class="order-textarea">
-					<div class="fs-5 fw-bold">給店家留言</div>
+					<div class="fs-5 fw-bold">給店家留言 <span class="fs-6 fw-light text-muted">(最大長度250個字)</div>
 					<textarea class="form-control mb-4" id="orderFormControlTextarea1" rows="10"></textarea>
 				</div>
 
@@ -363,6 +363,7 @@
 
 <!-- 取餐結束開始 -->
 @section Scripts {
+
 	<script src="~/js/tw-city-selector.js"></script>
 	<script src="~/js/data-time.js"></script>
 	<script>
@@ -708,6 +709,31 @@
 			}
 		}
 
+		//給店家留言
+		// 獲取文字區域元素
+		const textarea = document.getElementById('orderFormControlTextarea1');
+
+		// 設置最大文字長度限制,例如500個字符
+		const maxLength = 500;
+
+		// 監聽 input 事件
+		textarea.addEventListener('input', () => {
+			// 如果文字長度超過上限,截斷多餘部分
+			if (textarea.value.length > maxLength) {
+				textarea.value = textarea.value.slice(0, maxLength);
+			}
+		});
+
+		// 監聽 input 事件
+		textarea.addEventListener('input', () => {
+			// 使用正則表達式過濾掉危險字符
+			const sanitizedValue = textarea.value.replace(/[<>\/]/g, '');
+
+			// 如果有不安全的字符被移除,更新文字區域的值
+			if (sanitizedValue !== textarea.value) {
+				textarea.value = sanitizedValue;
+			}
+		});
 
 
 
