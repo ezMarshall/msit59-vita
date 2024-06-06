@@ -5,6 +5,7 @@ using static NuGet.Packaging.PackagingConstants;
 using System.Drawing;
 using System.Diagnostics;
 using static msit59_vita.Models.ManagerReviews;
+using NuGet.Protocol;
 
 namespace msit59_vita.Controllers
 {
@@ -28,8 +29,6 @@ namespace msit59_vita.Controllers
             var viewModel = GetReviews(currentPage);
             return PartialView("_ReviewsTable", viewModel);
         }
-
-
 
         public ManagerReviews GetReviews(int currentPage)
         {
@@ -76,9 +75,6 @@ namespace msit59_vita.Controllers
             return viewModel;
         }
 
-
-
-
         [HttpPost]
         public IActionResult ManagerComments(Review replyItem)
         {
@@ -89,8 +85,14 @@ namespace msit59_vita.Controllers
             return RedirectToAction("ManagerComments", "ManagerComments");
         }
 
-        [HttpPost]
-        public PartialViewResult FilterReviews(string searchString, string replyStatus, string startDate, string endDate, int currentPage = 1)
+        public IActionResult FilterReviews(string searchString, string replyStatus, string startDate, string endDate, int currentPage = 1)
+        {
+            var viewModel = GetFilterReviews(searchString, replyStatus, startDate, endDate, currentPage);
+            return PartialView("_ReviewsTable", viewModel);
+        }
+
+
+        public ManagerReviews GetFilterReviews(string searchString, string replyStatus, string startDate, string endDate, int currentPage = 1)
         {
             int? replyStatusInt = null;
             if (!string.IsNullOrEmpty(replyStatus))
@@ -147,8 +149,12 @@ namespace msit59_vita.Controllers
             // 根據發佈時間區間過濾
             if (startDateParsed.HasValue && endDateParsed.HasValue)
             {
+                //Console.WriteLine($"你好: {startDateParsed}");
+                //Console.WriteLine($"你好: {endDateParsed}");
+
                 queryReviews = queryReviews.Where(r => r.ReviewTime >= startDateParsed.Value && r.ReviewTime <= endDateParsed.Value);
             }
+          
 
             var totalCount = queryReviews.Count(); // 總記錄數
             int maxRows = 10; // 每頁行數
@@ -167,10 +173,8 @@ namespace msit59_vita.Controllers
                 TotalCount = totalCount // 新增：返回總記錄數
             };
 
-            return PartialView("_ReviewsTable", viewModel);
+            return viewModel;
         }
-
-
 
 
 

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Order
+
+@{
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
 }
 
@@ -10,6 +12,9 @@
             padding: 50px 0px 0px 0px;
             width: 90%
         }
+        #order-info ul{
+            min-width: 300px;
+        }
 
         
         #order-info, #review-info {
@@ -17,6 +22,9 @@
         }
 
         @@media (max-width: 992px) {
+            #order-info ul {
+                min-width: auto;
+            }
             #review-info {
                 padding-top: 35px;
 
@@ -39,28 +47,31 @@
     <div class="info-area">
     <div class="row">
         <div id="order-info" class="col-lg-9 col-12">
-            <h3 class="p-0 fw-bolder">今日訂單資訊</h3>
-            <div class="row p-0">
+                <h3 class="p-0 fw-bolder">今日訂單資訊</h3>
+            <div class="row p-0 float-lg-start">
+                   
                 <ul class="col-lg-6 col-6 list-unstyled">
-                    <li>待接單：<a href="" class="text-success fw-bolder">8</a></li>
-                    <li>製作中：<a href="" class="text-success fw-bolder">5</a></li>
-                    <li>配送中/等待自取：<a href="" class="text-success fw-bolder">3</a></li>
-                    <li>已完成：<a href="" class="text-success fw-bolder">46</a></li>
-                    <li>退單/已取消：<a href="" class="text-success fw-bolder">7</a></li>
+                        <li class="fw-bold">訂單狀態概覽 </li>
+                        <li>待接單：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
+                        <li>製作中：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
+                        <li>配送中/等待自取：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
+                        <li>已完成：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
+                        <li>退單/已取消：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
 
                 </ul>
-                <ul class="col-lg-4 col-6 list-unstyled ">
-                    <li>今日營業額：5800</li>
-                    <li>今日銷售數量：49</li>
-                    <li>自取：38&nbsp;&nbsp;外送：11</li>
+                <ul class="col-lg-6 col-6 list-unstyled ">
+                        <li class="fw-bold">已完成訂單統計 </li>
+						<li>營業額： <span class="fw-bolder" style="color:blue">@ViewBag.TodayRevenue</span> </li>
+                        <li>便當總數量：<span class="fw-bolder" style="color:blue">@ViewBag.TodayQuantity </span></li>
                 </ul>
             </div>
 
         </div>
-        <div id="review-info" class="col-lg-3 col-12">
+        <div id="review-info" class="col-lg-3 col-12 pl-0">
             <h3 class="fw-bolder">評論管理</h3>
             <ul class="row list-unstyled ">
-                <li>本週新進評論：<a href="" class="text-success fw-bolder">5</a></li>
+                    <li> 本週新進評論： <a href="/ManagerComments/ManagerComments" onclick="redirectToManagerComments()" class="text-success fw-bolder">@ViewBag.NumComment</a> </li>
+
 
             </ul>
 
@@ -69,7 +80,7 @@
 
     </div>
 
-    <div id="sales-stats" class="pt-4">
+    <div id="sales-stats" class="pt-4 pl-0">
         <h3 class="fw-bolder">報表統計</h3>
 
 
@@ -104,4 +115,17 @@
     </div>
     
 
+}
+
+@section Scripts {
+    <script>
+        function redirectToManagerComments() {
+            sessionStorage.setItem('startDate', '@ViewBag.Last7DaysDate');
+            sessionStorage.setItem('endDate', '@ViewBag.TodayDate');
+
+          
+        }
+        
+        
+    </script>
 }
