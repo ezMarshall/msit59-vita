@@ -193,7 +193,17 @@
 }
 
 @section Scripts{
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.start().then(function () {
+            console.log("start connection");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
         // pagenation start
         function PagerClick(currentPage) {
             if ($('#searchString').val() || $('#startDate').val() || $('#endDate').val() || $('#deliveryVia').val() || $('#orderStatus').val()) {
@@ -303,6 +313,12 @@
                     data: { orderId: orderId, action: action },
                     success: function (result) {
                         if (result.success) {
+                            //singaIR發送
+                            connection.invoke("SwitchOrderStatus", 31, orderId, "配送中").catch(function (err) {
+                                return console.error(err.toString());
+                            });
+
+
                             modal.hide();
                             // 重新加載訂單表格
                             reloadOrdersTable();
