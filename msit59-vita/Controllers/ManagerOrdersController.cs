@@ -41,6 +41,7 @@ namespace msit59_vita.Controllers
                                   OrderPayment=o.OrderPayment,
                                   OrderDeliveryVia=o.OrderDeliveryVia,
                                   CustomerOrderStatus=o.CustomerOrderStatus,
+                                  CustomerId = o.CustomerId,
                               };
             var orders = queryOrders.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
             var viewModel = new ManagerOrders

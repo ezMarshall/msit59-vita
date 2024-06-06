@@ -53,7 +53,7 @@
         connection.invoke("SendMessage", user, message).catch(function (err) {
             return console.error(err.toString());
         });
-        connection.invoke("SwitchOrderStatus", 31, "10000010", "配送中").catch(function (err) {
+        connection.invoke("SwitchOrderStatus", "31", "10000010", "配送中").catch(function (err) {
             return console.error(err.toString());
         });
         event.preventDefault();

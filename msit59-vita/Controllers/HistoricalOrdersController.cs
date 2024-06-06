@@ -24,10 +24,17 @@ namespace msit59_vita.Controllers
 
 
             //取得使用者ID
-            var queryCustomerID = from c in _context.Customers
-                                  where c.CustomerEmail == User.Identity.Name
-                                  select c.CustomerId;
-            _customerId = queryCustomerID.Single();
+            var queryCustomer = from c in _context.Customers
+                                where c.CustomerEmail == User.Identity.Name
+                                select new
+                                {
+                                    c.CustomerId,
+                                    c.CustomerName,
+                                    c.CustomerNickName
+                                };
+
+            _customerId = queryCustomer.Single().CustomerId;
+
 
             var queryOrder = from o in _context.Orders
                              where o.CustomerOrderStatus > 2 && o.CustomerId == _customerId
@@ -48,7 +55,8 @@ namespace msit59_vita.Controllers
                                  OrderStoreMemo = String.IsNullOrEmpty(o.OrderStoreMemo) ? "無" : o.OrderStoreMemo,
                                  OrderUniformInvoiceVia = (int)o.OrderUniformInvoiceVia,
                                  OrderDeliveryVia = o.OrderDeliveryVia ? "外送" : "自取",
-                                 CustomerOrderStatus = (int)o.CustomerOrderStatus
+                                 CustomerOrderStatus = (int)o.CustomerOrderStatus,
+                                 
                              };
 
             var queryProducts = from o in _context.Orders
@@ -71,7 +79,15 @@ namespace msit59_vita.Controllers
                                  OrderId = g.Key,
                                  totalPrice = (int)g.Sum(p => (p.UnitPrice * p.Quantity))
                              };
-
+            var queryReviews = from r in _context.Reviews
+                               where r.Order.CustomerId == _customerId
+                               select new
+                               {
+                                   r.ReviewId,
+                                   r.OrderId
+                               };
+            ViewBag.reviews = queryReviews.ToList();
+            ViewBag.customer = queryCustomer.Single();
             ViewBag.products = queryProducts.ToList();
             ViewBag.price = queryPrice.ToList();
             return View(queryOrder.ToList());
