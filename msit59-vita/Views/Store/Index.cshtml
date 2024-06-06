@@ -53,10 +53,22 @@
 			<div class="store-comment fs-6 fw-bold mb-2 d-flex align-items-center">
 				<span class="star-container home-store-star d-inline-block"
 					  style="background: linear-gradient(to right ,  #ffd700 0% @((ViewBag.averageRating*20).ToString()+"%"), #FFFFFF @((ViewBag.averageRating*20).ToString()+"%") 100%)"></span>
-				<span>
-					@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
-					   data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
-				</span>
+
+				@if (ViewBag.totalReviews > 0)
+				{
+					<span>
+						@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal" data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
+					</span>
+				}
+				else
+				{
+					<span>@ViewBag.averageRating (@ViewBag.reviewCountSum)</span>
+				}
+
+				@* <span>
+				@ViewBag.averageRating (<a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal"
+				data-bs-target="#commentModal">@ViewBag.reviewCountSum</a>)
+				</span> *@
 			</div>
 			<div class="store-time fs-6 mb-1">
 				<i class="fa-solid fa-clock me-2"></i>
@@ -97,56 +109,41 @@
 
 		<!-- 商品分類開始 -->
 
-		
-			
-			<div class="product-category col-sm-3">
-				<form action="/Store/Index/@store.StoreId" method="get">
 
-				<div id="categoryFilter" class="list-group custom-checkbox rounded-2 shadow-sm">
-					<label class="list-group-item fs-5 fw-bold text-dark">
-						商品分類
+
+		<div class="product-category col-sm-3">
+
+			<div id="categoryFilter" class="list-group custom-checkbox rounded-2 shadow-sm">
+				<label class="list-group-item fs-5 fw-bold text-dark">
+					商品分類
+				</label>
+
+				@foreach (var category in ViewBag.ProductCategoryCounts)
+				{
+					<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
+						<span>
+							<input class="form-check-input me-1 category-checkbox" type="checkbox" name="categoryName" value="@category.CategoryId">
+							@category.CategoryName
+						</span>
+						<span class="badge bg-dark rounded-pill">
+							@category.ProductCount
+						</span>
 					</label>
-
-					@foreach (var category in ViewBag.ProductCategoryCounts)
-					{
-						<label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-							<span>
-								<input class="form-check-input me-1 category-checkbox" type="checkbox" name="categoryName" value="@category.CategoryId">
-								@category.CategoryName
-							</span>
-							<span class="badge bg-dark rounded-pill">
-								@category.ProductCount
-							</span>
-						</label>
-					}
-
-
-					@* <label class="list-group-item d-flex justify-content-between align-items-center fs-5">
-					<span>
-					<input class="form-check-input me-1" type="checkbox" value="">
-					便當單點
-					</span>
-					<span class="badge bg-dark rounded-pill">14</span>
-					</label> *@
-				</div>
-
-				</form>
+				}
 			</div>
-		
-		
+		</div>
 
-		
+
+
+
 		<!-- 商品分類結束 -->
 		<!-- 商品列表開始 -->
-
-		<div class="product-list col-sm-9 mb-3">
+		<div id="product-list" class="product-list col-sm-9 mb-3">
 			<div class="row row-cols-1 row-cols-md-3 g-3">
-				@for (var i = 0; i < products.Count; i++)
+				@foreach (var product in products)
 				{
-					var product = products[i];
 					var productImage = string.IsNullOrEmpty(product.ProductImage) ? "image/Common/300x300_default.png" : product.ProductImage;
-
-					<div class="col product-category-@product.CategoryId">
+					<div class="col product-category-@product.CategoryId product-item" data-id="@product.ProductId" data-category="@product.CategoryId" data-productid="@product.ProductId" data-stock="@product.ProductUnitsInStock" data-store="@store.StoreId">
 						<div class="card h-100">
 							<img src="~/@productImage" class="card-img-top" alt="食物圖片">
 							<div class="card-body fs-5 fw-bold">
@@ -155,15 +152,37 @@
 							</div>
 							<div class="card-footer bg-white border-0 fs-6 d-flex justify-content-between align-items-center">
 								<div class="input-group w-50">
-									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, -1)">
+									<button class="quantity btn btn-success" type="button" onclick="productAdjustValue(this, -1)">
 										<i class="fa-solid fa-minus fw-bold text-white"></i>
 									</button>
-									<input type="text" class="form-control fw-bold text-center" value="1" id="@product.ProductId">
-									<button class="quantity btn btn-success" type="button" onclick="adjustValue(this, 1)">
+									<input type="text" class="form-control fw-bold text-center product-quantity-input" value="1" id="@product.ProductId" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+									<button class="quantity btn btn-success" type="button" onclick="productAdjustValue(this, 1)">
 										<i class="fa-solid fa-plus fw-bold text-white"></i>
 									</button>
 								</div>
-								<button class="product-btn btn btn-outline-danger fw-bold">加入購物車</button>
+								@if (ViewBag.orderStatusTime == 2 || ViewBag.orderStatusTime == 3)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
+								}
+								else if (!isOrder)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
+								}
+								else if (ViewBag.storeOpeningTimeQuery.storeOpenOrNot == false)
+								{
+									<button id="@product.ProductId" class="product-btn btn btn-outline-dark fw-bold" type="button" disabled>不能加入商品</button>
+								}
+								else
+								{
+									if (product.ProductUnitsInStock > 0)
+									{
+										<button id="@product.ProductId" class="product-btn btn btn-outline-danger fw-bold" type="button">加入購物車</button>
+									}
+									else
+									{
+										<button id="@product.ProductId" class="product-btn btn btn-dark fw-bold" type="button" disabled>商品已售完</button>
+									}
+								}
 							</div>
 						</div>
 					</div>
@@ -178,8 +197,8 @@
 </section>
 
 
-@* 跳轉登入頁面需要調整 *@
-<form method="post" action="/Register/Register">
+
+@* <form method="get" action="/Account/Login">
 	<!-- 登入模態對話框 -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -200,43 +219,179 @@
 		</div>
 	</div>
 
-</form>
+</form> *@
+
+<partial name="_StoreCommentPartial" model="store" />
+<script src="~/js/cartjs.js"></script>
+
 
 
 @section Scripts {
 
 	<script>
-		function adjustValue(button, change) {
-			var inputElement = button.parentNode.querySelector('input');
-			var newValue = parseInt(inputElement.value) + change;
-			if (newValue >= 1) {
-				inputElement.value = newValue;
-			} else {
-				inputElement.value = 1;
+
+
+		// 商品數量調整
+		$('#product-list').on('input change paste keyup', '.product-quantity-input', function () {
+			var inputField = $(this);
+			var cartItemId = inputField.closest('.product-item').data('id');
+			var maxStock = inputField.closest('.product-item').data('stock');
+
+			var currentValue = parseInt(inputField.val());
+			var newValue = currentValue;
+
+			if (isNaN(newValue) || newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+				maxQuantity();
+			} else if (newValue > 30) {
+				newValue = 30;
+				maxQuantity();
 			}
+
+			inputField.val(newValue);
+
+		});
+
+
+		function productAdjustValue(button, increment) {
+			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
+			var cartItemId = inputField.closest('.product-item').data('id');
+			var maxStock = inputField.closest('.product-item').data('stock');
+			var currentValue = parseInt(inputField.val());
+			var newValue = currentValue + increment;
+
+			if (isNaN(newValue) || newValue < 1) {
+				newValue = 1;
+			} else if (newValue > maxStock) {
+				newValue = maxStock;
+				maxQuantity();
+			} else if (newValue > 30) {
+				newValue = 30;
+				maxQuantity();
+			}
+
+			inputField.val(newValue);
 		}
 
-		// 點擊心心按鈕
-		// var heartIcon = document.getElementById('heart-icon');
+
+		// 加入購物車
+
+		$('#product-list').on('click', '.product-btn', function () {
+			var productId = $(this).attr('id');
+			var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
+			var storeId = $('.product-item').data('store');
 
 
-		// heartIcon.addEventListener('click', function () {
+			// $('.product-item').data('store')
+			// $('.cart-item').data('storeid')
 
-		// 	if (heartIcon.classList.contains('far')) {
-		// 		heartIcon.classList.remove('far');
-		// 		heartIcon.classList.add('fas');
-		// 	} else {
-		// 		heartIcon.classList.remove('fas');
-		// 		heartIcon.classList.add('far');
+			if ($('.product-item').data('store') != $('.cart-item').data('storeid') && $('.cart-item').data('storeid') != null) {
+				return addSameStoreProdouctMessage();
+			}
+
+			// 發送 AJAX 請求
+			$.ajax({
+				url: '/ShoppingCarts/AddToCart', // 你的控制器方法的路徑
+				type: 'POST',
+				data: { productId: productId, quantity: quantity, storeId: storeId },
+				success: function (data) {
+					// 在這裡處理從控制器返回的數據
+	
+					if (data.success) {						
+						getCart();						
+						AddCartSuccess();
+						countCartItems();
+					
+		
+					} else {
+						if (data.message == '請先登入') {
+							showLoginModal(data.message);
+						}
+						// alert('商品數量不足');
+					}
+
+				},
+				error: function () {
+					alert('發生錯誤');
+				}
+			});
+		});
+
+
+
+
+
+		// 顯示加入購物車成功訊息
+		function AddCartSuccess() {
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": false,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "2000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+			toastr["success"]("商品已加入購物車！");
+		}
+		//顯示請選擇同一個門市商品訊息
+		function addSameStoreProdouctMessage() {
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": false,
+				"positionClass": "toast-top-center",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+			toastr["warning"]("請選擇同一個門市商品或先結算再加入購物車！")
+		}
+
+		//顯示商品可以購買的最大數量
+		// function addMaxQuantityMessage() {
+		// 	toastr.options = {
+		// 		"closeButton": false,
+		// 		"debug": false,
+		// 		"newestOnTop": false,
+		// 		"progressBar": false,
+		// 		"positionClass": "toast-top-center",
+		// 		"preventDuplicates": false,
+		// 		"showDuration": "300",
+		// 		"hideDuration": "1000",
+		// 		"timeOut": "3000",
+		// 		"extendedTimeOut": "1000",
+		// 		"showEasing": "swing",
+		// 		"hideEasing": "linear",
+		// 		"showMethod": "fadeIn",
+		// 		"hideMethod": "fadeOut"
 		// 	}
-		// });
+		// 	toastr["warning"]("已達到商品可以購買的最大數量！")
+		// }
 
+		// 點擊心心按鈕
 		$(function () {
 			var storeId = @store.StoreId;
 
 			$('#heart-icon').click(function () {
 				$.ajax({
-					url: '@Url.Action("ToggleFavorite", "Store")',
+					url: '/Store/ToggleFavorite',
 					type: 'POST',
 					data: { storeId: storeId },
 					success: function (data) {
@@ -252,18 +407,63 @@
 			});
 		});
 
-		function showLoginModal(message) {
-			// 您的代碼,用於顯示登入視窗
-			// 可以在這裡顯示錯誤消息
-			// alert(message);
-			// 設置錯誤消息
-			$('#loginMessage').text(message);
+		// function showLoginModal(message) {
+		// 	// 您的代碼,用於顯示登入視窗
+		// 	// 可以在這裡顯示錯誤消息
+		// 	// alert(message);
+		// 	// 設置錯誤消息
+		// 	$('#loginMessage').text(message);
 
-			// 顯示模態對話框
-			$('#loginModal').modal('show');
-		}
+		// 	// 顯示模態對話框
+		// 	$('#loginModal').modal('show');
+		// }
 
+		//商品分類篩選
+		$('.category-checkbox').change(function () {
+			var selectedCategories = [];
+			$('.category-checkbox:checked').each(function () {
+				selectedCategories.push($(this).val());
+			});
+			// console.log(selectedCategories);
+
+			// 顯示勾選的分類商品
+			$('[data-category]').each(function () {
+				var categoryValue = $(this).data('category');
+				if (selectedCategories.length === 0) {
+					$(this).show();
+				} else {
+					if (selectedCategories.includes(categoryValue.toString())) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				}
+			});
+		});
+
+		//商品分類篩選
+		$('.category-checkbox').change(function () {
+			var selectedCategories = [];
+			$('.category-checkbox:checked').each(function () {
+				selectedCategories.push($(this).val());
+			});
+			// console.log(selectedCategories);
+
+			// 顯示勾選的分類商品
+			$('[data-category]').each(function () {
+				var categoryValue = $(this).data('category');
+				if (selectedCategories.length === 0) {
+					$(this).show(); 
+				} else {
+					if (selectedCategories.includes(categoryValue.toString())) {
+						$(this).show(); 
+					} else {
+						$(this).hide(); 
+					}
+				}
+			});
+		});
 
 	</script>
-	
+
 }

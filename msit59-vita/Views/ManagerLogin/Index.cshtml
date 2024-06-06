@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITA</title>
+
+    <link rel="shortcut icon" href="~/image/logo/logo_30x30_dark.png" type="image/x-icon">
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/toastr.js/toastr.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+</head>
+<body class="manager-login-bg py-4">
+    <h1 class="mb-3">
+        <a href="/ManagerHome" class="replace-text-login mx-auto">
+            VITA健康餐盒訂餐平台
+        </a>
+    </h1>
+    <h2 class="text-center h4 mb-3 text-dark">VITA註冊店家後台管理系統</h2>
+    <form class="w-50 mx-auto p-3 needs-validation" novalidate action="/ManagerLogin/Index" method="post">
+        <div class="mb-3">
+            <label for="StoreAccountNumber" class="form-label is-required ps-3 mb-1">帳號</label>
+            <input type="text" class="form-control text-dark rounded-pill" id="StoreAccountNumber" name="StoreAccountNumber" required>
+            <div class="invalid-feedback ps-3">
+                請輸入帳號
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="StorePassword" class="form-label is-required ps-3 mb-1">密碼</label>
+            <input type="password" class="form-control text-dark rounded-pill" id="StorePassword" name="StorePassword" required>
+            <div class="invalid-feedback ps-3">
+                請輸入密碼
+            </div>
+        </div>
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <span class="text-danger ps-3">@ViewBag.ErrorMessage</span>
+        }
+        <button type="submit" class="w-100 btn btn-success text-light rounded-pill mt-4">登入</button>
+    </form>
+    <p class="text-center">忘記密碼請洽業務專員</p>
+
+
+@*     <script src="./node_modules/jquery/dist/jquery.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            // 表單驗證
+            let form = $('.needs-validation');
+
+            form.on('submit', function (e) {
+                if (!form[0].checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                form.addClass('was-validated');
+            })
+        })
+    </script>
+</body>
+</html>

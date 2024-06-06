@@ -158,7 +158,6 @@ namespace msit59_vita.Migrations
                 });
 
 
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",

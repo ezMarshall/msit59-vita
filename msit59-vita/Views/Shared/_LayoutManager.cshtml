@@ -156,10 +156,8 @@
 
 </head>
 <body>
-    <div class="body-container">
-        @* 為了讓position-sticky可用而存在的div *@
 
-        <header class="nav-area bg-dark sticky-sm-top">
+       <header class="nav-area bg-dark sticky-sm-top">
             <ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
                 <li class="nav-item">
                     <a href="/ManagerHome/Index">
@@ -167,7 +165,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/ManagerLogin/"
+                    <a href="javascript:void(0)" onclick="logout()"
                        class="logout-link fs-5 fw-bolder link-light text-decoration-none">
                         會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
                     </a>
@@ -205,6 +203,7 @@
                         </li>
                         <li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger">暫停接單</a></li>
 
+
                     </ul>
                 </div>
             </div>
@@ -224,16 +223,30 @@
                     }
 
                 </div>
-
+            </div>
+        </div>
                 <script src="~/lib/jquery/dist/jquery.min.js"></script>
                 <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
                 <script src="~/js/site.js" asp-append-version="true"></script>
+                <script>
+                    function logout() {
+                        $.ajax({
+                            type: "post",
+                            url: "@Url.Action("Logout", "ManagerLogin")",
+                            success: function (data) {
+                                if (data == "ok") {
+                                    window.location.href = "@Url.Action("Index", "ManagerLogin")";
+                                } else {
+                                    alert(data);
+                                }
+                            },
+                            error: function () {
+                                alert("發生未預期的錯誤,請稍後再試。");
+                            }
+                        })
+                    }
+                </script>
                 @await RenderSectionAsync("Scripts", required: false)
-            </div>
-        </div>
-
-
-    </div>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "收藏店家";
+    string customerName = String.IsNullOrEmpty(ViewBag.customer.CustomerNickName) ? ViewBag.customer.CustomerName : ViewBag.customer.CustomerNickName;
     int storeID = 8;
     // var openHours = ViewBag.openHours;
 }
@@ -14,27 +15,30 @@
     <div class="container container-lg ">
         <h4 class="text-dark">收藏店家</h4>
         <!-- 收藏的店家 -->
-         @foreach (var store in Model)
-        {
-            double starRange = 0.0; 
-            double avgOfRating = 0.0;
-            string countOfRating = "尚無";
-            string[] openHourArray = new string[7];
-            string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/logo/logo_30x30_dark.png" : store.StoreImage;
-            @foreach (var comment in ViewBag.queryComments)
+        @if(Model.Count!=0){
+            @foreach (var store in Model)
             {
-                if (comment.StoreId == store.StoreId)
-                {
+                double starRange = 0.0;
+                double avgOfRating = 0.0;
+                string countOfRating = "尚無";
+                string[] openHourArray = new string[7];
+                string storeImage = String.IsNullOrEmpty(store.StoreImage) ? "image/Common/300x300_default.png" : store.StoreImage;
 
-                    avgOfRating = Math.Round(comment.avgOfRating,1);
-                    starRange = (avgOfRating / 5 * 100);
-                    countOfRating = comment.countOfRating;
-                }
-            }
-            @foreach (var oh in ViewBag.openHours)
-            {
-                if (oh.StoreId == store.StoreId)
+                @foreach (var comment in ViewBag.queryComments)
                 {
+                    if (comment.StoreId == store.StoreId)
+                    {
+
+                        avgOfRating = Math.Round(comment.avgOfRating, 1);
+                        starRange = (avgOfRating / 5 * 100);
+                        countOfRating = comment.countOfRating;
+                    }
+                }
+                @* @foreach (var oh in ViewBag.openHours) *@
+                @for (int i = 0; i < ViewBag.openHours.Count; i++)
+                {
+                    var oh = ViewBag.openHours[i];
+                    if (oh.StoreId != store.StoreId) continue;
                     string openTime = $"{oh.StoreOpeningTime}-{oh.StoreClosingTime}";
                     string closeText = "休息";
                     switch (oh.MyWeekDay)
@@ -64,139 +68,78 @@
                             break;
 
                     }
+
                 }
-            }
-            <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
-                <div class="row mt-3">
-                    <div class="col-12 col-lg-5 mb-3">
-                        <img class="card-img-top object-fit-sm-contain object-fit-contain h-75" src="~/@storeImage" alt="@(store.StoreName+"_picture")">
-
-                    </div>
-                    <!-- 文字內容 -->
-                    <div class="col-12 col-lg-7">
-                        <div class="d-flex flex-row justify-content-between align-self-center ">
-                            <h5 class=" my-auto fa-solid ">@store.StoreName</h5>
-                            <a href="/FavoriteStores/Cancel/?id=@store.FavoriteId" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('@store.StoreName')">
-                                <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
-                            </a>
-                        </div>
-                        <div class="d-flex flex-row">
-
-                            <div class="col-4 home-store-star my-0"
-                                 style="background: linear-gradient(to right ,  #ffd700 0% @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
-                            <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info ms-1" href="">(@(countOfRating + "評論"))</a></p>
-                            <p class="fs-6 pt-1"></p>
+                <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("FavoriteId"+store.FavoriteId)">
+                    <div class="row mt-3">
+                        <div class="col-12 col-lg-5 mb-3">
+                            <img class="card-img-top user-center-image  h-75" src="~/@storeImage" alt="@(store.StoreName+"_picture")">
 
                         </div>
-                        <p class="fs-6">連絡電話:@store.StorePhoneNumber</p>
-                        <p class="fs-6">地址:@(store.StoreAddress)</p>
-
-                        <dl>
-                            <dt>營業時間:</dt>
-                            <div class="p-3">
-
-
-                                <dd>星期日:@openHourArray[0]</dd>
-                                <dd>星期一:@openHourArray[1]</dd>
-                                <dd>星期二:@openHourArray[2]</dd>
-                                <dd>星期三:@openHourArray[3]</dd>
-                                <dd>星期四:@openHourArray[4]</dd>
-                                <dd>星期五:@openHourArray[5]</dd>
-                                <dd>星期六:@openHourArray[6]</dd>
+                        <!-- 文字內容 -->
+                        <div class="col-12 col-lg-7">
+                            <div class="d-flex flex-row justify-content-between align-self-center ">
+                                <h5 class=" my-auto fa-solid ">@store.StoreName</h5>
+                                <a href="/FavoriteStores/Cancel/?id=@store.FavoriteId" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('@store.StoreName')">
+                                    <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
+                                </a>
                             </div>
-                        </dl>
-                        <a class="bg-primary fs-6 link-info" href="./MyData/@store.StoreId">馬上點餐 ></a>
+                            <div class="d-flex flex-row">
+
+                                <div class="col-4 home-store-star my-0"
+                                     style="background: linear-gradient(to right ,  #ffd700 0% @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
+                                <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info ms-1" href="">(@(countOfRating + "評論"))</a></p>
+                                <p class="fs-6 pt-1"></p>
+
+                            </div>
+                            <p class="fs-6">連絡電話:@store.StorePhoneNumber</p>
+                            <p class="fs-6">地址:@(store.StoreAddress)</p>
+
+                            <dl>
+                                <dt>營業時間:</dt>
+                                <div class="p-3">
+
+
+                                    <dd>星期日:@openHourArray[0]</dd>
+                                    <dd>星期一:@openHourArray[1]</dd>
+                                    <dd>星期二:@openHourArray[2]</dd>
+                                    <dd>星期三:@openHourArray[3]</dd>
+                                    <dd>星期四:@openHourArray[4]</dd>
+                                    <dd>星期五:@openHourArray[5]</dd>
+                                    <dd>星期六:@openHourArray[6]</dd>
+                                </div>
+                            </dl>
+                            <a class="bg-primary fs-6 link-info" href="./store/index/@store.StoreId">馬上點餐 ></a>
+                        </div>
                     </div>
+                </div>
+            }
+        }
+        else
+        {
+
+            <div class="container container-lg my-3  w-75  border-bottom border-dark pb-3">
+                <div class="container-lg container row  ">
+
+
+                    <div class="col-12  d-flex justify-content-center">
+                        <p class="text-break">
+                            親愛的顧客 <span class="text-info">@(customerName)</span>  您目前沒有收藏的店家，馬上前往
+                            <a href="/" class="text-info">首頁</a>
+                            收藏喜愛的店家吧！
+                        </p>
+                    </div>
+                    <div class="col-3 col-lg-4 mb-3 "></div>
+                    <div class="col-6 col-lg-4 mb-3">
+                        <a href="/">
+                            <img class="card-img-top bg-dark" src="~/image/logo/logo_150x150.png" alt="logo-picture">
+                        </a>
+                    </div>
+                    <div class="col-3 col-lg-4 mb-3 "></div>
                 </div>
             </div>
         }
-
- 
-     <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3 @("storeID"+storeID)">
-            <div class="row mt-3">
-            <div class="col-12 col-lg-5 mb-3">
-            <img class="card-img-top" src="~/image/StorePictures/Product_14.webp" alt="店家照片">
-
-            </div>
-            <!-- 文字內容 -->
-            <div class="col-12 col-lg-7">
-            <div class="d-flex flex-row justify-content-between align-self-center ">
-                        <h5 class=" my-auto fa-solid ">優輕食</h5>
-                        <a href="#" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('storeStoreName');" id="favoriteStore">
-                <i class="fa-regular fa-heart fs-2 text-info "></i>
-                <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
-                </a>
-            </div>
-            <div class="d-flex flex-row">
-
-                <div class="col-4 store-star my-0"
-                style="background: linear-gradient(to right ,  #ffd700 0 50%, #F1F0CC 50% 100%)"></div>
-                <p class="fs-6 pt-1">2.5 <a class="bg-primary text-dark fs-6 link-info" href="">(100評論)</a></p>
-                <p class="fs-6 pt-1"></p>
-
-            </div>
-            <p class="fs-6">連絡電話:0455697946</p>
-            <p class="fs-6">地址:台中市大屯區大墩十二街153號</p>
-
-            <dl>
-                <dt>營業時間:</dt>
-                <div class="p-3">
-                <dd>星期日:休息</dd>
-                <dd>星期一:1500-2000</dd>
-                <dd>星期二:1500-2000</dd>
-                <dd>星期三:1500-2000</dd>
-                <dd>星期四:1500-2000</dd>
-                <dd>星期五:1500-2000</dd>
-                <dd>星期六:休息</dd>
-                </div>
-            </dl>
-                    <a class="bg-primary fs-6 link-info" href="./MyData">馬上點餐 ></a>
-            </div>
-        </div>
-    </div>
-     <div class=" container container-lg border-bottom  border-dark w-75 mb-3 pb-3">
-            <div class="row mt-3">
-            <div class="col-12 col-lg-5 mb-3">
-                <img class="card-img-top " src="../img/home_banner.png" alt="店家照片">
-
-            </div>
-            <!-- 文字內容 -->
-            <div class="col-12 col-lg-7">
-                <div class="d-flex flex-row justify-content-between align-self-center ">
-                    <h5 class=" my-auto fa-solid">優輕食</h5>
-                    <a href="#" class=" d-block align-self-center text-decoration-none" id="favoriteStore">
-                    <i class="fa-regular fa-heart fs-2 text-info "></i>
-                    <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
-                    </a>
-                </div>
-                <div class="d-flex flex-row">
-
-                    <div class="col-4 store-star my-0"
-                    style="background: linear-gradient(to right ,  #ffd700 0 50%, #F1F0CC 50% 100%)"></div>
-                    <p class="fs-6 pt-1">2.5 <a class="bg-primary text-dark fs-6 link-info" href="">(100評論)</a></p>
-                    <p class="fs-6 pt-1"></p>
-
-                </div>
-                <p class="fs-6">連絡電話:0455697946</p>
-                <p class="fs-6">地址:台中市大屯區大墩十二街153號</p>
-
-                <dl>
-                <dt>營業時間:</dt>
-                <div class="p-3">
-                    <dd>星期日:休息</dd>
-                    <dd>星期一:1500-2000</dd>
-                    <dd>星期二:1500-2000</dd>
-                    <dd>星期三:1500-2000</dd>
-                    <dd>星期四:1500-2000</dd>
-                    <dd>星期五:1500-2000</dd>
-                    <dd>星期六:休息</dd>
-                </div>
-                </dl>
-                <a class="bg-primary fs-6 link-info" href="#">馬上點餐 ></a>
-            </div>
-        </div>
-        </div>
-    </div>
+        
 </div>
 
 @section Scripts{
