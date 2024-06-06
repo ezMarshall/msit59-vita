@@ -109,10 +109,21 @@
 								</label>
 							</div>
 						}
-						
+
 					}
 
 				</div>
+
+
+
+
+
+
+
+
+
+
+
 
 				<div class="order-pick-up mb-2">
 					<div class="d-flex justify-content-between">
@@ -156,6 +167,24 @@
 
 				</div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				<div class="order-invoice mb-2">
 					<div class="fs-5 fw-bold">開立發票方式</div>
 
@@ -163,7 +192,7 @@
 					{
 						<div class="form-check ms-3">
 							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt0"
-							value="0" checked required>
+								   value="0" checked required>
 							<label class="form-check-label" for="flexRadioReceipt0">不開立發票</label>
 						</div>
 					}
@@ -193,7 +222,7 @@
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioCellphone"
-							   onclick="handlePhoneTypeChange('cellphone')" checked required>
+							   onclick="handlePhoneTypeChange('cellphone')" required>
 						<label class="form-check-label" for="flexRadioCellphone"
 							   onclick="handlePhoneTypeChange('cellphone')">手機號碼</label>
 						<input id="inputCellphone" class="form-control" type="text" placeholder="請輸入手機號碼"
@@ -229,7 +258,7 @@
 
 	<div class="row mb-3 mx-auto w-75">
 		<div class="btn-group" role="group" aria-label="Basic example">
-			<button class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
+			<button id="continueShoppingBtn" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
 				<a href="javascript:void(0)"
 				   class="text-decoration-none text-black">繼續加購</a>
 			</button>
@@ -274,7 +303,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" class="address-button btn btn-dark col-6 mx-auto" onclick="validateAddressForm()">確定
+				<button type="submit" class="address-button btn btn-dark col-6 mx-auto" onclick="validateAddressForm()">
+					確定
 				</button>
 			</div>
 		</div>
@@ -282,6 +312,7 @@
 </div>
 
 <!-- 地址填寫結束 -->
+<!-- 取餐時間開始 -->
 <!-- 取餐時間開始 -->
 <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -329,7 +360,7 @@
 	</div>
 </div>
 
-
+<!-- 取餐結束開始 -->
 <!-- 取餐結束開始 -->
 @section Scripts {
 
@@ -371,29 +402,29 @@
 
 			orderProductItems.forEach(function (item) {
 				var orderProductItemsHtml = `
-											<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
-												<div class="product-info col-6">
-													<div class="product-name fw-bold">
-														<div class="fs-5">${item.productName}</div>
-														<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+													<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
+														<div class="product-info col-6">
+															<div class="product-name fw-bold">
+																<div class="fs-5">${item.productName}</div>
+																<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+															</div>
+														</div>
+														<div class="col-6 d-flex justify-content-around align-items-center">
+															<div class="input-group w-50">
+																<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+																	<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
+																</button>
+																<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="${item.quantity}"
+																		id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+																<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
+																	<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
+																</button>
+															</div>
+															<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
+															<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
+														</div>
 													</div>
-												</div>
-												<div class="col-6 d-flex justify-content-around align-items-center">
-													<div class="input-group w-50">
-														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-															<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
-														</button>
-														<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="${item.quantity}"
-																id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
-															<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
-														</button>
-													</div>
-													<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
-													<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
-												</div>
-											</div>
-														`;
+																`;
 				orderProductList.append(orderProductItemsHtml);
 			});
 
@@ -624,9 +655,9 @@
 			const carrierFeedback = document.getElementById('carrierFeedback');
 			if (type === 'paper') {
 				input.value = '';
-				input.classList.remove('is-valid', 'is-invalid');				
+				input.classList.remove('is-valid', 'is-invalid');
 				carrierFeedback.style.display = 'none';
-			} else if (type === 'carrier') {				
+			} else if (type === 'carrier') {
 				focusInput('inputCarrier');
 			}
 		}
@@ -766,6 +797,176 @@
 		// }
 
 
+		// function validateTimeForm() {
+		// 	var datepicker = document.getElementById("datepicker").value;
+		// 	var timepicker = document.getElementById("timepicker").value;
+
+		// 	if (!datepicker || !timepicker) {
+		// 		alert("請填寫取餐時間！");
+		// 		return false;
+		// 	}
+
+		// 	// 如果日期和时间都已填写，可以执行下一步操作，比如关闭模态框
+		// 	// 你可以根据需要添加更多逻辑，比如提交表单或进行其他操作
+		// 	// 这里假设你有一个表单需要提交，可以如下所示：
+		// 	// document.getElementById("yourFormId").submit();
+
+		// 	// 如果不需要自动提交表单，只需关闭模态框即可：
+		// 	$('#timeModal').modal('hide');
+
+		// 	return true;
+		// }
+
+		//自動帶入會員資料
+		$(document).ready(function () {
+			$('#flexCheckmemberProfile').change(function () {
+				if (this.checked) {
+					
+					$.ajax({
+						url: '/CheckedPayment/GetMemberProfile',
+						type: 'GET',
+						dataType: 'json',
+						success: function (response) {
+							if (response.success) {
+								var data = response.data;
+								// 填入会员资料
+								$('#addressInput').val(data.address);
+								$('#inputCarrier').val(data.carrier);
+
+
+
+								// 自動選擇外送選項框
+								$('#flexRadioPickUp2').prop('checked', true);
+
+								// 自動選擇手機載具選項框
+								if (data.carrier) {
+									$('#flexRadioReceipt2').prop('checked', true);
+								}
+
+								// 根據返回的電話類型選擇相應的選項框
+
+								if (data.cellphone) {
+									$('#flexRadioCellphone').prop('checked', true);
+									$('#inputCellphone').val(data.cellphone);
+								} else if (data.phone) {
+									$('#flexRadioPhone').prop('checked', true);
+									$('#inputPhone').val(data.phone);
+								}
+
+							} else {
+								console.error('Error: ' + response.message);
+							}
+						},
+						error: function (xhr, status, error) {
+							console.error('Error fetching member profile:', error);
+						}
+					});
+				} else {
+					// 清空输入框
+					$('#addressInput').val('');
+					$('#inputCarrier').val('');
+					$('#inputCellphone').val('');
+					$('#inputPhone').val('');
+				}
+			});
+		});
+
+
+		// 點擊繼續加購功能
+		$('#continueShoppingBtn').click(function () {
+			// 重新導向至首頁
+			continueShopping()
+		});
+
+		function continueShopping() {
+			
+			$.ajax({
+				url: '/CheckedPayment/GetShopping',
+				type: 'GET',
+				success: function (data) {
+					// console.log(data);
+					
+					if (data.success) {
+
+						if (data.data.length === 0) {
+							// 重新導向至首頁
+							window.location.href = '/';
+						} else {
+							// 重新導向至商店
+							window.location.href = '/Store/Index/' + data.data[0].storeId;
+						}
+						
+						// 重新導向至首頁
+						// window.location.href = '/';
+					} else {
+						console.error('Error: ' + data.message);
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error clearing cart:', error);
+				}
+			});
+		}
+
+
+		// 點擊送出訂單按鈕
+		// function submitOrder() {
+		// 	// 驗證地址
+		// 	const addressInput = document.getElementById("addressInput");
+		// 	if (!addressInput.value) {
+		// 		alert("請填寫地址！");
+		// 		return false;
+		// 	}
+
+		// 	// 驗證手機載具
+		// 	const receiptType = document.querySelector('input[name="receiptType"]:checked');
+		// 	if (receiptType.value === 'carrier' && !document.getElementById('inputCarrier').value) {
+		// 		alert("請填寫手機載具！");
+		// 		return false;
+		// 	}
+
+		// 	// 驗證電話
+		// 	const phoneType = document.querySelector('input[name="phoneType"]:checked');
+		// 	if (phoneType.value === 'cellphone' && !document.getElementById('inputCellphone').value) {
+		// 		alert("請填寫手機號碼！");
+		// 		return false;
+		// 	} else if (phoneType.value === 'phone' && !document.getElementById('inputPhone').value) {
+		// 		alert("請填寫市話！");
+		// 		return false;
+		// 	}
+
+		// 	// 驗證取餐時間
+		// 	const datepicker = document.getElementById("datepicker").value;
+		// 	const timepicker = document.getElementById("timepicker").value;
+		// 	if (!datepicker || !timepicker) {
+		// 		alert("請填寫取餐時間！");
+		// 		return false;
+		// 	}
+
+		// 	// 驗證留言
+		// 	const textarea = document.getElementById('orderFormControlTextarea1');
+		// 	if (textarea.value.length > 500) {
+		// 		alert("留言字數超過上限！");
+		// 		return false;
+		// 	}
+
+
+
+		// 	// 確認是否有選擇商品
+		// 	if ($('.order-product-item').length === 0) {
+		// 		alert("請選擇商品！");
+		// 		return false;
+		// 	}
+
+		// 	/
+		// 	// 確認是否同意付款方式
+		// 	const paymentCheckbox = document.getElementById('orderFormControlCheckbox5');
+		// 	if (!paymentCheckbox.checked) {
+		// 		alert("請選擇付款方式！");
+		// 		return false;
+		// 	}
+
+		// }
 
 
 
@@ -783,7 +984,10 @@
 
 
 
-		
+
+
+
+
 
 
 
