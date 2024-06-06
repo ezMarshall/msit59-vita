@@ -197,8 +197,8 @@
 </section>
 
 
-@* 跳轉登入頁面需要調整 *@
-<form method="post" action="/Register/Register">
+
+@* <form method="get" action="/Account/Login">
 	<!-- 登入模態對話框 -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,7 +219,7 @@
 		</div>
 	</div>
 
-</form>
+</form> *@
 
 <partial name="_StoreCommentPartial" model="store" />
 <script src="~/js/cartjs.js"></script>
@@ -254,6 +254,7 @@
 
 		});
 
+
 		function productAdjustValue(button, increment) {
 			var inputField = $(button).closest('.input-group').find('.product-quantity-input');
 			var cartItemId = inputField.closest('.product-item').data('id');
@@ -274,19 +275,21 @@
 			inputField.val(newValue);
 		}
 
+
 		// 加入購物車
+
 		$('#product-list').on('click', '.product-btn', function () {
 			var productId = $(this).attr('id');
 			var quantity = $(this).closest('.card-footer').find('.product-quantity-input').val();
-			var storeId = @store.StoreId;
+			var storeId = $('.product-item').data('store');
 
 
 			// $('.product-item').data('store')
 			// $('.cart-item').data('storeid')
 
-			if ($('.product-item').data('store') != $('.cart-item').data('storeid') && $('.cart-item').data('storeid')!= null) {
+			if ($('.product-item').data('store') != $('.cart-item').data('storeid') && $('.cart-item').data('storeid') != null) {
 				return addSameStoreProdouctMessage();
-			} 
+			}
 
 			// 發送 AJAX 請求
 			$.ajax({
@@ -295,25 +298,30 @@
 				data: { productId: productId, quantity: quantity, storeId: storeId },
 				success: function (data) {
 					// 在這裡處理從控制器返回的數據
-					// console.log(data);
-					if (data.success) {
-						getCart();
+	
+					if (data.success) {						
+						getCart();						
 						AddCartSuccess();
 						countCartItems();
-
+					
+		
 					} else {
 						if (data.message == '請先登入') {
 							showLoginModal(data.message);
 						}
-						alert('商品數量不足');
+						// alert('商品數量不足');
 					}
-					
+
 				},
 				error: function () {
 					alert('發生錯誤');
 				}
 			});
 		});
+
+
+
+
 
 		// 顯示加入購物車成功訊息
 		function AddCartSuccess() {
@@ -357,25 +365,25 @@
 		}
 
 		//顯示商品可以購買的最大數量
-		function addMaxQuantityMessage() {
-			toastr.options = {
-				"closeButton": false,
-				"debug": false,
-				"newestOnTop": false,
-				"progressBar": false,
-				"positionClass": "toast-top-center",
-				"preventDuplicates": false,
-				"showDuration": "300",
-				"hideDuration": "1000",
-				"timeOut": "3000",
-				"extendedTimeOut": "1000",
-				"showEasing": "swing",
-				"hideEasing": "linear",
-				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
-			}
-			toastr["warning"]("已達到商品可以購買的最大數量！")
-		}
+		// function addMaxQuantityMessage() {
+		// 	toastr.options = {
+		// 		"closeButton": false,
+		// 		"debug": false,
+		// 		"newestOnTop": false,
+		// 		"progressBar": false,
+		// 		"positionClass": "toast-top-center",
+		// 		"preventDuplicates": false,
+		// 		"showDuration": "300",
+		// 		"hideDuration": "1000",
+		// 		"timeOut": "3000",
+		// 		"extendedTimeOut": "1000",
+		// 		"showEasing": "swing",
+		// 		"hideEasing": "linear",
+		// 		"showMethod": "fadeIn",
+		// 		"hideMethod": "fadeOut"
+		// 	}
+		// 	toastr["warning"]("已達到商品可以購買的最大數量！")
+		// }
 
 		// 點擊心心按鈕
 		$(function () {
@@ -399,16 +407,39 @@
 			});
 		});
 
-		function showLoginModal(message) {
-			// 您的代碼,用於顯示登入視窗
-			// 可以在這裡顯示錯誤消息
-			// alert(message);
-			// 設置錯誤消息
-			$('#loginMessage').text(message);
+		// function showLoginModal(message) {
+		// 	// 您的代碼,用於顯示登入視窗
+		// 	// 可以在這裡顯示錯誤消息
+		// 	// alert(message);
+		// 	// 設置錯誤消息
+		// 	$('#loginMessage').text(message);
 
-			// 顯示模態對話框
-			$('#loginModal').modal('show');
-		}
+		// 	// 顯示模態對話框
+		// 	$('#loginModal').modal('show');
+		// }
+
+		//商品分類篩選
+		$('.category-checkbox').change(function () {
+			var selectedCategories = [];
+			$('.category-checkbox:checked').each(function () {
+				selectedCategories.push($(this).val());
+			});
+			// console.log(selectedCategories);
+
+			// 顯示勾選的分類商品
+			$('[data-category]').each(function () {
+				var categoryValue = $(this).data('category');
+				if (selectedCategories.length === 0) {
+					$(this).show();
+				} else {
+					if (selectedCategories.includes(categoryValue.toString())) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				}
+			});
+		});
 
 		//商品分類篩選
 		$('.category-checkbox').change(function () {
