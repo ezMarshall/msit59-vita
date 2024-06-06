@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
 
+<html>
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,9 +12,8 @@
 	<script src="~/lib/jquery/dist/jquery.js"></script>
 	<script src="~/lib/toastr.js/toastr.min.js"></script>
 </head>
-
 <body>
-	<header class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
+	<header class="navbar navbar-expand-lg bg-dark navbar-dark shadow sticky-top">
 		<div class="container-lg">
 			<h1 class="m-0">
 				<a href="/Home" class="replace-text-nav">
@@ -106,116 +105,70 @@
 		</div>
 	</header>
 
-	@RenderBody()
+    @RenderBody()
 
-	<footer class="bg-dark pt-5">
-		<div class="container-lg row mx-auto">
-			<div class="d-none d-md-block col-md-4 mb-3 mb-md-0">
-				<p class="footer-slogan text-primary">
-					集結200家健康餐盒，你的健康，我們守護！<br>
-					首選VITA，百搭你的味蕾。
-				</p>
-			</div>
-			<div class="col-6 col-md-4">
-				<p class="text-primary fw-bold fs-5">聯絡我們</p>
-				<a href="tel:+0800123567"><i class="fa-solid fa-phone me-2"></i>0800-123-567</a> <br>
-				<a href="mailto:info@vita.com"><i class="fa-regular fa-envelope me-2"></i>info@vita.com</a>
-				<div class="mt-4">
-					<a href="#" class="footer-link d-inline-block link-primary">
-						<i class="fa-brands fa-facebook fs-3"></i>
-					</a>
-					<a href="#" class="footer-link link-primary">
-						<i class="fa-brands fa-instagram fs-3 ms-3"></i>
-					</a>
-				</div>
-			</div>
+    <!-- contact us -->
+    <section class="home-fixed">
+        <ul class="d-flex flex-sm-column list-unstyled mb-0">
+            <li>
+                <a href="tel:+0800123567" class="d-block me-2 me-sm-0 mb-sm-3 bg-dark rounded-circle contact-phone position-relative text-center">
+                    <i class="fa-solid fa-phone fs-3 text-light"></i>
+                </a>
+            </li>
+            <li>
+                <a href="mailto:info@vita.com" class="d-block me-2 me-sm-0 mb-sm-3 bg-dark rounded-circle contact-email position-relative text-center"><i class="fa-regular fa-envelope fs-3 text-light"></i></a>
+            </li>
+            <li>
+                <a href="/JoinUs" class="d-block me-2 me-sm-0 mb-sm-3 bg-dark rounded-circle join-us-hover position-relative text-center">
+                    <i class="fa-regular fa-handshake fs-3 text-light"></i>
+                </a>
+            </li>
+            <li>
+                <a href="/Faq" class="d-block me-2 me-sm-0 mb-sm-3 bg-dark rounded-circle faq-hover position-relative text-center">
+                    <i class="fa-solid fa-question fs-3 text-light"></i>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- contact us end -->
 
-			<div class="col-6 col-md-4">
-				<a href="/JoinUs" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
-				<a href="/Faq" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
-			</div>
-			<div class="col-12 border-top mt-5 border-primary">
-				<p class="text-primary text-center my-4">© 2024 資展專題報告</p>
-			</div>
-		</div>
-	</footer>
-	<!-- footer end -->
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-	<script src="~/js/cartjs.js" asp-append-version="true"></script>
-	<script>
-		function logout() {
-			$.ajax({
-				type: "post",
-				url: "@Url.Action("Logout", "Account")",
-				success: function (data) {
-					if (data == "ok") {
-						window.location.href = "@Url.Action("Login", "Account")";
-					} else {
-						alert(data);
-					}
-				},
-				error: function () {
-					alert("發生未預期的錯誤,請稍後再試。");
-				}
-			})
-		}
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/cartjs.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            // 滾動式顯示
+            $(window).scroll(function () {
+                let scrollPos = $(window).scrollTop();
+                let windowHeight = $(window).height();
+                let targetPos = $('.home-fixed').offset().top
 
-	</script>
-	@await RenderSectionAsync("Scripts", required: false)
+                if (targetPos > windowHeight) {
+                    $('.home-fixed').addClass('show-contact')
+                } else {
+                    $('.home-fixed').removeClass('show-contact')
+                }
+            })
+        });
 
-	<!-- 購物車頁面開始 -->
-
-	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-		<div class="offcanvas-header justify-content-end">
-			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
-					aria-label="Close"></button>
-		</div>
-		<div id="qqaa" class="offcanvas-body cart-list d-flex flex-column justify-content-between">
-
-			<div class="cart-container overflow-auto">
-			</div>
-
-
-			<div class="total-price pt-3">
-				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
-
-				<div class="d-grid col-10 mx-auto">
-					<button id="checkoutBtn" class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<!-- 購物車頁面結束 -->
-
-	<!-- 顯示請登入開始 -->
-
-	<form method="get" action="/Account/Login">
-		<!-- 登入模態對話框 -->
-		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header border-0">
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body text-center fs-3 fw-bold">
-						<i class="fa-solid fa-circle-exclamation text-danger fs-2"></i>
-						<p id="loginMessage"></p>
-						<!-- 在這裡添加登入表單或其他內容 -->
-					</div>
-					<div class="modal-footer border-0 d-flex justify-content-center">
-						<button type="submit" class="btn btn-info text-white col-4">登入</button>
-						<button type="button" class="btn btn-secondary col-4" data-bs-dismiss="modal">取消</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</form>
-	<!-- 顯示請登入結束 -->
+        function logout() {
+            $.ajax({
+                type: "post",
+                url: "@Url.Action("Logout", "Account")",
+                success: function (data) {
+                    if (data == "ok") {
+                        window.location.href = "@Url.Action("Login", "Account")";
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function () {
+                    alert("發生未預期的錯誤,請稍後再試。");
+                }
+            })
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
