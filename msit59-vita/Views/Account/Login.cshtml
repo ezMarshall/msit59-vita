@@ -8,7 +8,7 @@
     <h2 class="text-center text-success fw-bold mb-3">登入</h2>
     <div class="row container justify-content-center mx-auto">
         <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
-            <form class="needs-validation" novalidate action="/Account/Login" method="post">
+            <form class="needs-validation" novalidate action="/Account/Login" method="post" id="LoginForm">
                 <div class="mb-3">
                     <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
                     <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required />
@@ -40,12 +40,51 @@
         </div>
     </div>
 </section>
+@await Html.PartialAsync("_ForgetPwdPartial", ViewData);
+@await Html.PartialAsync("_ResultPartial", ViewData);
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            let form = $('.needs-validation');
-            form.on('submit', function (e) {
+            let forgetPwdForm = $('#forgetPwdForm')
+            forgetPwdForm.on('submit', function (e) {
+                e.preventDefault();
+                let emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                let CustomerEmail = $('#ForgetPwdEmail').val();
+                if (!emailPattern.test(CustomerEmail)) {
+                    $('#ForgetPwdEmail').addClass('is-invalid');
+                } else {
+                    var formData = forgetPwdForm.serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Account/ForgetPwd',
+                        data: formData,
+                        success: function (response) {
+                            if (response.success) {
+                                $('#modalForgetPwd').modal('hide');
+                                $('#resultModal #ResultOk').removeClass('d-none');
+                                $('#resultModal').modal('show');
+                            } else {
+                                // 沒有找到對應帳號
+                                $('#ForgetPwdEmail').removeClass('is-invalid');
+                                if (response.message) {
+                                    alert(response.message);
+                                } else {
+                                    $('#ResultNotFound').removeClass('d-none');
+                                }
+                                $('#modalForgetPwd').modal('show');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                            alert("出現無法預期的問題，請稍後再試。")
+                        }
+                    });
+                }
+            });
+
+            let LoginForm = $('#LoginForm');
+            LoginForm.on('submit', function (e) {
                 if (!form[0].checkValidity()) {
                     e.preventDefault();
                     e.stopPropagation();
