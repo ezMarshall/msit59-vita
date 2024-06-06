@@ -719,6 +719,12 @@ namespace msit59_vita.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<bool>("IsCustomer")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("IsCustomer");
+
                     b.Property<string>("VitaUserName")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("VitaUserName");

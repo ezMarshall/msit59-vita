@@ -271,6 +271,7 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
             entity.ToTable("AspNetUsers");
             entity.HasDiscriminator<string>("CusDis");
             entity.Property(e => e.VitaUserName).HasColumnName("VitaUserName");
+            entity.Property(e => e.IsCustomer).HasColumnName("IsCustomer").HasDefaultValue(true);
         });
 
         OnModelCreatingPartial(modelBuilder);
