@@ -218,22 +218,24 @@
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioCellphone"
-							   onclick="focusInput('inputCellphone')">
+							   onclick="handlePhoneTypeChange('cellphone')" checked required>
 						<label class="form-check-label" for="flexRadioCellphone"
-							   onclick="focusInput('inputCellphone')">手機號碼</label>
+							   onclick="handlePhoneTypeChange('cellphone')">手機號碼</label>
 						<input id="inputCellphone" class="form-control" type="text" placeholder="請輸入手機號碼"
 							   aria-label="default input cellphone" onfocus="focusRadio('flexRadioCellphone')"
-							   autocomplete="off">
+							   oninput="validatePhone('cellphone')" autocomplete="off">
+						<div id="cellphoneFeedback" class="invalid-feedback">請輸入有效的手機號碼式</div>
 					</div>
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioPhone"
-							   onclick="focusInput('inputPhone')">
+							   onclick="handlePhoneTypeChange('phone')">
 						<label class="form-check-label" for="flexRadioPhone"
-							   onclick="focusInput('inputPhone')">市話</label>
+							   onclick="handlePhoneTypeChange('phone')">市話</label>
 						<input id="inputPhone" class="form-control" type="text" placeholder="請輸入市話"
 							   aria-label="default input phone" onfocus="focusRadio('flexRadioPhone')"
-							   autocomplete="off">
+							   oninput="validatePhone('phone')" autocomplete="off">
+						<div id="phoneFeedback" class="invalid-feedback">請輸入有效的市話</div>
 					</div>
 
 
@@ -647,13 +649,67 @@
 		//如果原先手機載具輸入框有值，則切換到紙本發票後清空手機載具輸入框的值
 		function handleReceiptTypeChange(type) {
 			const input = document.getElementById('inputCarrier');
+			const carrierFeedback = document.getElementById('carrierFeedback');
 			if (type === 'paper') {
 				input.value = '';
-				input.classList.remove('is-valid', 'is-invalid');				
+				input.classList.remove('is-valid', 'is-invalid');
+				carrierFeedback.style.display = 'none';
 			} else if (type === 'carrier') {				
 				focusInput('inputCarrier');
 			}
 		}
+
+		//電話格式驗證
+		function validatePhone(type) {
+			const inputCellphone = document.getElementById('inputCellphone');
+			const inputPhone = document.getElementById('inputPhone');
+			const cellphoneFeedback = document.getElementById('cellphoneFeedback');
+			const phoneFeedback = document.getElementById('phoneFeedback');
+
+			if (type === 'cellphone') {
+				const pattern = /^09\d{8}$/; // 正則表達式，驗證手機號碼格式
+				if (pattern.test(inputCellphone.value)) {
+					inputCellphone.classList.remove('is-invalid');
+					inputCellphone.classList.add('is-valid');
+					cellphoneFeedback.style.display = 'none';
+				} else {
+					inputCellphone.classList.remove('is-valid');
+					inputCellphone.classList.add('is-invalid');
+					cellphoneFeedback.style.display = 'block';
+				}
+			} else if (type === 'phone') {
+				const pattern = /^0\d{1,2}\d{6,8}$/; // 正則表達式，驗證市話格式
+				if (pattern.test(inputPhone.value)) {
+					inputPhone.classList.remove('is-invalid');
+					inputPhone.classList.add('is-valid');
+					phoneFeedback.style.display = 'none';
+				} else {
+					inputPhone.classList.remove('is-valid');
+					inputPhone.classList.add('is-invalid');
+					phoneFeedback.style.display = 'block';
+				}
+			}
+		}
+
+		function handlePhoneTypeChange(type) {
+			const inputCellphone = document.getElementById('inputCellphone');
+			const inputPhone = document.getElementById('inputPhone');
+
+			if (type === 'cellphone') {
+				inputPhone.value = '';
+				inputPhone.classList.remove('is-valid', 'is-invalid');
+				phoneFeedback.style.display = 'none';
+				focusInput('inputCellphone');
+			} else if (type === 'phone') {
+				inputCellphone.value = '';
+				inputCellphone.classList.remove('is-valid', 'is-invalid');
+				cellphoneFeedback.style.display = 'none';
+				focusInput('inputPhone');
+			}
+		}
+
+
+
 
 
 
