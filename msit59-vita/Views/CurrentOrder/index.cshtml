@@ -76,8 +76,8 @@
                         <dd class="col-6">@order.OrderPhoneNumber</dd>
 
 
-                        <dt class="col-6">取餐方式:</dt>
-                        <dd class="col-6">@order.OrderDeliveryVia</dd>
+                    <dt class="col-6">取餐方式:</dt>
+                    <dd class="col-6 order-type">@order.OrderDeliveryVia</dd>
 
                         @if (@order.OrderDeliveryVia == "外送")
                         {
@@ -172,6 +172,8 @@
             <div class="container-lg container row  ">
 
 
+         
+
                 <div class="col-12  d-flex justify-content-center">
                     <p class="text-break">
                         親愛的顧客 <span class="text-info">@(customerName)</span>  您目前沒有訂單，馬上前往
@@ -205,7 +207,7 @@
             $(`#${id}>dd>a`).remove();
         }       
         $("#order-btns>button").click(function () {
-            window.location.href = !$(this).hasClass("user-center-order-btn") ? "/CurrentOrder" : "/HistoricalOrders";
+            window.location.href = !$(this).hasClass("user-center-order-btn") ? "./CurrentOrder" : "./HistoricalOrders";
         })
 
         //接收訂單狀態更改
@@ -218,8 +220,29 @@
         connection.on("StatusChange", function (CustomerId, OrderId, CustomerOrderStatus) {
             const targetOrder = $(`#order${OrderId}`);
             if (!targetOrder) return;
-            targetOrder.find("#order-status>span").text(CustomerOrderStatus);
-            if (CustomerOrderStatus !== "待接單") targetOrder.find("#order-status~form").remove();
+            let status = "";
+            switch(CustomerOrderStatus)
+            {
+                case "接單":
+                    status = "製作中";
+                    break;
+                case "出餐":
+                    status = targetOrder.find(".order-type").text() === "自取" ? "等待自取" : "配送中";
+                    break;
+                case "退單":
+                    status = "已退單";
+                    break;
+                case "完成訂單":
+                    status = "已完成";
+                    break;
+                default:
+                    status = targetOrder.find("#order-status>span").text();
+                    break;
+            }
+
+
+            targetOrder.find("#order-status>span").text(status);
+            targetOrder.find("#order-status~form").remove();
             
             console.log(CustomerId, OrderId, CustomerOrderStatus);
         })

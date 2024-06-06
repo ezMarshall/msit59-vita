@@ -1,4 +1,5 @@
-﻿@{
+﻿@model msit59_vita.Models.ManagerOrders;
+@{
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
 }
 
@@ -8,7 +9,6 @@
 }
 
 @section BreadCrumb {
-    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
     <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
         <ol class="breadcrumb pt-3">
             <li class="breadcrumb-item" aria-current="page">
@@ -20,15 +20,15 @@
     </div>
 }
 
-@section ContentWrapper{
+@section Content{
     <div class=" row justify-content-center ">
         <div id="TableAreas" class=" pt-0 pb-4 ps-2 col-11 ">
             <div class="d-lg-flex mb-2 container-fluid">
                 <div class="search-icon">
-                    <a href="#">
+                    <a href="#" id="searchLink">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3" type="text" placeholder="請輸入關鍵字">
+                    <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3" type="text" id="searchString" placeholder="請輸入訂單編號">
                 </div>
                 <div>
                     <input class="order-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
@@ -36,202 +36,415 @@
                     <input class="order-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
                 </div>
                 <div>
-                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="">
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="deliveryVia">
                         <option value="">訂單種類</option>
-                        <option value="0">外送</option>
-                        <option value="1">自取</option>
+                        <option value="1">外送</option>
+                        <option value="0">自取</option>
                     </select>
                 </div>
                 <div>
-                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" name="" id="">
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="orderStatus">
                         <option value="">訂單狀態</option>
-                        <option value="finished">已完成</option>
-                        <option value="unfinish">未完成</option>
-                        <option value="declined">已退單</option>
+                        <option value="0">已完成</option>
+                        <option value="1">未完成</option>
+                        <option value="2">已退單</option>
                     </select>
                 </div>
                 <div>
-                    <button class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</button>
+                    <a href="/ManagerOrders/ManagerOrders" class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</a>
                 </div>
             </div>
 
             <table id="TableProducts" class=" table table-hover table-borderless border-bottom border-dark text-center">
-                <thead class="border-dark">
-                    <tr>
-                        <th scope="col" style="width: 10%">#</th>
-                        <th scope="col" style="width: 16%">訂單編號</th>
-                        <th scope="col" style="width: 17%">訂餐時間</th>
-                        <th scope="col" style="width: 13%">付款方式</th>
-                        <th scope="col" style="width: 13%">訂單種類</th>
-                        <th scope="col" style="width: 13%">訂單狀態</th>
-                        <th scope="col" style="width: 18%">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-row-id="1" class="order-tr">
-                        <th class="align-middle" scope="row">1</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">待接單</td>
-                        <td class="align-middle">
-                            <button class="btn btn-success me-1 fw-bold btn-accept show-alert">接單</button>
-                            <button class="btn btn-danger fw-bold btn-decline show-alert">退單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="2" class="order-tr">
-                        <th class="align-middle" scope="row">2</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">待接單</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold show-alert">出店</button>
-                            <button class="btn btn-dark fw-bold show-alert">完成訂單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="3" class="order-tr">
-                        <th class="align-middle" scope="row">3</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">等待自取</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
-                            <button class="btn btn-dark fw-bold ">完成訂單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="4" class="order-tr">
-                        <th class="align-middle" scope="row">4</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">等待自取</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
-                            <button class="btn btn-dark fw-bold ">完成訂單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="5" class="order-tr">
-                        <th class="align-middle" scope="row">5</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">等待自取</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold ">出店</button>
-                            <button class="btn btn-dark fw-bold ">完成訂單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="6" class="order-tr">
-                        <th class="align-middle" scope="row">6</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">外送中</td>
-                        <td class="align-middle ">
-                            <button class="btn btn-dark fw-bold ">出店</button>
-                            <button class="btn btn-dark fw-bold ">完成訂單</button>
-                        </td>
-                    </tr>
-                    <tr data-row-id="7" class="order-tr">
-                        <th class="align-middle" scope="row">7</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">已完成</td>
-                        <td class="align-middle">
-                        </td>
-                    </tr>
-                    <tr data-row-id="8" class="order-tr">
-                        <th class="align-middle" scope="row">8</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">已取消</td>
-                        <td class="align-middle">
-                        </td>
-                    </tr>
-                    <tr data-row-id="9" class="order-tr">
-                        <th class="align-middle" scope="row">9</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">已退單</td>
-                        <td class="align-middle">
-                        </td>
-                    </tr>
-                    <tr data-row-id="10" class="order-tr">
-                        <th class="align-middle" scope="row">10</th>
-                        <td class="align-middle" scope="row">12345678</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">現金</td>
-                        <td class="align-middle">外送</td>
-                        <td class="align-middle">已完成</td>
-                        <td class="align-middle">
-                        </td>
-                    </tr>
-
-                </tbody>
+                @await Html.PartialAsync("_OrdersTable")
             </table>
 
-            <div aria-label="" class="">
+            @* pagination *@
+            <!-- #region Pagination -->
+            <div>
                 <ul class="pagination align-items-center justify-content-center">
-                    <li id="prevPageButton" class="btn disabled page-item">
-                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Previous</a>
+
+                    <li id="prevPageButton" class="btn page-item">
+                        <a class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">Previous</a>
                     </li>
-                    <li id="pageBox1" class="page-item active">
-                        <a id="pageBox1-link" class="rounded-2 page-link text-dark" href="javascript:void(0)">1</a>
+
+                    @{
+                        if (Model.PageCount <= 3)
+                        {
+                            <li id="pageBox1" class="page-item ">
+                                <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                    1
+                                </a>
+                            </li>
+                            <li id="pageBox2" class="page-item 2">
+                                <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                    2
+                                </a>
+                            </li>
+                            <li id="pageBox3" class="page-item  ">
+                                <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
+                                    3
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+
+                            // pageBox1
+                            if (Model.CurrentPageIndex == 1)
+                            {
+                                <li id="pageBox1" class="page-item active">
+                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                        1
+                                    </a>
+                                </li>
+                            }
+                            else if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                <li id="pageBox1" class="page-item">
+                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
+                                        @(Model.CurrentPageIndex - 2)
+                                    </a>
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li id="pageBox1" class="page-item">
+                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
+                                        @(Model.CurrentPageIndex - 1)
+                                    </a>
+                                </li>
+                            }
+
+                            // pageBox2
+                            if (Model.CurrentPageIndex == 1)
+                            {
+                                <li id="pageBox2" class="page-item">
+                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                        2
+                                    </a>
+                                </li>
+
+                            }
+                            else if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                <li id="pageBox2" class="page-item">
+                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
+                                        @(Model.PageCount - 1)
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+
+                                <li id="pageBox2" class="page-item active">
+                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
+                                        @Model.CurrentPageIndex
+                                    </a>
+                                </li>
+                            }
+
+                            // pageBox3
+                            if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                <li id="pageBox3" class="page-item active">
+                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
+                                        @Model.PageCount
+                                    </a>
+                                </li>
+                            }
+                            else if (Model.CurrentPageIndex == 1)
+                            {
+                                <li id="pageBox3" class="page-item">
+                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
+                                        @(Model.CurrentPageIndex + 2)
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li id="pageBox3" class="page-item">
+                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
+                                        @(Model.CurrentPageIndex + 1)
+                                    </a>
+                                </li>
+                            }
+
+                        }
+                    }
+
+                    <li id="nextPageButton" class="btn page-item ">
+                        <a class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex +1))">Next</a>
                     </li>
-                    <li id="pageBox2" class="page-item">
-                        <a id="pageBox2-link" class=" rounded-2 page-link text-dark" href="javascript:void(0)">2</a>
-                    </li>
-                    <li id="pageBox3" class="page-item">
-                        <a id="pageBox3-link" class="rounded-2 page-link text-dark" href="javascript:void(0)">3</a>
-                    </li>
-                    <li id="nextPageButton" class="btn page-item">
-                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Next</a>
-                    </li>
+
                 </ul>
             </div>
+
+            <!-- #endregion -->
+            <form id="paginationForm" method="get" action="/ManagerOrders/Index">
+                <input type="hidden" id="hfCurrentPageIndex" name="currentPage" value="@Model.CurrentPageIndex" />
+                <input type="hidden" id="hfPageCount" value="@Model.PageCount" />
+            </form>
+
         </div>
     </div>
 
 }
 
 @section Scripts{
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
-        var buttons = document.querySelectorAll('.show-alert');
-        buttons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                var buttonText = this.textContent;
-                console.log(buttonText);
-                Swal.fire({
 
-                    html: `<b>是否確認"${buttonText}"?</b>`,
-                    showConfirmButton: 'true',
-                    showCancelButton: 'true',
-                    showCloseButton: 'true',
-                    confirmButtonText: "確認",
-                    cancelButtonText: "取消",
-                    confirmButtonColor: '#262a10',
-                    cancelButtonColor: '#9db7a8',
-                    width: '300px'
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.start().then(function () {
+            console.log("start connection");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        // pagenation start
+        function PagerClick(currentPage) {
+            if ($('#searchString').val() || $('#startDate').val() || $('#endDate').val() || $('#deliveryVia').val() || $('#orderStatus').val()) {
+                // 如果有篩選條件，使用篩選函數
+                filterTable(currentPage);
+            } else {
+                // 否則使用原有的分頁函數
+                $.ajax({
+                    url: '/ManagerOrders/GetOrdersTable',
+                    type: 'GET',
+                    data: { currentPage: currentPage },
+                    success: function (result) {
+                        $('#TableProducts').html(result);
+                        $("#hfCurrentPageIndex").val(currentPage);
+
+                        // 從服務器響應中提取總頁數
+                        var pageCount = $(result).find('#hfPageCount').val();
+                        $("#hfPageCount").val(pageCount);
+
+                        updatePaginationButtons(currentPage);
+                    }
+                });
+            }
+        }
+
+        function updatePaginationButtons(currentPage) {
+            // 從隱藏字段中獲取總頁數
+            var pageCount = parseInt($('#hfPageCount').val());
+
+            // 更新 Previous 按鈕
+            $('#prevPageButton').toggleClass('disabled', currentPage == 1);
+            $('#prevPageButton a').attr('href', 'javascript:PagerClick(' + (currentPage - 1) + ')');
+
+            // 更新 Next 按鈕
+            $('#nextPageButton').toggleClass('disabled', currentPage == pageCount);
+            $('#nextPageButton a').attr('href', 'javascript:PagerClick(' + (currentPage + 1) + ')');
+
+            // 更新中間的頁碼按鈕
+            if (pageCount <= 3) {
+                for (var i = 1; i <= 3; i++) {
+                    var $btn = $('#pageBox' + i);
+                    var $link = $('#pageBox' + i + '-link');
+                    $btn.toggleClass('active', currentPage == i);
+                    $btn.toggleClass('disabled', i > pageCount);
+                    $link.attr('href', 'javascript:PagerClick(' + i + ')');
+                    $link.text(i);
+                }
+            } else {
+                if (currentPage == 1) {
+                    setPageBox(1, 1, true);
+                    setPageBox(2, 2, false);
+                    setPageBox(3, 3, false);
+                } else if (currentPage == pageCount) {
+                    setPageBox(1, pageCount - 2, false);
+                    setPageBox(2, pageCount - 1, false);
+                    setPageBox(3, pageCount, true);
+                } else {
+                    setPageBox(1, currentPage - 1, false);
+                    setPageBox(2, currentPage, true);
+                    setPageBox(3, currentPage + 1, false);
+                }
+            }
+        }
+
+        function setPageBox(boxIndex, pageNumber, isActive) {
+            var $btn = $('#pageBox' + boxIndex);
+            var $link = $('#pageBox' + boxIndex + '-link');
+            $btn.toggleClass('active', isActive);
+            $link.attr('href', 'javascript:PagerClick(' + pageNumber + ')');
+            $link.text(pageNumber);
+        }
+        // pagenation end
+
+        // update order status start
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = new bootstrap.Modal(document.getElementById('orderModal'));
+            var actionTextSpan = document.getElementById('actionText');
+            var confirmButton = document.getElementById('confirmAction');
+
+            function setupEventListeners() {
+                document.querySelectorAll('.show-alert').forEach(function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        var action = this.getAttribute('data-action');
+                        var orderId = this.getAttribute('data-order-id');
+                        var customerId = this.getAttribute('data-customer-id');
+                        actionTextSpan.textContent = "訂單" + orderId + "，是否確認" + action + "？";
+
+                        // 將訂單ID和操作存儲在確認按鈕上
+                        confirmButton.setAttribute('data-order-id', orderId);
+                        confirmButton.setAttribute('data-action', action);
+                        confirmButton.setAttribute('data-customer-id', customerId);
+
+                        modal.show();
+                    });
+                });
+            }
+
+            // 初始設置事件監聽器
+            setupEventListeners();
+
+            confirmButton.addEventListener('click', function () {
+                var orderId = this.getAttribute('data-order-id');
+                var action = this.getAttribute('data-action');
+                var customerId = this.getAttribute('data-customer-id');
+
+                $.ajax({
+                    url: '/ManagerOrders/ChangeOrderStatus',
+                    type: 'POST',
+                    data: { orderId: orderId, action: action },
+                    success: function (result) {
+                        if (result.success) {
+                            //singaIR發送
+                            connection.invoke("SwitchOrderStatus", customerId, orderId, action).catch(function (err) {
+                                return console.error(err.toString());
+                            });
 
 
-                })
+                            modal.hide();
+                            // 重新加載訂單表格
+                            reloadOrdersTable();
+                        } else {
+                            alert('操作失敗');
+                        }
+                    },
+                    error: function () {
+                        alert('發生錯誤，請稍後再試');
+                    }
+                });
+            });
+
+            function reloadOrdersTable() {
+                var currentPage = $("#hfCurrentPageIndex").val();
+                $.ajax({
+                    url: '/ManagerOrders/GetOrdersTable',
+                    type: 'GET',
+                    data: { currentPage: currentPage },
+                    success: function (result) {
+                        $('#TableProducts').html(result);
+                        // 重新設置事件監聽器，因為表格內容已更新
+                        setupEventListeners();
+                    }
+                });
+            }
+        });
+
+        function filterTable(currentPage) {
+            var searchString = $('#searchString').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            var deliveryVia = $('#deliveryVia').val();
+            var orderStatus = $('#orderStatus').val();
+
+            $.ajax({
+                url: '/ManagerOrders/FilterOrders',
+                type: 'POST',
+                data: {
+                    searchString: searchString,
+                    startDate: startDate,
+                    endDate: endDate,
+                    deliveryVia: deliveryVia,
+                    orderStatus: orderStatus,
+                    currentPage: currentPage
+                },
+                success: function (result) {
+                    $('#TableProducts').html(result);
+                    // 重新設置事件監聽器，因為表格內容已更新
+                    setupEventListeners();
+                },
+                error: function () {
+                    alert('發生錯誤，請稍後再試');
+                }
+            });
+        }
+        // update order status start end
+
+        
+        // 篩選 start
+        // 獲取過濾欄位
+        const searchInput = document.getElementById('searchString');
+        const searchLink = document.getElementById('searchLink');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const deliveryViaSelect = document.getElementById('deliveryVia');
+        const orderStatusSelect = document.getElementById('orderStatus');
+
+        // 綁定事件處理程序
+        searchLink.addEventListener('click', () => filterTable(1)); // 篩選時從第1頁開始
+        startDateInput.addEventListener('change', () => filterTable(1));
+        endDateInput.addEventListener('change', () => filterTable(1));
+        deliveryViaSelect.addEventListener('change', () => filterTable(1));
+        orderStatusSelect.addEventListener('change', () => filterTable(1));
+
+        function filterTable(currentPage) {
+            const params = {
+                searchString: searchInput.value,
+                startDate: startDateInput.value,
+                endDate: endDateInput.value,
+                deliveryVia: deliveryViaSelect.value,
+                orderStatus: orderStatusSelect.value,
+                currentPage: currentPage // 添加當前頁碼
+            };
+
+            $.ajax({
+                url: '/ManagerOrders/FilterOrders',
+                type: 'POST',
+                data: params,
+                success: function (result) {
+                    $('#TableProducts').html(result);
+
+                    // 從服務器響應中提取總頁數和當前頁碼
+                    var pageCount = $(result).find('#hfPageCount').val();
+                    var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+
+                    $("#hfPageCount").val(pageCount);
+                    $("#hfCurrentPageIndex").val(currentPageIndex);
+
+                    updatePaginationButtons(parseInt(currentPageIndex));
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in AJAX request:", error);
+                }
+            });
+        }
+
+        // row click
+        // 將事件監聽綁到tableproducts上 避免ajax換頁之後row的點擊效果失效
+        document.addEventListener('DOMContentLoaded', function () {
+            var tableContainer = document.getElementById('TableProducts');
+
+            tableContainer.addEventListener('click', function (event) {
+                var row = event.target.closest('.order-tr');
+                if (row && event.target.tagName !== 'BUTTON') {
+                    var orderId = row.getAttribute('data-order-id');
+                    window.location.href = '/ManagerOrders/OrderDetails/' + orderId;
+                }
             });
         });
+        
+
+
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
 
 }

@@ -1,12 +1,233 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Messaging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using msit59_vita.Models;
+using static msit59_vita.Models.ManagerOrders;
+
 
 namespace msit59_vita.Controllers
 {
     public class ManagerOrdersController : Controller
     {
-        public IActionResult ManagerOrders()
+        private readonly VitaContext _context;
+
+        public ManagerOrdersController(VitaContext context)
         {
-            return View();
+            _context = context;
         }
+        public IActionResult ManagerOrders(int currentPage = 1)
+        {
+            var viewModel = GetOrders(currentPage);
+            return View(viewModel);
+        }
+
+
+        // 點擊分頁時
+        public IActionResult GetOrdersTable(int currentPage = 1)
+        {
+            var viewModel = GetOrders(currentPage);
+            return PartialView("_OrdersTable", viewModel);
+        }
+
+        public ManagerOrders GetOrders(int currentPage)
+        {
+            int maxRows = 10; //每頁幾列'
+            var queryOrders = from o in _context.Orders
+                              orderby o.CustomerOrderStatus, o.OrderTime descending
+                              select new OrderViewModel
+                              {
+                                  OrderId = o.OrderId,
+                                  OrderTime = o.OrderTime,
+                                  OrderPayment=o.OrderPayment,
+                                  OrderDeliveryVia=o.OrderDeliveryVia,
+                                  CustomerOrderStatus=o.CustomerOrderStatus,
+                                  CustomerId = o.CustomerId,
+                              };
+            var orders = queryOrders.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+            var viewModel = new ManagerOrders
+            {
+                Orders = orders
+            };
+            double pageCount = (double)((decimal)queryOrders.ToList().Count() / Convert.ToDecimal(maxRows));
+            viewModel.PageCount = (int)Math.Ceiling(pageCount); //總共頁數
+            viewModel.CurrentPageIndex = currentPage; //目前所在分頁
+            viewModel.MaxRows = maxRows;
+            return viewModel;
+        }
+
+        [HttpPost]
+        public PartialViewResult FilterOrders(string searchString, string deliveryVia, string orderStatus, string startDate, string endDate, int currentPage = 1)
+        {
+
+            int? orderStatusInt = null;
+            if (!string.IsNullOrEmpty(orderStatus))
+            {
+                if (int.TryParse(orderStatus, out int statusValue))
+                {
+                    orderStatusInt = statusValue;
+                }
+            }
+
+            DateTime? startDateParsed = null;
+            DateTime? endDateParsed = null;
+            if (!string.IsNullOrEmpty(startDate))
+            {
+                startDateParsed = DateTime.Parse(startDate);
+            }
+            if (!string.IsNullOrEmpty(endDate))
+            {
+                endDateParsed = DateTime.Parse(endDate);
+            }
+            var queryOrders = from o in _context.Orders
+                              orderby o.CustomerOrderStatus,o.OrderTime descending
+                              select new OrderViewModel
+                              {
+                                  OrderId = o.OrderId,
+                                  OrderTime = o.OrderTime,
+                                  OrderPayment = o.OrderPayment,
+                                  OrderDeliveryVia = o.OrderDeliveryVia,
+                                  CustomerOrderStatus = o.CustomerOrderStatus,
+                                  OrderFinishedTime= o.OrderFinishedTime,
+                              };
+
+            // 根據搜尋字串過濾
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                queryOrders = queryOrders.Where(o => o.OrderId.ToString().Contains(searchString) );
+            }
+
+            // 根據訂單狀態過濾
+            if (orderStatusInt.HasValue)
+            {
+                switch (orderStatusInt.Value)
+                {
+                    case 0: // 已完成
+                        queryOrders = queryOrders.Where(o => o.CustomerOrderStatus == 3 || o.CustomerOrderStatus == 5);
+                        break;
+                    case 1: // 未完成
+                        queryOrders = queryOrders.Where(o => o.CustomerOrderStatus == 0 || o.CustomerOrderStatus == 1 || o.CustomerOrderStatus == 2);
+                        break;
+                    case 2: // 已退單
+                        queryOrders = queryOrders.Where(o => o.CustomerOrderStatus == 4);
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(deliveryVia))
+            {
+                bool isDelivery = (deliveryVia == "1"); // "1" 表示外送
+                queryOrders = queryOrders.Where(o => o.OrderDeliveryVia == isDelivery);
+            }
+
+            // 根據發佈時間區間過濾
+            if (startDateParsed.HasValue && endDateParsed.HasValue)
+            {
+                queryOrders = queryOrders.Where(o => o.OrderTime >= startDateParsed.Value && o.OrderTime <= endDateParsed.Value);
+            }
+
+            var totalCount = queryOrders.Count(); // 總記錄數
+            int maxRows = 10; // 每頁行數
+
+            var reviewsList = queryOrders
+            .Skip((currentPage - 1) * maxRows)
+            .Take(maxRows)
+            .ToList();
+
+            var viewModel = new ManagerOrders
+            {
+                Orders = reviewsList.Cast<OrderViewModel>().ToList(),
+                CurrentPageIndex = currentPage,
+                PageCount = (int)Math.Ceiling((double)totalCount / maxRows),
+                MaxRows = maxRows,
+                TotalCount = totalCount // 新增：返回總記錄數
+            };
+
+            return PartialView("_OrdersTable", viewModel);
+        }
+
+        // 更改訂單狀態
+        [HttpPost]
+        public IActionResult ChangeOrderStatus(int orderId, string action)
+        {
+            var order = _context.Orders.Find(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            switch (action)
+            {
+                case "接單":
+                    order.CustomerOrderStatus = 1; // 製作中
+                    break;
+                case "出餐":
+                    order.CustomerOrderStatus = 2; // 配送中或等待自取
+                    break;
+                case "退單":
+                    order.CustomerOrderStatus = 4; // 已退單
+                    order.OrderFinishedTime = DateTime.Now;
+                    break;
+                case "完成訂單":
+                    order.CustomerOrderStatus = 3; // 已完成
+                    order.OrderFinishedTime = DateTime.Now;
+                    break;
+                default:
+                    return BadRequest("無效的操作");
+            }
+
+            var newMessage = new OrderMessage
+            {
+                OrderId = orderId,
+                MessageInformedTime = DateTime.Now,
+                MessageStatus = false, 
+                MessageContent = order.CustomerOrderStatus
+            };
+            _context.OrderMessages.Add(newMessage);
+
+            try
+            {
+                _context.SaveChanges();
+                return Ok(new { success = true, message = "訂單狀態已更新，新訊息已創建" });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"更新訂單狀態時發生錯誤: {ex.Message}");
+                Console.Error.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "更新訂單狀態時發生錯誤" });
+            }
+        }
+        public IActionResult OrderDetails(int id)
+        {
+            var queryDetails = from o in _context.Orders
+                               join c in _context.Customers on o.CustomerId equals c.CustomerId
+                               join od in _context.OrderDetails on o.OrderId equals od.OrderId
+                               join p in _context.Products on od.ProductId equals p.ProductId
+                               where o.OrderId ==id
+                               select new
+                               {
+                                   OrderId = o.OrderId,
+                                   CustomerOrderStatus = o.CustomerOrderStatus,
+                                   OrderDeliveryVia = o.OrderDeliveryVia,
+                                   CustomerName = c.CustomerName,
+                                   OrderPhoneNumeber = o.OrderPhoneNumber,
+                                   OrderTime = o.OrderTime,
+                                   PredictedArrivalTime = o.PredictedArrivalTime,
+                                   OrderAddressCity = o.OrderAddressCity,
+                                   OrderAddressDistrict = o.OrderAddressDistrict,
+                                   OrderAddressDetails = o.OrderAddressDetails,
+                                   ProductName = p.ProductName,
+                                   Quantity = od.Quantity,
+                                   OrderStoreMemo = o.OrderStoreMemo,
+                                   OrderUniformInvoiceVia = o.OrderUniformInvoiceVia,
+                                   OrderPayment = o.OrderPayment,
+                               };
+            ViewBag.OrderDetails = queryDetails.ToList();
+            return View(); 
+        }
+
     }
+
+
+
 }

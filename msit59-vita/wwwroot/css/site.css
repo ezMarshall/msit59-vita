@@ -12483,3 +12483,17 @@ body {
                 background-color: #FF6700;
             }
 /*# sourceMappingURL=all.css.map */
+.googleLogin-btn {
+    background: #fff;
+}
+
+.googleLogin-btn::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    background-image: url('../image/Common/google.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
