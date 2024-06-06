@@ -9,7 +9,7 @@ namespace SignalRChat.Hubs
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
         //後台訂單管理 >> 前台當前訂單+通知
-        public async Task SwitchOrderStatus(int CustomerId, string OrderId, string CustomerOrderStatus)
+        public async Task SwitchOrderStatus(string CustomerId, string OrderId, string CustomerOrderStatus)
         {
             await Clients.All.SendAsync("StatusChange", CustomerId, OrderId, CustomerOrderStatus);
         }

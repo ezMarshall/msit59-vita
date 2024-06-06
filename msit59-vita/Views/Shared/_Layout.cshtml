@@ -18,61 +18,61 @@
 </head>
 
 <body>
-	<header>
-		<nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
-			<div class="container-lg">
-				<h1 class="m-0">
-					<a href="/Home" class="replace-text-nav">
-						VITA健康餐盒訂餐平台
-					</a>
-				</h1>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-						aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarNavDropdown">
-					<ul class="navbar-nav ms-auto">
-						@* 會員中心 *@
-						@if (User.Identity?.IsAuthenticated ?? false)
-						{
-							<li class="nav-item text-light mt-3 mt-lg-0">
-								<span class="text-primary me-3 nav-welcome ps-2">Welcome Back &nbsp; @User.Claims.FirstOrDefault(c => c.Type == "VitaUserName")?.Value</span>
-							</li>
-							@* 分隔線 *@
-							<li class="d-lg-none border-light border-top opacity-25 my-3"></li>
-							<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
-							<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
-							<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
-							<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
-							<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#" onclick="logout()">登出</a></li>
-							<li class="nav-item dropdown d-none d-lg-block z-index-1">
-								<button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
-										id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									會員中心
-								</button>
-								<ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
-									aria-labelledby="navbarDropdownMenuLink">
-									<li><a class="dropdown-item py-2" href="#">會員資料</a></li>
-									<li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
-									<li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
-									<li><a class="dropdown-item py-2" href="#">我的評論</a></li>
-									<li><a class="dropdown-item py-2" href="#" onclick="logout()">登出</a></li>
-								</ul>
-							</li>
-						}
-
-						@* 登入註冊 *@
-						@if (!(User.Identity?.IsAuthenticated ?? false))
-						{
-							<li class="my-2 my-lg-0">
-								<a href="/Account/Login" class="d-none d-lg-block rounded-pill btn btn-outline-primary me-3 px-4 py-2">登入</a>
-								<a href="/Account/Login" class="d-lg-none p-2 text-decoration-none link-primary">登入</a>
-							</li>
-							<li class="my-2 my-lg-0">
-								<a href="/Account/Register" class="d-none d-lg-block rounded-pill btn btn-primary px-4 py-2 me-4" id="btnRegister">註冊</a>
-								<a href="/Account/Register" class="d-lg-none p-2 text-decoration-none link-primary">註冊</a>
-							</li>
-						}
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow">
+            <div class="container-lg">
+                <h1 class="m-0">
+                    <a href="/Home" class="replace-text-nav">
+                        VITA健康餐盒訂餐平台
+                    </a>
+                </h1>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto">
+                        @* 會員中心 *@
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                            {      
+                                <li class="nav-item text-light mt-3 mt-lg-0">
+                                <span class="text-primary me-3 nav-welcome ps-2">Welcome Back &nbsp; @User.Claims.FirstOrDefault(c => c.Type == "VitaUserName")?.Value</span>
+                                </li>
+                                @* 分隔線 *@
+                                <li class="d-lg-none border-light border-top opacity-25 my-3"></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyData">會員資料</a></li>
+                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="/CurrentOrder">我的訂單</a></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/FavoriteStores">收藏店家</a></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyComment">我的評論</a></li>
+                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#" onclick="logout()">登出</a></li>
+                                <li class="nav-item dropdown d-none d-lg-block z-index-1">
+                                    <button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
+                                            id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        會員中心
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
+                                        aria-labelledby="navbarDropdownMenuLink">
+                                        <li><a class="dropdown-item py-2" href="/MyData">會員資料</a></li>
+                                        <li><a class="dropdown-item py-2" href="/CurrentOrder">我的訂單</a></li>
+                                        <li><a class="dropdown-item py-2" href="/FavoriteStores">收藏店家</a></li>
+                                        <li><a class="dropdown-item py-2" href="/MyComment">我的評論</a></li>
+                                        <li><a class="dropdown-item py-2" href="#" onclick="logout()">登出</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        
+                        @* 登入註冊 *@
+                        @if (!(User.Identity?.IsAuthenticated ?? false))
+                        {
+                            <li class="my-2 my-lg-0">
+                              <a href="/Account/Login" class="d-none d-lg-block rounded-pill btn btn-outline-primary me-3 px-4 py-2">登入</a>
+                                <a href="/Account/Login" class="d-lg-none p-2 text-decoration-none link-primary">登入</a>
+                            </li>
+                            <li class="my-2 my-lg-0">
+                                <a href="/Account/Register" class="d-none d-lg-block rounded-pill btn btn-primary px-4 py-2 me-4" id="btnRegister">註冊</a>
+                                <a href="/Account/Register" class="d-lg-none p-2 text-decoration-none link-primary">註冊</a>
+                            </li>
+                        }
 
 						@* 分隔線 *@
 						<li class="d-lg-none border-light border-top opacity-25 my-3"></li>
