@@ -18,45 +18,50 @@ namespace msit59_vita.Controllers
 		// GET: ShoppingCartsController
 		public IActionResult Index()
 		{
-			//沒有登入購物車資料透過Session取得
-			if (false)
-			{
-				//未登入，請先登入
-				//判斷是否營業中，如果商品不在營業中，則不能加入購物車
-				//未登入他有加入商品，之後登入的購物車資料會自動顯示，原先購物車資料和登入後購物車資料分，加入到登入後購物車裡面
-				//要進行比較如果未登入購物車中有相同的商品
-				//如果有相同商品，登入後購物車的數量會覆蓋原先購物車的數量，不會重複加入
+			//沒有登入購物車資料
+			// 檢查使用者是否已登入
 
-				Console.WriteLine("Get cart from session");
-            }
-			else
+			if (!User.Identity?.IsAuthenticated ?? false)
 			{
-				//目前CustomerId固定的
-				// 取得目前登入的使用者，顯示他的購物車內容
-				var cart = from s in _context.ShoppingCarts
-                           join c in _context.Customers on s.CustomerId equals c.CustomerId
-                           join p in _context.Products on s.ProductId equals p.ProductId
-						   join t in _context.Stores on p.StoreId equals t.StoreId
-                           where s.CustomerId == 1
-                           select new
-                           {
-							   ShoppingCartId = s.ShoppingCartId,
-                               CustomerID = s.CustomerId,
-                               ProductId = s.ProductId,
-                               Quantity = s.ShoppingCartQuantity,
-							   StoreID  = p.StoreId,
-							   StoreName = t.StoreName,
-                               ProductName = p.ProductName,
-							   ProductUnitsInStock = p.ProductUnitsInStock,
-							   Price = p.ProductUnitPrice,
-                               ProductImage = p.ProductImage
-                           };
+				//未登入狀態
+				return Json(new { success = false, message = "未登入購物車狀態" });
+			}
 
-				var cartList = cart.ToList();
-				return Json(cartList);                
-            }
-			            
-        }
+
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
+
+			// 取得目前登入的使用者，顯示他的購物車內容
+			var cart = from s in _context.ShoppingCarts
+					   join c in _context.Customers on s.CustomerId equals c.CustomerId
+					   join p in _context.Products on s.ProductId equals p.ProductId
+					   join t in _context.Stores on p.StoreId equals t.StoreId
+					   where s.CustomerId == customerID
+					   select new
+					   {
+						   ShoppingCartId = s.ShoppingCartId,
+						   CustomerID = s.CustomerId,
+						   ProductId = s.ProductId,
+						   Quantity = s.ShoppingCartQuantity,
+						   StoreID = p.StoreId,
+						   StoreName = t.StoreName,
+						   ProductName = p.ProductName,
+						   ProductUnitsInStock = p.ProductUnitsInStock,
+						   Price = p.ProductUnitPrice,
+						   ProductImage = p.ProductImage
+					   };
+
+			var cartList = cart.ToList();
+
+			//return Json(cartList);
+			return Json(new { success = true, message = "已登入購物車狀態", cart = cartList.ToList() });
+
+
+		}
 
 
 		[HttpPost]
@@ -75,17 +80,27 @@ namespace msit59_vita.Controllers
 
 			// 檢查使用者是否已登入
 			//!User.Identity.IsAuthenticated
+
 			if (!User.Identity?.IsAuthenticated ?? false)
 			{
+				//未登入狀態
 				return Json(new { success = false, message = "請先登入" });
 			}
+
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
+
 
 			//取得使用者的購物車
 			var cart = from s in _context.ShoppingCarts
 					   join c in _context.Customers on s.CustomerId equals c.CustomerId
 					   join p in _context.Products on s.ProductId equals p.ProductId
 					   join t in _context.Stores on p.StoreId equals t.StoreId
-					   where s.CustomerId == 1
+					   where s.CustomerId == customerID
 					   select new
 					   {
 						   ShoppingCartId = s.ShoppingCartId,
@@ -114,6 +129,7 @@ namespace msit59_vita.Controllers
 						shoppingCart.ShoppingCartQuantity = 30;
 					}
 					_context.SaveChanges();
+
 				}
 			}
 			else
@@ -121,13 +137,13 @@ namespace msit59_vita.Controllers
 				// 如果沒有相同商品,新增商品到購物車
 				var newCartItem = new ShoppingCart
 				{
-					//CustomerId = customerId,
-					CustomerId = 1,
+					CustomerId = customerID,//CustomerId = customerId,
 					ProductId = productId,
 					ShoppingCartQuantity = (short)quantity
 				};
 				_context.ShoppingCarts.Add(newCartItem);
 				_context.SaveChanges();
+
 			}
 
 			// 獲取更新後的購物車列表
@@ -135,7 +151,7 @@ namespace msit59_vita.Controllers
 							  join c in _context.Customers on s.CustomerId equals c.CustomerId
 							  join p in _context.Products on s.ProductId equals p.ProductId
 							  join t in _context.Stores on p.StoreId equals t.StoreId
-							  where s.CustomerId == 1// 目前CustomerId固定的
+							  where s.CustomerId == customerID
 							  select new
 							  {
 								  ShoppingCartId = s.ShoppingCartId,
@@ -155,12 +171,26 @@ namespace msit59_vita.Controllers
 		[HttpPost]
 		public IActionResult AddToCartInput(int productId, int quantity, int storeId)
 		{
+			// 檢查使用者是否已登入
+			//!User.Identity.IsAuthenticated
+			if (!User.Identity?.IsAuthenticated ?? false)
+			{
+				return Json(new { success = false, message = "未登入" });
+			}
+
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
+
 			//取得使用者的購物車
 			var cart = from s in _context.ShoppingCarts
 					   join c in _context.Customers on s.CustomerId equals c.CustomerId
 					   join p in _context.Products on s.ProductId equals p.ProductId
 					   join t in _context.Stores on p.StoreId equals t.StoreId
-					   where s.CustomerId == 1
+					   where s.CustomerId == customerID
 					   select new
 					   {
 						   ShoppingCartId = s.ShoppingCartId,
@@ -187,16 +217,16 @@ namespace msit59_vita.Controllers
 					if (shoppingCart.ShoppingCartQuantity >= 30)
 					{
 						shoppingCart.ShoppingCartQuantity = 30;
-					}            
-                    _context.SaveChanges();
+					}
+					_context.SaveChanges();
 
 				}
 			}
 
-			return Json(new { success = true, message = "商品已加入購物車"});
+			return Json(new { success = true, message = "商品已加入購物車" });
 		}
 
-			[HttpPost]
+		[HttpPost]
 		public IActionResult Delete(int id)
 		{
 			var cartItem = _context.ShoppingCarts.FirstOrDefault(sc => sc.ShoppingCartId == id);

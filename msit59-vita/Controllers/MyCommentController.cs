@@ -51,10 +51,17 @@ namespace msit59_vita.Controllers
 
 
             //取得使用者ID
-            var queryCustomerID = from c in _context.Customers
-                                  where c.CustomerEmail == User.Identity.Name
-                                  select c.CustomerId;
-            _customerId = queryCustomerID.Single();
+            var queryCustomer = from c in _context.Customers
+                                where c.CustomerEmail == User.Identity.Name
+                                select new
+                                {
+                                    c.CustomerId,
+                                    c.CustomerName,
+                                    c.CustomerNickName
+                                };
+
+            _customerId = queryCustomer.Single().CustomerId;
+
 
             var queryComment = from r in _context.Reviews
                                where r.Order.CustomerId == _customerId
@@ -86,6 +93,7 @@ namespace msit59_vita.Controllers
                                     
                                 };
 
+            ViewBag.customer = queryCustomer.Single();
             ViewBag.products = queryProducts.ToList();
             return View(queryComment.ToList());
         }

@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="~/lib/toastr.js/toastr.css" asp-append-version="true" />
 	<script src="~/lib/jquery/dist/jquery.js"></script>
 	<script src="~/lib/toastr.js/toastr.min.js"></script>
+	
 	<!-- 要套用自己的頁面去 all.scss 裡面新增 -> 可以用 bs變數 -->
 	<!-- 或者在下面增加 link -> 檔案裡面沒有@import的話無法用 bs變數 -->
 
@@ -39,10 +40,10 @@
                                 </li>
                                 @* 分隔線 *@
                                 <li class="d-lg-none border-light border-top opacity-25 my-3"></li>
-                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
-                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
-                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
-                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyData">會員資料</a></li>
+                                <li><a class="d-lg-none d-block p-2 text-decoration-none" href="/CurrentOrder">我的訂單</a></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/FavoriteStores">收藏店家</a></li>
+								<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyComment">我的評論</a></li>
                                 <li><a class="d-lg-none d-block p-2 text-decoration-none" href="#" onclick="logout()">登出</a></li>
                                 <li class="nav-item dropdown d-none d-lg-block z-index-1">
                                     <button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
@@ -51,10 +52,10 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
                                         aria-labelledby="navbarDropdownMenuLink">
-                                        <li><a class="dropdown-item py-2" href="#">會員資料</a></li>
-                                        <li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
-                                        <li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
-                                        <li><a class="dropdown-item py-2" href="#">我的評論</a></li>
+                                        <li><a class="dropdown-item py-2" href="/MyData">會員資料</a></li>
+                                        <li><a class="dropdown-item py-2" href="/CurrentOrder">我的訂單</a></li>
+                                        <li><a class="dropdown-item py-2" href="/FavoriteStores">收藏店家</a></li>
+                                        <li><a class="dropdown-item py-2" href="/MyComment">我的評論</a></li>
                                         <li><a class="dropdown-item py-2" href="#" onclick="logout()">登出</a></li>
                                     </ul>
                                 </li>
@@ -73,18 +74,18 @@
                             </li>
                         }
 
-                        @* 分隔線 *@
-                        <li class="d-lg-none border-light border-top opacity-25 my-3"></li>
+						@* 分隔線 *@
+						<li class="d-lg-none border-light border-top opacity-25 my-3"></li>
 
 
-							<!-- 購物車 -->
+						<!-- 購物車 -->
 
 
 						<li>
 							<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
 							   class="position-relative ms-4 d-none d-lg-block">
 								<i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
-								<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold"
+								<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold d-none"
 									  id="cartNum"></span>
 							</a>
 
@@ -93,23 +94,18 @@
 
 						</li>
 						<!-- 購物車 end -->
-						
-
-
-					
-                        
-                        @* 通知 *@
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li>
-                                <a data-bs-toggle="offcanvas" href="#offcanvasNotify" role="button" aria-controls="offcanvasNotify" class="d-block position-relative ms-3 d-none d-lg-block">
-                                    <i class="fa-regular fa-bell fs-3 nav-icon"></i>
-                                    <span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="notifyNum">1</span>
-                                </a>
-                                <a data-bs-toggle="offcanvas" href="#offcanvasNotifyMobile" role="button" aria-controls="offcanvasNotifyMobile" class="d-block d-lg-none text-decoration-none p-2">重要通知</a>
-                            </li>
-                        }
-                    </ul>
+						@* 通知 *@
+						@if (User.Identity?.IsAuthenticated ?? false)
+						{
+							<li>
+								<a data-bs-toggle="offcanvas" href="#offcanvasNotify" role="button" aria-controls="offcanvasNotify" class="d-block position-relative ms-3 d-none d-lg-block">
+									<i class="fa-regular fa-bell fs-3 nav-icon"></i>
+									<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold" id="notifyNum">1</span>
+								</a>
+								<a data-bs-toggle="offcanvas" href="#offcanvasNotifyMobile" role="button" aria-controls="offcanvasNotifyMobile" class="d-block d-lg-none text-decoration-none p-2">重要通知</a>
+							</li>
+						}
+					</ul>
 
 				</div>
 			</div>
@@ -141,118 +137,96 @@
 				</div>
 			</div>
 
-            <div class="col-6 col-md-4">
-                <a href="/JoinUs" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
-                <a href="/Faq" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
-            </div>
-            <div class="col-12 border-top mt-5 border-primary">
-                <p class="text-primary text-center my-4">© 2024 資展專題報告</p>
-            </div>
-        </div>
-    </footer>
-    <!-- footer end -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-	<script src="~/js/cartjs.js" asp-append-version="true"></script>
-    <script>
-        function logout() {
-            $.ajax({
-                type: "post",
-                url: "@Url.Action("Logout","Account")",
-                success: function(data){
-                    if(data == "ok"){
-                        window.location.href = "@Url.Action("Login", "Account")";
-                    } else {
-                        alert(data);
-                    }
-                },
-                error: function () {
-                    alert("發生未預期的錯誤,請稍後再試。");
-                }
-            })
-        }
-    </script>
-    @await RenderSectionAsync("Scripts", required: false)
-			
-	<!-- 購物車頁面開始 -->
-	<form action="/CheckedPayment/Index" method="post">
-		<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-			<div class="offcanvas-header justify-content-end">
-				<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
-						aria-label="Close"></button>
+			<div class="col-6 col-md-4">
+				<a href="/JoinUs" class="d-block text-decoration-none link-primary fs-5 fw-bold footer-link">加入我們</a>
+				<a href="/Faq" class="d-block text-decoration-none link-primary fs-5 fw-bold mt-3 footer-link">常見問題</a>
 			</div>
-			<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
-
-				<div class="cart-container overflow-auto">
-					@* <div class="cart-item d-flex justify-content-between pb-3">
-					<img src="./image/Product_1042_法式舒肥嫩雞胸輕食餐.jpg" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
-					<div class="cart-details">
-					<div class="cart-info d-flex justify-content-between mb-1">
-					<div class="me-3">
-					<div class="shop-name fs-6 fw-bold">優輕食｜大墩店</div>
-					<div class="product-name fs-5 fw-bold">法式舒肥嫩雞胸輕食餐</div>
-					</div>
-					<div class="product-delate text-success fs-4 mt-1">
-					<i class="fa-solid fa-trash"></i>
-					</div>
-					</div>
-					<div class="shop-price d-flex justify-content-around align-items-center">
-					<div class="input-group w-50">
-					<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
-					<i class="fa-solid fa-minus fs-5 fw-bold text-success"></i>
-					</button>
-					<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="1" id="number">
-					<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
-					<i class="fa-solid fa-plus fs-5 fw-bold text-success"></i>
-					</button>
-					</div>
-					<div class="fs-5 fw-bold text-center product-price" data-price="100">$100</div>
-					</div>
-
-					</div>
-					</div> *@
-
-				</div>
-
-
-				<div class="total-price pt-3">
-					<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
-
-					<div class="d-grid col-10 mx-auto">
-						<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
-					</div>
-				</div>
+			<div class="col-12 border-top mt-5 border-primary">
+				<p class="text-primary text-center my-4">© 2024 資展專題報告</p>
 			</div>
 		</div>
-	</form>
-	
-	<!-- 購物車頁面結束 -->
-	<!-- 手機版購物車開始 -->
-	@* <div class="offcanvas offcanvas-bottom bg-light h-75" tabindex="-1" id="offcanvasCartMobile"
-		 aria-labelledby="offcanvasCart MobileLabel">
+	</footer>
+	<!-- footer end -->
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/cartjs.js" asp-append-version="true"></script>
+	<script>
+		function logout() {
+			$.ajax({
+				type: "post",
+				url: "@Url.Action("Logout", "Account")",
+				success: function (data) {
+					if (data == "ok") {
+						window.location.href = "@Url.Action("Login", "Account")";
+					} else {
+						alert(data);
+					}
+				},
+				error: function () {
+					alert("發生未預期的錯誤,請稍後再試。");
+				}
+			})
+		}
+
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
+
+	<!-- 購物車頁面開始 -->
+
+	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
 		<div class="offcanvas-header justify-content-end">
 			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
 					aria-label="Close"></button>
 		</div>
-		<div class="offcanvas-body cart-list">
+		<div id="qqaa" class="offcanvas-body cart-list d-flex flex-column justify-content-between">
 
-			<div class="cart-container">
-				
-
+			<div class="cart-container overflow-auto">
 			</div>
 
-			<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
 
-			<div class="d-grid col-10 mx-auto">
-				<button class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="button">立即結帳</button>
-			</div> 
+			<div class="total-price pt-3">
+				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
 
+				<div class="d-grid col-10 mx-auto">
+					<button id="checkoutBtn" class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+				</div>
+			</div>
 		</div>
-	</div> *@
-	<!-- 手機版購物車結束 -->
+	</div>
 
-		
+
+	<!-- 購物車頁面結束 -->
+
+	<!-- 顯示請登入開始 -->
+
+	<form method="get" action="/Account/Login">
+		<!-- 登入模態對話框 -->
+		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header border-0">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-center fs-3 fw-bold">
+						<i class="fa-solid fa-circle-exclamation text-danger fs-2"></i>
+						<p id="loginMessage"></p>
+						<!-- 在這裡添加登入表單或其他內容 -->
+					</div>
+					<div class="modal-footer border-0 d-flex justify-content-center">
+						<button type="submit" class="btn btn-info text-white col-4">登入</button>
+						<button type="button" class="btn btn-secondary col-4" data-bs-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+	<!-- 顯示請登入結束 -->
+
+	
+
+
 
 
 

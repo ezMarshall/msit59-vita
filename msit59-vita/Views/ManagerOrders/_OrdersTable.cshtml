@@ -42,6 +42,7 @@
                               data-bs-toggle="modal" data-bs-target="#orderModal"
                               data-action="@((item.CustomerOrderStatus == 0) ? "接單" : "出餐")"
                               data-order-id="@item.OrderId"
+                              data-customer-id ="@item.CustomerId"
                               @((item.CustomerOrderStatus == 2) ? "disabled" : "")>
                           @((item.CustomerOrderStatus == 0) ? "接單" : "出餐")
                       </button>
@@ -50,7 +51,8 @@
                               data-bs-toggle="modal" data-bs-target="#orderModal"
                               data-action="@((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")"
                               data-order-id="@item.OrderId"
-                              @((item.CustomerOrderStatus == 1) ? "disabled" : "")>
+                              data-customer-id="@item.CustomerId"
+                    @((item.CustomerOrderStatus == 1) ? "disabled" : "")>
                           @((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")
                       </button>
                   </td>

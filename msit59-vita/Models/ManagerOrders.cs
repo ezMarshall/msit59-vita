@@ -17,6 +17,7 @@
             public bool OrderDeliveryVia { get; set; }
             public byte CustomerOrderStatus { get; set; }
             public DateTime? OrderFinishedTime { get; set; }
+            public int CustomerId { get; set; }
 
 
         }
