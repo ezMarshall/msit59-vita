@@ -31,10 +31,7 @@
                     <span class="text-danger ps-3">@ViewBag.ErrorMessage</span>
                 }
                 <button type="submit" class="w-100 btn btn-success text-light rounded-pill mt-4">登入</button>
-
-                <!-- 待加入 -->
-                <!-- 使用google登入 -->
-
+                <a class="w-100 btn border-dark rounded-pill mt-4 mb-3 googleLogin-btn" asp-controller="Account" asp-action="GoogleLogin" asp-route-provider="Google">使用Google帳號登入</a>
             </form>
             <p class="mt-4 mb-0 text-center">
                 還沒有會員？

@@ -1,0 +1,91 @@
+﻿@{
+	var store = ViewData["Store"] as Store;
+	string heartIconClass = ViewBag.isFavorite ? "fas" : "far";
+}
+
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+	<div class="store-comment-modal modal-dialog modal-dialog-scrollable modal-dialog-centered ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title fs-3 fw-bold" id="commentModalLabel">@store.StoreName</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="store-comment-form modal-body container">
+				<div class="rating-container row border-bottom border-gray-100 mx-auto">
+					<div class="rating-bars col-sm-12 col-md-8">
+						<div class="rating-bar d-flex align-items-center mb-1">
+							<span class="me-2">5</span>
+							<div class="bar">
+								<div class="filled" style="width: @ViewBag.reviewPercentages[5]%;"></div>
+							</div>
+						</div>
+						<div class="rating-bar d-flex align-items-center mb-1">
+							<span class="me-2">4</span>
+							<div class="bar">
+								<div class="filled" style="width: @ViewBag.reviewPercentages[4]%;"></div>
+							</div>
+						</div>
+						<div class="rating-bar d-flex align-items-center mb-1">
+							<span class="me-2">3</span>
+							<div class="bar">
+								<div class="filled" style="width: @ViewBag.reviewPercentages[3]%;"></div>
+							</div>
+						</div>
+						<div class="rating-bar d-flex align-items-center mb-1">
+							<span class="me-2">2</span>
+							<div class="bar">
+								<div class="filled" style="width: @ViewBag.reviewPercentages[2]%;"></div>
+							</div>
+						</div>
+						<div class="rating-bar d-flex align-items-center mb-1">
+							<span class="me-2">1</span>
+							<div class="bar">
+								<div class="filled" style="width: @ViewBag.reviewPercentages[1]%;"></div>
+							</div>
+						</div>
+
+					</div>
+					<div class="rating-summary col-sm-12 col-md-4 text-center">
+						<div class="rating-value fw-bold">@ViewBag.averageRating</div>
+						<div class="stars">
+							<span class="star-container home-store-star d-inline-block"
+								  style="background: linear-gradient(to right ,  #ffd700 0% @((ViewBag.averageRating*20).ToString()+"%"), #FFFFFF @((ViewBag.averageRating*20).ToString()+"%") 100%)"></span>
+						</div>
+						<div class="review-count text-secondary fs-6">@ViewBag.reviewCountSum</div>
+					</div>
+				</div>
+				<div class="row mx-auto">
+
+					@foreach (var review in ViewBag.customerReviewCounts)
+					{
+						<div class="review-card d-flex px-3 my-2">
+							<img src="/image/Common/user.png" alt="Profile Picture" class="rounded-circle me-3">
+							<div class="flex-wrap flex-grow-1 mt-1">
+								<div class="d-flex justify-content-between flex-wrap">
+									<div class="mb-0 fs-5 fw-bold">@review.CustomerName</div>
+									<div class="text-muted fs-6">@review.ReviewTime.ToString("yyyy/MM/dd")</div>
+								</div>
+								<div class="rating-stars">
+									<span class="star-container home-store-star d-inline-block"
+										  style="background: linear-gradient(to right ,  #ffd700 0% @((review.ReviewRating*20).ToString()+"%"), #FFFFFF @((review.ReviewRating*20).ToString()+"%") 100%)"></span>
+								</div>
+								<p class="mb-0">@review.ReviewText</p>
+
+								@if (review.StoreReplyText!= null)
+								{
+									<div class="reply mt-2 ps-2 border-start border-gray-700 border-5">
+										<div class="text-muted">業主回應 @review.StoreReplyTime.ToString("yyyy/MM/dd")</div>
+										<p class="mb-0">@review.StoreReplyText</p>
+									</div>
+								}
+								
+							</div>
+						</div>
+					}
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

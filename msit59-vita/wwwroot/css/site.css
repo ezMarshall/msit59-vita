@@ -12216,6 +12216,10 @@ body {
 .user-center-rating input:checked ~ label:before {
     opacity: 1;
 }
+.user-center-image{
+    object-fit:cover;
+    height:250px;
+}
 
 .product-store .store-comment .fa-star {
     color: #ffd700;
@@ -12479,3 +12483,17 @@ body {
                 background-color: #FF6700;
             }
 /*# sourceMappingURL=all.css.map */
+.googleLogin-btn {
+    background: #fff;
+}
+
+.googleLogin-btn::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    background-image: url('../image/Common/google.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}

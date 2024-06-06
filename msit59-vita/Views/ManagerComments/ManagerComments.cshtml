@@ -1,15 +1,19 @@
-﻿@{
+﻿@model ManagerReviews;
+
+@{
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
 }
 
+
 @section MyStyle {
+    
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Manager/ManagerComments.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
 }
 
 @section BreadCrumb {
-    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
     <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
         <ol class="breadcrumb pt-3">
             <li class="breadcrumb-item" aria-current="page">
@@ -21,111 +25,302 @@
     </div>
 }
 
-@section ContentWrapper {
+@section Content {
+
     <div class=" row justify-content-center">
         <div id="TableAreas" class="pt-0 pb-4 ps-2 col-lg-11 col-sm-9 ">
             <div class=" d-lg-flex mb-2 container-fluid">
-                <div class="search-icon">
-                    <a href="ManagerHome_7rong.html">
-                        <i class=" fa-solid fa-magnifying-glass"></i>
-                    </a>
-                    <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="text" placeholder="請輸入關鍵字">
-                </div>
+                    <div class="search-icon">
+                        <a href="#" id="searchLink">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                        <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="text" name="searchString" placeholder="請輸入關鍵字" id="searchString">
+                    </div>
                 <div>
                     <input class="comment-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
                     <span class="fw-bold">~</span>
                     <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
                 </div>
                 <div>
-                    <select class="comment-select border-2 border-dark rounded-3 py-1 px-2 me-3" id="">
+                    <select class="comment-select border-2 border-dark rounded-3 py-1 px-2 me-3" id="replyStatus">
                         <option value="">回覆狀態</option>
                         <option value="1">已回覆</option>
                         <option value="0">未回覆</option>
                     </select>
                 </div>
                 <div>
-                    <button class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</button>
+                    <a href="/ManagerComments/ManagerComments" class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</a>
                 </div>
 
             </div>
 
             <table id="TableProducts" class="table table-hover table-borderless border-bottom border-dark text-center">
-                <thead class="border-dark">
-                    <tr>
-                        <th scope="col" style="width: 8%">#</th>
-                        <th scope="col" style="width: 13%">發佈人</th>
-                        <th scope="col" style="width: 17%">發佈時間</th>
-                        <th scope="col" style="width: 18%">發佈內容</th>
-                        <th scope="col" style="width: 18%">評論星級</th>
-                        <th scope="col" style="width: 10%">回覆狀態</th>
-                        <th scope="col" style="width: 13%">操作</th>
-                        <th scope="col" style="width: 3%"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="comment-tr">
-                        <th class="align-middle" scope="row">1</th>
+                @await Html.PartialAsync("_ReviewsTable")
+            </table>
+          
+            @* pagination *@
+            <!-- #region Pagination -->
+            <div>
+                <ul class="pagination align-items-center justify-content-center">
 
-                        <td class="align-middle">海綿寶寶</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">外送快速推推!!!!</td>
-                        <td class="align-middle rating">
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                        </td>
-                        <td class="align-middle">已回覆</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold btn-accept show-alert" disabled>回覆</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-1" aria-expanded="false" aria-controls="accordion-1">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="comment-tr">
-                        <td colspan="8" class=" p-0">
-                            <div class="collapse" id="accordion-1">
-                                <div class="d-lg-flex">
-                                    <div class="col-lg-6 card card-body">
-                                        <p class="fw-bold">發佈內容：</p>
-                                        <p>外送快速推推!!!!</p>
-                                    </div>
-                                    <div class="col-lg-6 card card-body">
-                                        <p class="fw-bold">訂購品項：</p>
-                                        <p>雞胸餐盒*1、牛腱餐盒*3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="comment-tr">
-                        <th class="align-middle" scope="row">2</th>
-                        <td class="align-middle">海綿寶寶</td>
-                        <td class="align-middle">2024/05/05 15:30</td>
-                        <td class="align-middle">超過一定寬度時顯示省略符號，展開可以看到完整評論。好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃</td>
-                        <td class="align-middle rating">
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star "></i>
-                        </td>
-                        <td class="align-middle">未回覆</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold btn-accept show-alert" data-bs-toggle="modal" data-bs-target="#replyModal">回覆</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-2" aria-expanded="false" aria-controls="accordion-2">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <!-- Modal -->
-                    <div class="modal" id="replyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <li id="prevPageButton" class="btn page-item">
+                        <a class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">Previous</a>
+                    </li>
+
+                    @{
+                        if (Model.PageCount <= 3)
+                        {
+                                <li id="pageBox1" class="page-item ">
+                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                        1
+                                    </a>
+                                </li>
+                                <li id="pageBox2" class="page-item 2">
+                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                        2
+                                    </a>
+                                </li>
+                                <li id="pageBox3" class="page-item  ">
+                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
+                                        3
+                                    </a>
+                                </li>
+                        }
+                        else
+                        {
+
+                            // pageBox1
+                            if (Model.CurrentPageIndex == 1)
+                            {
+                                    <li id="pageBox1" class="page-item active">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                            1
+                                        </a>
+                                    </li>
+                            }
+                            else if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                    <li id="pageBox1" class="page-item">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
+                                            @(Model.CurrentPageIndex - 2)
+                                        </a>
+                                    </li>
+
+                            }
+                            else
+                            {
+                                    <li id="pageBox1" class="page-item">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
+                                            @(Model.CurrentPageIndex - 1)
+                                        </a>
+                                    </li>
+                            }
+
+                            // pageBox2
+                            if (Model.CurrentPageIndex == 1)
+                            {
+                                    <li id="pageBox2" class="page-item">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                            2
+                                        </a>
+                                    </li>
+
+                            }
+                            else if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                    <li id="pageBox2" class="page-item">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
+                                            @(Model.PageCount - 1)
+                                        </a>
+                                    </li>
+                            }
+                            else
+                            {
+
+                                    <li id="pageBox2" class="page-item active">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
+                                            @Model.CurrentPageIndex
+                                        </a>
+                                    </li>
+                            }
+
+                            // pageBox3
+                            if (Model.CurrentPageIndex == Model.PageCount)
+                            {
+                                    <li id="pageBox3" class="page-item active">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
+                                            @Model.PageCount
+                                        </a>
+                                    </li>
+                            }
+                            else if (Model.CurrentPageIndex == 1)
+                            {
+                                    <li id="pageBox3" class="page-item">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
+                                            @(Model.CurrentPageIndex + 2)
+                                        </a>
+                                    </li>
+                            }
+                            else
+                            {
+                                    <li id="pageBox3" class="page-item">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
+                                            @(Model.CurrentPageIndex + 1)
+                                        </a>
+                                    </li>
+                            }
+
+                        }
+                    }
+
+                    <li id="nextPageButton" class="btn page-item ">
+                        <a class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex +1))">Next</a>
+                    </li>
+
+                </ul>
+            </div>
+ 
+            <!-- #endregion -->
+           <form id="paginationForm" method="get" action="/ManagerComments/Index">
+                <input type="hidden" id="hfCurrentPageIndex" name="currentPage" value="@Model.CurrentPageIndex" />
+                <input type="hidden" id="hfPageCount" value="@Model.PageCount" />
+            </form>
+        </div>
+    </div>
+    }
+
+    @section Scripts{
+    <script>
+
+        // pagenation start
+        function PagerClick(currentPage) {
+            if ($('#searchString').val() || $('#startDate').val() || $('#endDate').val() || $('#replyStatus').val()) {
+                // 如果有篩選條件，使用篩選函數
+                filterTable(currentPage);
+            } else {
+                // 否則使用原有的分頁函數
+                $.ajax({
+                    url: '/ManagerComments/GetReviewsTable',
+                    type: 'GET',
+                    data: { currentPage: currentPage },
+                    success: function (result) {
+                        $('#TableProducts').html(result);
+                        $("#hfCurrentPageIndex").val(currentPage);
+
+                        // 從服務器響應中提取總頁數
+                        var pageCount = $(result).find('#hfPageCount').val();
+                        $("#hfPageCount").val(pageCount);
+
+                        updatePaginationButtons(currentPage);
+                    }
+                });
+            }
+        }
+
+        function updatePaginationButtons(currentPage) {
+            // 從隱藏字段中獲取總頁數
+            var pageCount = parseInt($('#hfPageCount').val());
+
+            // 更新 Previous 按鈕
+            $('#prevPageButton').toggleClass('disabled', currentPage == 1);
+            $('#prevPageButton a').attr('href', 'javascript:PagerClick(' + (currentPage - 1) + ')');
+
+            // 更新 Next 按鈕
+            $('#nextPageButton').toggleClass('disabled', currentPage == pageCount);
+            $('#nextPageButton a').attr('href', 'javascript:PagerClick(' + (currentPage + 1) + ')');
+
+            // 更新中間的頁碼按鈕
+            if (pageCount <= 3) {
+                for (var i = 1; i <= 3; i++) {
+                    var $btn = $('#pageBox' + i);
+                    var $link = $('#pageBox' + i + '-link');
+                    $btn.toggleClass('active', currentPage == i);
+                    $btn.toggleClass('disabled', i > pageCount);
+                    $link.attr('href', 'javascript:PagerClick(' + i + ')');
+                    $link.text(i);
+                }
+            } else {
+                if (currentPage == 1) {
+                    setPageBox(1, 1, true);
+                    setPageBox(2, 2, false);
+                    setPageBox(3, 3, false);
+                } else if (currentPage == pageCount) {
+                    setPageBox(1, pageCount - 2, false);
+                    setPageBox(2, pageCount - 1, false);
+                    setPageBox(3, pageCount, true);
+                } else {
+                    setPageBox(1, currentPage - 1, false);
+                    setPageBox(2, currentPage, true);
+                    setPageBox(3, currentPage + 1, false);
+                }
+            }
+        }
+
+        function setPageBox(boxIndex, pageNumber, isActive) {
+            var $btn = $('#pageBox' + boxIndex);
+            var $link = $('#pageBox' + boxIndex + '-link');
+            $btn.toggleClass('active', isActive);
+            $link.attr('href', 'javascript:PagerClick(' + pageNumber + ')');
+            $link.text(pageNumber);
+        }
+        // pagenation end
+
+
+        // 篩選 start
+        // 獲取過濾欄位
+        const searchInput = document.getElementById('searchString');
+        const searchLink = document.getElementById('searchLink');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const replyStatusSelect = document.getElementById('replyStatus');
+
+        // 綁定事件處理程序
+        searchLink.addEventListener('click', () => filterTable(1)); // 篩選時從第1頁開始
+        startDateInput.addEventListener('change', () => filterTable(1));
+        endDateInput.addEventListener('change', () => filterTable(1));
+        replyStatusSelect.addEventListener('change', () => filterTable(1));
+
+        function filterTable(currentPage) {
+            const params = {
+                searchString: searchInput.value,
+                startDate: startDateInput.value,
+                endDate: endDateInput.value,
+                replyStatus: replyStatusSelect.value,
+                currentPage: currentPage // 添加當前頁碼
+            };
+
+            $.ajax({
+                url: '/ManagerComments/FilterReviews',
+                type: 'POST',
+                data: params,
+                success: function (result) {
+                    $('#TableProducts').html(result);
+
+                    // 從服務器響應中提取總頁數和當前頁碼
+                    var pageCount = $(result).find('#hfPageCount').val();
+                    var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+
+                    $("#hfPageCount").val(pageCount);
+                    $("#hfCurrentPageIndex").val(currentPageIndex);
+
+                    updatePaginationButtons(parseInt(currentPageIndex));
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in AJAX request:", error);
+                }
+            });
+        }
+        // 篩選end
+        // modal start
+        $(document).on('click', '.show-alert', function () {
+            var reviewContent = $(this).data('review-content');
+            var reviewId = $(this).data('review-id');
+            var storeReplyContent = $(this).data('store-reply-content');
+            var isReplied = storeReplyContent !== null && storeReplyContent !== '';
+
+            var modalHtml = `
+                <form action="/ManagerComments/ManagerComments" method="post">
+                    <div class="modal" id="replyModal-${reviewId}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                             <div class="rounded-3 h-75 modal-content">
                                 <div class="modal-header bg-dark">
@@ -135,189 +330,54 @@
                                 <div class="modal-body">
                                     <div>
                                         <p class="h-50 fw-bold">評論：</p>
-                                        <p class="p-3 rounded-3 bg-primary  customer-reply-text">超過一定寬度時顯示省略符號，展開可以看到完整評論。好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃</p>
+                                        <p class="p-3 rounded-3 bg-primary customer-reply-text">${reviewContent}</p>
                                     </div>
                                     <div>
                                         <p class="h-50 fw-bold">回覆：</p>
-                                        <textarea class="p-3 w-100 rounded-3 border-dark" rows="7" name="replyTtext" id="replyText"></textarea>
+                                        <input type="hidden" id="ReviewId" name="ReviewId" value="${reviewId}" />
+                                        <textarea class="p-3 w-100 rounded-3 border-dark" rows="7" name="StoreReplyContent" id="StoreReplyContent-${reviewId}" ${isReplied ? 'disabled' : ''}>${storeReplyContent}</textarea>
                                     </div>
-
                                 </div>
                                 <div class="modal-footer bg-dark">
-                                    <button type="button" class="btn btn-primary border-0 rounded-3 fw-bold text-dark" data-bs-dismiss="modal">送出</button>
+                                    <input type="submit" value="送出" class="btn btn-primary border-0 rounded-3 fw-bold text-dark" id="submitButton-${reviewId}" ${isReplied ? 'disabled' : ''}>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end -->
-                    <tr>
-                        <td colspan="8" class=" p-0">
-                            <div class="collapse" id="accordion-2">
-                                <div class="d-flex">
-                                    <div class=" col-6 card card-body">
-                                        <p class="fw-bold">發佈內容：</p>
-                                        <p>超過一定寬度時顯示省略符號，展開可以看到完整評論。好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃</p>
-                                    </div>
-                                    <div class="col-6 card card-body">
-                                        <p class="fw-bold">訂購品項：</p>
-                                        <p>雞胸餐盒*1、牛腱餐盒*3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="comment-tr">
-                        <th class="align-middle" scope="row">3</th>
-                        <td class="align-middle">海綿寶寶</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">超過一定寬度時顯示省略符號，展開可以看到完整評論</td>
-                        <td class="align-middle rating">
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                        </td>
-                        <td class="align-middle">未回覆</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold btn-accept show-alert">回覆</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-3" aria-expanded="false" aria-controls="accordion-3">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class=" p-0">
-                            <div class="collapse" id="accordion-3">
-                                <div class="d-flex">
-                                    <div class="col-6 card card-body">
-                                        <p class="fw-bold">發佈內容：</p>
-                                        <p>超過一定寬度時顯示省略符號，展開可以看到完整評論</p>
-                                    </div>
-                                    <div class="col-6 card card-body">
-                                        <p class="fw-bold">訂購品項：</p>
-                                        <p>雞胸餐盒*1、牛腱餐盒*3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="comment-tr">
-                        <th class="align-middle" scope="row">4</th>
-                        <td class="align-middle">海綿寶寶</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">外送快速推推!!!!</td>
-                        <td class="align-middle rating">
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                        </td>
-                        <td class="align-middle">已回覆</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold btn-accept show-alert" disabled>回覆</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-4" aria-expanded="false" aria-controls="accordion-4">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class=" p-0">
-                            <div class="collapse" id="accordion-4">
-                                <div class="d-flex">
-                                    <div class=" col-6 card card-body">
-                                        <p class="fw-bold">發佈內容：</p>
-                                        <p>外送快速推推!!!!</p>
-                                    </div>
-                                    <div class="col-6 card card-body">
-                                        <p class="fw-bold">訂購品項：</p>
-                                        <p>雞胸餐盒*1、牛腱餐盒*3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="comment-tr">
-                        <th class="align-middle" scope="row">5</th>
-                        <td class="align-middle">海綿寶寶</td>
-                        <td class="align-middle">2024/05/02 12:30</td>
-                        <td class="align-middle">外送快速推推!!!!</td>
-                        <td class="align-middle rating">
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                            <i class="fa fa-star fill"></i>
-                        </td>
-                        <td class="align-middle">未回覆</td>
-                        <td class="align-middle">
-                            <button class="btn btn-dark me-1 fw-bold btn-accept show-alert">回覆</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-5" aria-expanded="false" aria-controls="accordion-5">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class=" p-0">
-                            <div class="collapse" id="accordion-5">
-                                <div class="d-flex">
-                                    <div class=" col-6 card card-body">
-                                        <p class="fw-bold">發佈內容：</p>
-                                        <p>外送快速推推!!!!</p>
-                                    </div>
-                                    <div class="col-6 card card-body">
-                                        <p class="fw-bold">訂購品項：</p>
-                                        <p>雞胸餐盒*1、牛腱餐盒*3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                </form>
+            `;
+            $('body').append(modalHtml);
+            var modal = new bootstrap.Modal(document.getElementById(`replyModal-${reviewId}`));
+            modal.show();
+            $('#replyModal-' + reviewId).on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
 
-            <div aria-label="" class="">
-                <ul class="pagination align-items-center justify-content-center">
-                    <li id="prevPageButton" class="btn disabled page-item">
-                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Previous</a>
-                    </li>
-                    <li id="pageBox1" class="page-item active">
-                        <a id="pageBox1-link" class="rounded-2 page-link text-dark"
-                           href="javascript:void(0)">1</a>
-                    </li>
-                    <li id="pageBox2" class="page-item">
-                        <a id="pageBox2-link" class=" rounded-2 page-link text-dark"
-                           href="javascript:void(0)">2</a>
-                    </li>
-                    <li id="pageBox3" class="page-item">
-                        <a id="pageBox3-link" class="rounded-2 page-link text-dark"
-                           href="javascript:void(0)">3</a>
-                    </li>
-                    <li id="nextPageButton" class="btn page-item">
-                        <a class="rounded-2 page-link text-dark" href="javascript:void(0)">Next</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+            // 如果未回覆，設置 textarea 的事件監聽器
+            if (!isReplied) {
+                $(`#StoreReplyContent-${reviewId}`).on('input', function () {
+                    var content = $(this).val().trim();
+                    $(`#submitButton-${reviewId}`).prop('disabled', content === '');
+                });
+
+                // 立即觸發一次事件，以防 storeReplyContent 有初始值
+                $(`#StoreReplyContent-${reviewId}`).trigger('input');
+            }
+
+            $('#replyModal-' + reviewId).on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
+        });
+        // modal end
+        </script>
 
 
 }
+
+
+
+
+
+
 
 

@@ -2,92 +2,267 @@
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
 }
 
+@model msit59_vita.Models.Store;
+@{
+
+    var Sun = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Sun");
+    var Mon = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Mon");
+    var Tue = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Tue");
+    var Wed = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Wed");
+    var Thu = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Thu");
+    var Fri = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Fri");
+    var Sat = ((List<StoreOpeningHour>)ViewBag.StoreOpeningHours).FirstOrDefault(s => s.MyWeekDay == "Sat");
+
+
+}
+
 @section MyStyle {
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Manager/ManagerStores.css" asp-append-version="true" />
+    <style>
+        .bg-img {
+            height: 200px;
+            background-image: url("../@Model.StoreImage");
+            background-attachment: fixed;
+            line-height: 200px;
+            text-align: center;
+            color: black;
+            font-size: 50px;
+            font-weight: 900;
+            letter-spacing: 20px;
+            opacity: 80%;
+            background-position: 30% 30%;
+            z-index: 2;
+        }
+
+        .content-area {
+            height: calc(100vh - 80px);
+        }
+
+        #btnEditStoreInfoModal {
+            width: 17%;
+            float: right;
+        }
+
+        @@media (max-width: 992px) {
+            #btnEditStoreInfoModal {
+                width: 100%;
+                float: none;
+            }
+        }
+
+        dl {
+            font-size: large;
+        }
+
+        #EditStoreInfoModal .modal-content {
+            font-size: larger;
+        }
+
+        #EditStoreInfoModal .modal-body input {
+            font-size: medium;
+        }
+
+        @@media (max-width: 992px) {
+            #EditStoreInfoModal .modal-content {
+                font-size: medium;
+            }
+
+            #EditStoreInfoModal .modal-body input {
+                font-size: small;
+            }
+
+            #EditStoreInfoModal .modal-footer .btn-lg {
+                font-size: medium !important;
+            }
+        }
+    </style>
 }
 
 @section BreadCrumb {
-    <div class="col-lg-2 col-sm-3 bg-primary ps-0 pe-0"></div>
-    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
-        <ol class="breadcrumb pt-3">
-            <li class="breadcrumb-item" aria-current="page">
-                <a href="./ManagerHome.html"
-                   class="text-dark text-decoration-none fw-bolder">首頁</a>
-            </li>
-            <li class="breadcrumb-item">店家資訊</li>
-        </ol>
-    </div>
-
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="~/ManagerHome/index"
+           class="text-dark text-decoration-none fw-bolder">首頁</a>
+    </li>
+    <li class="breadcrumb-item">店家資訊</li>
 }
 
-@section ContentWrapper{
-    <div class="bg-img">
-        优輕食（大墩店）
-    </div>
+@section Content {
+
+    <div class="bg-img"></div>
     <div class="row justify-content-center">
 
-        <div class="col-10 ">
-            <dl class="row fs-5 justify-content-center store-info-area mx-auto">
-                <dt class="col-sm-3">商家名稱</dt>
-                <dd class="col-sm-9">
-                    <span>优輕食（大墩店）</span>
-                  
-                    <button type="button" class="float-end btn btn-outline-success"
-                            data-bs-toggle="modal" data-bs-target="#EditStoreInfoModal">
-                        點我編輯全部
-                    </button>
-                </dd>
-
-
-                <dt class="col-sm-3">商家地址</dt>
-                <dd class="col-sm-9">
-                    <p class="d-inline">台中市</p>
-                    <p class="d-inline">南屯區</p>
-                    <p class="d-inline">大墩十二街153號</p>
+        <div class="col-lg-10 col-12">
+            <button type="button" class="btn btn-outline-success mt-3" id="btnEditStoreInfoModal">
+                點我編輯全部
+            </button>
+            <dl class="row justify-content-center pt-3 mx-auto">
+                <dt class="col-3">商家名稱</dt>
+                <dd class="col-9">
+                    <span>@Model.StoreName</span>
 
                 </dd>
 
-                <dt class="col-sm-3">連絡電話</dt>
-                <dd class="col-sm-9">0958405948</dd>
 
-                <dt class="col-sm-3">營業時間</dt>
-                <dd class="col-sm-9">
+                <dt class="col-3">商家地址</dt>
+                <dd class="col-9">
+                    <p class="d-inline">@Model.StoreAddressCity</p>
+                    <p class="d-inline">@Model.StoreAddressDistrict</p>
+                    @{
+                        Console.WriteLine(Model.StoreAddressDetails);
+                    }
+                    <p class="d-inline">@Model.StoreAddressDetails</p>
+
+                </dd>
+
+                <dt class="col-3">連絡電話</dt>
+                <dd class="col-9">@Model.StorePhoneNumber.Trim()</dd>
+                <dt class="col-3">營業時間</dt>
+                <dd class="col-9">
                     <dl class="row">
-                        <dt class="col-sm-2">週日</dt>
-                        <dd class="col-sm-10">未營業</dd>
+                        <dt class="col-3">週日</dt>
 
-                        <dt class="col-sm-2">週一</dt>
-                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+                        @if (Sun?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Sun?.StoreOpeningTime ~ @Sun?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
 
-                        <dt class="col-sm-2">週二</dt>
-                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
 
-                        <dt class="col-sm-2">週三</dt>
-                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+                        <dt class="col-3">週一</dt>
+                        @if (Mon?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Mon?.StoreOpeningTime ~ @Mon?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
 
-                        <dt class="col-sm-2">週四</dt>
-                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+                        <dt class="col-3">週二</dt>
+                        @if (Tue?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Tue?.StoreOpeningTime ~ @Tue?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
 
-                        <dt class="col-sm-2">週五</dt>
-                        <dd class="col-sm-10">11:00 ~ 19:00</dd>
+                        <dt class="col-3">週三</dt>
+                        @if (Wed?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Wed?.StoreOpeningTime ~ @Wed?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
 
-                        <dt class="col-sm-2">週六</dt>
-                        <dd class="col-sm-10">未營業</dd>
+                        <dt class="col-3">週四</dt>
+                        @if (Thu?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Thu?.StoreOpeningTime ~ @Thu?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
+
+                        <dt class="col-3">週五</dt>
+                        @if (Fri?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Fri?.StoreOpeningTime ~ @Fri?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
+
+                        <dt class="col-3">週六</dt>
+                        @if (Sat?.StoreOpenOrNot == true)
+                        {
+                            <dd class="col-9">@Sat?.StoreOpeningTime ~ @Sat?.StoreClosingTime</dd>
+                        }
+                        else
+                        {
+                            <dd class="col-9">未營業</dd>
+                        }
                     </dl>
                 </dd>
 
-                <dt class="col-sm-3">開立發票方式</dt>
-                <dd class="col-sm-9">紙本/電子發票</dd>
 
-                <dt class="col-sm-3">接受LinePay</dt>
-                <dd class="col-sm-9">是</dd>
+
+                <dt class="col-3">開立發票方式</dt>
+
+                @if (Model.StoreUniformInvoiceVia == true)
+                {
+                    <dd class="col-9">紙本 / 電子發票</dd>
+                }
+                else
+                {
+                    <dd class="col-9">不開立統一發票</dd>
+                }
+
+
+                <dt class="col-3">接受LinePay</dt>
+                @if (Model.StoreLinePay == true)
+                {
+                    <dd class="col-9">是</dd>
+                }
+                else
+                {
+                    <dd class="col-9">否</dd>
+                }
             </dl>
-
-
-
         </div>
 
 
     </div>
+
+
+    <div class="modal fade" id="EditStoreInfoModal" tabindex="-1" aria-labelledby="EditStoreInfoModalLabel"
+         aria-hidden="true">
+        <form method="post" action="/ManagerStores/StoreInfoEdit" enctype="multipart/form-data">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditStoreInfoModalLabel">編輯店家資訊</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="提交" class="btn btn-success btn-lg" id="submitButton" />
+                        <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">取消</button>
+                    </div>
+
+                </div>
+        </form>
+    </div>
+
 }
+
+@section Scripts {
+    <script>
+        $(function () {
+
+            $("#btnEditStoreInfoModal").on('click', function () {
+                $("#EditStoreInfoModal .modal-body").load("/ManagerStores/StoreInfoEdit", function () {
+                    $("#EditStoreInfoModal").modal("show");
+                });
+
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+}
+

@@ -6,6 +6,8 @@ using msit59_vita.Models.ViewModels;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace msit59_vita.Controllers
 {
@@ -26,7 +28,7 @@ namespace msit59_vita.Controllers
 
         public IActionResult Register()
         {
-            return View();
+			return View();
         }
 
         [HttpPost]
@@ -39,13 +41,12 @@ namespace msit59_vita.Controllers
                     VitaUserName = model.CustomerNickName ?? model.CustomerName,
                     Email = model.CustomerEmail,
                     PhoneNumber = model.CustomerCellPhone,
+                    IsCustomer = true,
                 };
                 var result = await _userManager.CreateAsync(user, model.CustomerPassword);
 
                 if (result.Succeeded)
                 {
-                    // await _signInManager.SignInAsync(user, isPersistent: false);
-
                     Customer customer = new Customer
                     {
                         CustomerName = model.CustomerName,
@@ -56,8 +57,8 @@ namespace msit59_vita.Controllers
                     };
                     _context.Customers.Add(customer);
                     _context.SaveChanges();
-
                     
+            
                     // 創建自定義聲明
                     var claims = new List<Claim>
                     {
@@ -70,11 +71,9 @@ namespace msit59_vita.Controllers
                         // 更新當前用戶的 ClaimsPrincipal
                         var userIdentity = (ClaimsIdentity)User.Identity!;
                         userIdentity.AddClaims(claims);
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return Redirect("/Home");
                     }
-                    
-                    return Redirect("/Account/Login");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return Redirect("/Home");
                 }
 
                 foreach (var error in result.Errors)
@@ -99,7 +98,7 @@ namespace msit59_vita.Controllers
 
         public IActionResult Login()
         {
-            return View();
+			return View();
         }
 
         [HttpPost]
@@ -108,7 +107,8 @@ namespace msit59_vita.Controllers
             if (ModelState.IsValid)
             {
                 VitaUser? user = await _userManager.FindByEmailAsync(model.CustomerEmail);
-                if (user != null) {
+                if (user != null && user.IsCustomer) {
+
                     var result = await _signInManager.PasswordSignInAsync(user, model.CustomerPassword, false, false);
                     if (result.Succeeded)
                     {
@@ -122,6 +122,8 @@ namespace msit59_vita.Controllers
                         {
                             var userIdentity = (ClaimsIdentity)User.Identity!;
                             userIdentity.AddClaims(claims);
+                            await _signInManager.SignOutAsync();
+                            await _signInManager.SignInAsync(user, isPersistent: false);
                             return RedirectToAction("Index","Home");
                         }
                         return RedirectToAction("Index", "Home");
@@ -153,5 +155,93 @@ namespace msit59_vita.Controllers
                 return Content("發生未預期的錯誤,請稍後再試。");
             }
         }
-    }
+
+        // google 驗證
+        public IActionResult GoogleLogin(string returnUrl = null)
+        {
+			var redirectUrl = Url.Action("Callback", "Account", new { returnUrl });
+			var properties = new AuthenticationProperties { RedirectUri = redirectUrl ?? "/" };
+			return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+		}
+
+        public async Task<IActionResult> Callback(string returnUrl = null)
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (result.Succeeded)
+            {
+			    var claims = result.Principal?.Claims;
+			    var cName = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value ?? "用戶";
+			    var cEmail = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value ?? "null";
+
+			    VitaUser? user = await _userManager.FindByEmailAsync(cEmail);
+                if (user != null && user.IsCustomer) {
+					var myClaims = new List<Claim>
+					{
+						new Claim("VitaUserName", user.VitaUserName ?? ""),
+					};
+
+					var claimResult = await _userManager.AddClaimsAsync(user, myClaims);
+					if (claimResult.Succeeded)
+					{
+						var userIdentity = (ClaimsIdentity)User.Identity!;
+						userIdentity.AddClaims(myClaims);
+					}
+					await _signInManager.SignInAsync(user, isPersistent: false);
+					return Redirect("/Home");
+				}
+				VitaUser newUser = new VitaUser
+				{
+					UserName = cEmail,
+					VitaUserName = cName,
+					Email = cEmail,
+					IsCustomer = true,
+				};
+				string randomPassword = GenerateRandomPassword(8);
+				var createResult = await _userManager.CreateAsync(newUser, randomPassword);
+
+				if (createResult.Succeeded)
+				{
+					Customer customer = new Customer
+					{
+						CustomerName = cName,
+						CustomerEmail = cEmail,
+					};
+					_context.Customers.Add(customer);
+					_context.SaveChanges();
+
+					// 創建自定義聲明
+					var myClaims = new List<Claim>
+					{
+						new Claim("VitaUserName", newUser.VitaUserName ?? ""),
+					};
+
+					var claimResult = await _userManager.AddClaimsAsync(newUser, myClaims);
+					if (claimResult.Succeeded)
+                    {
+					    var userIdentity = (ClaimsIdentity)User.Identity!;
+					    userIdentity.AddClaims(myClaims);
+                    }
+					await _signInManager.SignInAsync(newUser, isPersistent: false);
+					return Redirect("/Home");
+				}
+			}
+
+			ViewBag.ErrorMessage = "出現未預期錯誤，請用VITA帳號登入";
+            return RedirectToAction("Login", "Account");
+		}
+
+        // 取亂數
+		public static string GenerateRandomPassword(int passwordLength = 12)
+		{
+			string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+			Random random = new Random();
+
+			char[] chars = new char[passwordLength];
+			for (int i = 0; i < passwordLength; i++)
+			{
+				chars[i] = validChars[random.Next(0, validChars.Length)];
+			}
+			return new string(chars);
+		}
+	}
 }

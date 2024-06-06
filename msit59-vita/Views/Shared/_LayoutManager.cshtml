@@ -3,91 +3,234 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
+    
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+
+    <style>
+        .nav-area {
+            height: 80px;
+            z-index: 1000;
+        }
+
+            .nav-area .nav {
+                height: 80px;
+            }
+
+                .nav-area .nav .logout-link:hover {
+                    color: #FF6700;
+                }
+
+                .nav-area .nav .header-logo {
+                    height: 70px;
+                }
+
+
+        .content-area{
+            height: calc(100vh - 80px);
+            background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
+        }        
+
+        .sidebar {
+            padding: 120px 0px 70px 0px;
+            position: fixed;
+            top: 0;            
+        }
+        
+        .sidebar ul{
+            display: flex;
+            flex-direction:column;
+            align-items: center;
+            line-height:3;
+        }
+
+            .sidebar ul li a{
+                font-size: x-large;
+            }
+
+                .sidemenu-link:hover {
+                    color: #FF6700;
+                }
+
+            .sidebar ul li .btn-xlarge {
+                padding: 10px 15px;
+                font-size: x-large;
+                line-height: normal;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+
+        .suspend-order {
+            margin-top: auto;
+        }
+
+        @@media (max-width: 576px){
+            .content-area{
+                position: sticky;
+                top: 0;
+            }
+                
+            .sidebar {
+/*                 position: sticky;
+                top: 0;
+ */
+                padding: 0px;
+                background-color: #F1F0CC !important;
+                max-height: 80px;
+                width:100%; 
+            }
+
+                .sidebar ul {
+/*                     position: sticky;
+                    top: 0; */
+                   display: flex;
+                   flex-direction:row;
+                   justify-content:space-around;
+                   align-items: center;
+
+                }
+                    .sidebar ul li a{
+                        font-size: larger;
+                    }
+
+                    .sidebar ul li img {
+                            display: none;
+                    }
+
+                    .sidebar ul li .btn-xlarge {
+                        padding:  0;
+                        font-size: large;
+                        border-radius: 0px;
+                        background-color: transparent;
+                        color: black;
+                        font-weight: bolder;
+                        border: 0;
+                    }
+
+                    .suspend-order {
+                        margin: 0;
+                overflow: visible;
+                    }
+
+                    .suspend-order a{
+                    position: relative;
+                }
+
+                    .suspend-order a:hover {
+                        transform: scale(1.4);
+                        color: red !important;
+                    }
+
+            .sidebar ul li:last-child a:before {
+                        content: '';
+                        position: absolute;
+                        top: 0
+                        left:0;
+                        width: 100%;
+                        height: 100%;
+                        background: #399E5A;
+                        opacity: 0.6;
+                        transition: 0.5s;
+                        transform-origin: right;
+                        transform: scaleX(0);
+                        z-index: -1;
+                    }
+
+            .sidebar ul li:last-child a:hover:before {
+                        transition: transform 0.5s;
+                        transform-origin: left;
+                        transform: scaleX(1);
+                    }
+
+
+                    
+
+        }
+    </style>
     @RenderSection("MyStyle", required: false)
-   
+
 
 </head>
 <body>
-    <header class=" sticky-top">
-        <div class="container-fluid nav-area bg-dark">
-            <ul class="nav d-flex justify-content-between align-items-center fs-2">
+    <div class="body-container">
+        @* 為了讓position-sticky可用而存在的div *@
+
+        <header class="nav-area bg-dark sticky-sm-top">
+            <ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
                 <li class="nav-item">
-                    <a href="@Url.Action("Index", "ManagerHome")">
-                        <img class="header-logo" src="./image/logo/logo_300x150.png" alt="">
+                    <a href="/ManagerHome/Index">
+                        <img class="header-logo" src="~/image/logo/logo_300x150.png" alt="">
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href=""
+                    <a href="/ManagerLogin/"
                        class="logout-link fs-5 fw-bolder link-light text-decoration-none">
                         會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
                     </a>
                 </li>
             </ul>
-        </div>
-    </header>
 
-    @if (IsSectionDefined("BreadCrumb"))
-    {
-        <nav class="container-fluid">
-            <div class="row justify-content-start">
-            @RenderSection("BreadCrumb", true)
-        </div>
-    </nav>
-    }
+        </header>
+        <div class="row content-area m-0">
+            <div class="col-lg-2 col-sm-3 bg-primary d-flex justify-content-center">
+                <div id="sidebar-wrapper" class="sidebar sidebar-dark vh-100 bg-primary">
+                    <ul class="h-100 list-unstyled">
+                        <li>
+                            <a href="/ManagerOrders/Index" class="text-decoration-none text-dark fw-bolder">
+                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
+                                <span class="sidemenu-link">訂單管理</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/ManagerProducts/Index" class="text-decoration-none text-dark fw-bolder">
+                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
+                                <span class="sidemenu-link">菜單管理</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/ManagerStores/Index" class="text-decoration-none text-dark fw-bolder">
+                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
+                                <span class="sidemenu-link">店家資訊</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/ManagerReviews/Index" class="text-decoration-none text-dark fw-bolder">
+                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
+                                <span class="sidemenu-link">評論管理</span>
+                            </a>
+                        </li>
+                        <li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger">暫停接單</a></li>
 
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-
-            <!-- 側邊攔 -->
-            <div id="sidebar-wrapper"
-                 class="col-lg-2 col-sm-3 sidebar sidebar-dark accordion bg-primary list-unstyled text-center">
-                <ul class="">
-                    <li>
-                        <a href="">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
-                            <span>訂單管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "ManagerProducts")">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
-                            <span>菜單管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "ManagerStores")">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
-                            <span>店家資訊</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="ManagerReviews">
-                            <img src="./image/logo/logo_30x30_dark.png" alt="">
-                            <span>評論管理</span>
-                        </a>
-                    </li>
-                    <button class="btn-lg btn-danger fixed-button">暫停接單</button>
-                    <!-- <button class="btn-lg btn-danger position-absolute" style="bottom: 10%; left: 32%;">暫停接單</button> -->
-
-                </ul>
-            </div>
-            @if (IsSectionDefined("ContentWrapper"))
-            {
-                <div id="content-wrapper" class="col-lg-10 col-sm-9 bg-light">
-                    @RenderSection("ContentWrapper", required: true)
+                    </ul>
                 </div>
-            }
+            </div>
+            <div class="col-lg-10 col-sm-9 bg-light">
+                <div id="content-wrapper" class="d-block h-100">
+                    @if (IsSectionDefined("BreadCrumb"))
+                    {
+                        <ol class="breadcrumb pt-3">
+                            @RenderSection("BreadCrumb", true)
+                        </ol>
+                    }
+                    @if (IsSectionDefined("Content"))
+                    {
+                        <div class=" row justify-content-center ">
+                            @RenderSection("Content", required: true)
+                        </div>
+                    }
 
-        </div> 
+                </div>
 
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/css/bootstrap.css"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @await RenderSectionAsync("Scripts", required: false)
+                <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+                <script src="~/js/site.js" asp-append-version="true"></script>
+                @await RenderSectionAsync("Scripts", required: false)
+            </div>
+        </div>
+
+
     </div>
 
-
-
-
 </body>
+</html>
