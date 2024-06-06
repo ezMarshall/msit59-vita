@@ -48,10 +48,16 @@ namespace msit59_vita.Controllers
             }
 
             //取得使用者ID
-            var queryCustomerID = from c in _context.Customers
+            var queryCustomer = from c in _context.Customers
                                   where c.CustomerEmail == User.Identity.Name
-                                  select c.CustomerId;
-            _customerId = queryCustomerID.Single();
+                                  select new
+                                  {
+                                      c.CustomerId,
+                                      c.CustomerName,
+                                      c.CustomerNickName
+                                  };
+
+            _customerId = queryCustomer.Single().CustomerId;
 
 
             var queryOrder = from o in _context.Orders
@@ -96,7 +102,7 @@ namespace msit59_vita.Controllers
                                  OrderId = g.Key,
                                  totalPrice = (int)g.Sum(p => (p.UnitPrice * p.Quantity))
                              };
-
+            ViewBag.customer = queryCustomer.Single();
             ViewBag.products = queryProducts.ToList();
             ViewBag.price = queryPrice.ToList();
             return View(queryOrder.ToList());
