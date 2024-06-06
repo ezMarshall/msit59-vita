@@ -289,11 +289,13 @@
                         e.preventDefault();
                         var action = this.getAttribute('data-action');
                         var orderId = this.getAttribute('data-order-id');
+                        var customerId = this.getAttribute('data-customer-id');
                         actionTextSpan.textContent = "訂單" + orderId + "，是否確認" + action + "？";
 
                         // 將訂單ID和操作存儲在確認按鈕上
                         confirmButton.setAttribute('data-order-id', orderId);
                         confirmButton.setAttribute('data-action', action);
+                        confirmButton.setAttribute('data-customer-id', customerId);
 
                         modal.show();
                     });
@@ -306,6 +308,7 @@
             confirmButton.addEventListener('click', function () {
                 var orderId = this.getAttribute('data-order-id');
                 var action = this.getAttribute('data-action');
+                var customerId = this.getAttribute('data-customer-id');
 
                 $.ajax({
                     url: '/ManagerOrders/ChangeOrderStatus',
@@ -314,7 +317,7 @@
                     success: function (result) {
                         if (result.success) {
                             //singaIR發送
-                            connection.invoke("SwitchOrderStatus", 31, orderId, "配送中").catch(function (err) {
+                            connection.invoke("SwitchOrderStatus", customerId, orderId, action).catch(function (err) {
                                 return console.error(err.toString());
                             });
 
