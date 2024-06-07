@@ -1,4 +1,7 @@
-﻿@model msit59_vita.Models.ViewModels.StoreSearchViewModel
+@using msit59_vita.Models.ViewModels
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model List<StoreSearchViewModel>
+
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_LayoutHome";
@@ -7,8 +10,9 @@
 <!-- banner -->
 <section class="home-banner">
     <div class="container-lg row align-items-center justify-content-end h-100 mx-auto">
-        <div class="bg-light rounded-3 p-4 col-12 col-md-6">
-            <ul class="list-unstyled text-center fs-0 fw-bold text-dark border-bottom border-2 border-dark" id="bannerForm">
+        <div class="col-12 col-md-6">
+        <h2 class="fw-bold mx-3 text-primary text-shadow text-center text-md-start">預約附近健康餐</h2>
+            @* <ul class="list-unstyled text-center fs-0 fw-bold text-dark border-bottom border-2 border-dark" id="bannerForm">
                 <li class="d-inline-block w-50 fs-6 deliver-hover" data-deliver="Delivery">
                     <i class="fa-solid fa-car-side"></i>
                     <p>外送</p>
@@ -17,16 +21,18 @@
                     <i class="fa-solid fa-bag-shopping"></i>
                     <p>自取</p>
                 </li>
-            </ul>
-            <form class="p-1">
-                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
+
+            </ul> *@
+            <form class="bg-light rounded-3 p-4" action="/Home/StoreSearch" method="post" id="StoreSearchForm">
+                @* <label class="form-label ps-3 mb-2">
                     預計送達時間
                 </label>
-                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-3" value="2024/05/16 17:30">
-                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
+                <input type="text" id="ArrivalTimeInput" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-3" value="2024/05/16 17:30"> *@
+                <label for="StoreSearch" class="form-label ps-3 mb-2">
                     在哪裡附近
-                </label>
-                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4">
+                </label> 
+                <input type="text" name="StoreSearch" id="StoreSearch" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4"
+                       value=@ViewBag.Address>
                 <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill w-100 border-0" id="bannerSearchBtn">開始尋找美食</button>
             </form>
         </div>
@@ -48,21 +54,34 @@
     </div>
 </section>
 
-@await Html.PartialAsync("_StoreListPartial", Model);
+@if (ViewBag.isSearched ?? false)
+{
+    <div id="StoreListContainer">
+        @await Html.PartialAsync("_StoreListPartial", Model);
+    </div>
+}
+else
+{
+    <section class="container py-5">
+        <p class="text-dark fw-bold fs-6 text-center opacity-75">尚未查詢，請先輸入地址或餐廳</p>
+    </section>
+} 
+
 
 
 @section Scripts{
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])&region=TW&language=zh-TW" async defer></script>
     <script>
         $(document).ready(function () {
             // banner deliver via
-            $('#bannerForm').find('li').on('click', function (e) {
-                $(this).addClass('deliver-hover').siblings().removeClass('deliver-hover');
-                if ($(this).data('deliver') == "Delivery") {
-                    $('#ArrivalTimeLabel').text('預計送達時間');
-                } else if ($(this).data('deliver') == "Self-pickup") {
-                    $('#ArrivalTimeLabel').text('預計取貨時間');
-                }
-            })
+            // $('#bannerForm').find('li').on('click', function (e) {
+            //     $(this).addClass('deliver-hover').siblings().removeClass('deliver-hover');
+            //     if ($(this).data('deliver') == "Delivery") {
+            //         $('#ArrivalTimeLabel').text('預計送達時間');
+            //     } else if ($(this).data('deliver') == "Self-pickup") {
+            //         $('#ArrivalTimeLabel').text('預計取貨時間');
+            //     }
+            // })
 
             // click to store page
             $('.home-store').each(function (index, item) {
@@ -73,9 +92,44 @@
                         $(e.target).removeClass('home-favorite-checked').siblings().addClass('home-favorite-checked');
                     } else {
                         // go to store page
-                        console.log("go to store page");
+                        let id = $(e.currentTarget).data('storeid');
+                        window.location.href = `/Store/Index/${id}`;
                     }
                 })
+            })
+
+            $('#StoreSearchForm').on('submit',function(e){
+                e.preventDefault();
+                
+                // 創建地理編碼服務實例
+                const geocoder = new google.maps.Geocoder();
+                // 地點名稱或地址
+                let address = $('#StoreSearch').val();
+
+                // 發送地理編碼請求
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === 'OK') {
+                        var data = {
+                            lat: results[0].geometry.location.lat(), 
+                            lng: results[0].geometry.location.lng() 
+                        };
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/StoreSearch',
+                            data: data,
+                            success: function (response) {
+                                $("#StoreListContainer").html(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(error);
+                                alert("出現無法預期的問題，請稍後再試。")
+                            }
+                        });
+                    } else {
+                        alert("請輸入正確地址");
+                        console.error('無法獲取地點坐標:', status);
+                    }
+                });
             })
         })
     </script>
