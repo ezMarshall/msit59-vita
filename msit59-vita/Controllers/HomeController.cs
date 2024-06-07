@@ -29,21 +29,9 @@ namespace msit59_vita.Controllers
             // 判斷是否登入
             if(User.Identity?.IsAuthenticated ?? false)
             {
-                //var Customer = _context.Customers
-                //    .Where(c => c.CustomerEmail == User.Identity.Name)
-                //    .FirstOrDefault();
-                var queryCustomer = from c in _context.Customers
-                                    where c.CustomerEmail == User.Identity.Name
-                                    select new
-                                    {
-                                        c.CustomerId,
-                                        c.CustomerAddressCity,
-                                        c.CustomerAddressDistrict,
-                                        c.CustomerAddressDetails,
-                                        c.CustomerAddressMemo
-
-                                    };
-                var Customer = queryCustomer.FirstOrDefault();
+                var Customer = _context.Customers
+                    .Where(c => c.CustomerEmail == User.Identity.Name)
+                    .FirstOrDefault();              
                 ViewBag.Address = (Customer.CustomerAddressCity + Customer.CustomerAddressDistrict + Customer.CustomerAddressDetails) ?? "";
 
                 // 是否有存常用地址
