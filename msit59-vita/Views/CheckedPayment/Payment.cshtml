@@ -6,27 +6,27 @@
 
 
 <section class="container-lg">
-
-	<div class="order mt-3 row mb-3">
-		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
-			<div class="step active col-2 text-center fw-bold ">
-				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
-				<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+	<form action="/OrderDetail/PayMentOrderDetail" method="post">
+		<div class="order mt-3 row mb-3">
+			<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+				<div class="step active col-2 text-center fw-bold ">
+					<div class="circle d-inline-block mb-1 rounded-circle">1</div>
+					<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+				</div>
+				<div class="step inactive col-2 text-center fw-bold ">
+					<div class="circle  d-inline-block mb-1 rounded-circle">2</div>
+					<div class="fs-6 fw-bold text-break">確認結帳</div>
+				</div>
 			</div>
-			<div class="step inactive col-2 text-center fw-bold ">
-				<div class="circle  d-inline-block mb-1 rounded-circle">2</div>
-				<div class="fs-6 fw-bold text-break">確認結帳</div>
-			</div>
-		</div>
-		<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
+			<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
 
-			@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
-			{
-				<input type="hidden" id="storeId" value="@paymentInfo[0]?.StoreId">
-			}
-			
+				@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
+				{
+					<input type="hidden" id="storeId" value="@paymentInfo[0]?.StoreId">
+				}
 
-			<form method="post">
+
+
 				<div class="order-store-info my-3">
 					@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
 					{
@@ -121,10 +121,6 @@
 
 				</div>
 
-
-
-
-
 				<div class="order-pick-up mb-2">
 					<div class="d-flex justify-content-between">
 						<div class="fs-5 fw-bold">取餐方式</div>
@@ -160,32 +156,10 @@
 
 				</div>
 
-				@* <div class="order-time mb-2">
-					<div class="fs-5 fw-bold">預計取餐時間</div>
-					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly"
-						   data-bs-toggle="modal" data-bs-target="#timeModal">
-
-				</div> *@
 				<div class="order-time mb-2">
 					<div class="fs-5 fw-bold">預計取餐時間</div>
 					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
 				</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 				<div class="order-invoice mb-2">
@@ -203,7 +177,7 @@
 					{
 						<div class="form-check ms-3">
 							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt1"
-								   value="1" onclick="handleReceiptTypeChange('paper')" checked required>
+								   value="1" onclick="handleReceiptTypeChange('paper')" checked>
 							<label class="form-check-label" for="flexRadioReceipt1">紙本發票</label>
 						</div>
 
@@ -225,7 +199,7 @@
 
 					<div class="form-check ms-3">
 						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioCellphone"
-							   onclick="handlePhoneTypeChange('cellphone')" required>
+							   onclick="handlePhoneTypeChange('cellphone')" >
 						<label class="form-check-label" for="flexRadioCellphone"
 							   onclick="handlePhoneTypeChange('cellphone')">手機號碼</label>
 						<input id="inputCellphone" class="form-control" type="text" placeholder="請輸入手機號碼"
@@ -253,24 +227,25 @@
 					<textarea class="form-control mb-4" id="orderFormControlTextarea1" rows="10"></textarea>
 				</div>
 
-			</form>
 
+
+			</div>
 		</div>
-	</div>
 
 
-	<div class="row mb-3 mx-auto w-75">
-		<div class="btn-group" role="group" aria-label="Basic example">
-			<button id="continueShoppingBtn" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
-				<a href="javascript:void(0)"
-				   class="text-decoration-none text-black">繼續加購</a>
-			</button>
-			<button class="btn-next btn btn-dark fs-5 fw-bold" type="button">
-				<a href="javascript:void(0)"
-				   class="text-decoration-none text-white">下一步</a>
-			</button>
+		<div class="row mb-3 mx-auto w-75">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button id="continueShoppingBtn" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-black">繼續加購</a>
+				</button>
+				<button class="btn-next btn btn-dark fs-5 fw-bold" type="submit">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-white">下一步</a>
+				</button>
+			</div>
 		</div>
-	</div>
+	</form>
 </section>
 
 
@@ -355,7 +330,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="submit" class="date-time-button btn btn-dark col-6 mx-auto "
-						data-bs-dismiss="modal">
+						onclick="validateTimeForm()">
 					確定
 				</button>
 			</div>
@@ -370,7 +345,7 @@
 
 
 	<script src="~/js/tw-city-selector.js"></script>
-	<script src="~/js/data-time.js"></script>
+	
 	<script>
 
 		$(document).ready(function () {
@@ -811,15 +786,15 @@
 		// 	}
 
 
-			// 獲取店家營業時間
-			// 判斷是否有營業
+		// 獲取店家營業時間
+		// 判斷是否有營業
 
 		document.addEventListener('DOMContentLoaded', function () {
 			var timeModalElement = document.getElementById('timeModal');
 			var timeModalInstance = bootstrap.Modal.getOrCreateInstance(timeModalElement);
 
 			$('#timeInput').click(function (event) {
-				event.preventDefault(); 
+				event.preventDefault();
 				var storeId = $('#storeId').val();
 
 				if (!storeId) {
@@ -827,26 +802,71 @@
 					return;
 				}
 
-			
+
+
+
 				$.ajax({
 					url: '/CheckedPayment/GetStoreOpenTime',
 					type: 'POST',
 					data: { storeId: storeId },
 					success: function (data) {
 						if (data.success) {
+
+							const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+
+							// 獲取當前時間
+							let currentTime = new Date();
+							let currentHour = currentTime.getHours();
+							let currentMinute = currentTime.getMinutes();
+
+							// console.log(currentTime);
+
+
+							// 商家營業時間
+							const storeOpenTimeDate = new Date();
+							const storeCloseTimeDate = new Date();
+							storeOpenTimeDate.setHours(data.data.storeOpeningTime.split(':')[0]);
+							storeOpenTimeDate.setMinutes(data.data.storeOpeningTime.split(':')[1]);
+							storeCloseTimeDate.setHours(data.data.storeClosingTime.split(':')[0]);
+							storeCloseTimeDate.setMinutes(data.data.storeClosingTime.split(':')[1]);
+
+							// console.log(storeOpenTimeDate);
+							// console.log(storeCloseTimeDate);
+
+							// 處理付款時間
+							let deliveryTime = new Date();
+							const pickUp = payWay; /* 自取或外送的選擇,假設為自取 */
+
+							// console.log(deliveryTime)
+
+							if (pickUp == '0') {
+								deliveryTime.setMinutes(deliveryTime.getMinutes() + 15);
+							} else if (pickUp == '1') {
+								deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
+							}
+
 							if (!data.data.storeOpenOrNot) {
 								$('#timeInput').val('店家今日未營業');
-								timeModalInstance.hide(); 
+								timeModalInstance.hide();
+								return;
+							} else if (deliveryTime < storeOpenTimeDate) {
+								$('#timeInput').val('門市尚未營業');
+								timeModalInstance.hide();
+								return;
+							} else if (deliveryTime > storeCloseTimeDate) {
+								$('#timeInput').val('已超出最晚取餐時間');
+								timeModalInstance.hide();
 								return;
 							}
 
+
 							// 顯示取餐時間模態框
 							timeModalInstance.show();
-							const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+
 							// const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
-							console.log(payWay);
+							// console.log(payWay);
 							calculateDeliveryTime(payWay, data.data.storeOpeningTime, data.data.storeClosingTime)
-							console.log(data);
+							// console.log(data);
 						} else {
 							console.error('Error: ' + data.message);
 						}
@@ -861,7 +881,7 @@
 		// 根據當前時間、商家營業時間和取餐方式，計算生成取餐時間
 		function calculateDeliveryTime(payWay, storeOpenTime, storeCloseTime) {
 
-			
+
 			// console.log(payWay);
 			// console.log(storeOpenTime);
 			// console.log(storeCloseTime);
@@ -878,27 +898,30 @@
 			datepickerInput.value = formattedDate;
 
 			// 獲取當前時間
-			var currentTime = new Date();
-			var currentHour = currentTime.getHours();
-			var currentMinute = currentTime.getMinutes();
+			let currentTime = new Date();
+			let currentOpenHour = currentTime.getHours();
+			let currentCloseHour = currentTime.getHours();
+			let currentMinute = currentTime.getMinutes();
 
-			console.log(currentTime);
+			// console.log(currentTime);
 
 
 			// 商家營業時間
-			const storeOpenTimeDate = new Date( ...storeOpenTime.split(':').map(Number));
-			const storeCloseTimeDate = new Date(...storeCloseTime.split(':').map(Number));
+			const storeOpenTimeDate = new Date();
+			const storeCloseTimeDate = new Date();
+			storeOpenTimeDate.setHours(storeOpenTime.split(':')[0]);
+			storeOpenTimeDate.setMinutes(storeOpenTime.split(':')[1]);
+			storeCloseTimeDate.setHours(storeCloseTime.split(':')[0]);
+			storeCloseTimeDate.setMinutes(storeCloseTime.split(':')[1]);
 
-
-
-			console.log(storeOpenTimeDate);
-			console.log(storeCloseTimeDate);
+			// console.log(storeOpenTimeDate);
+			// console.log(storeCloseTimeDate);
 
 			// 處理付款時間
 			let deliveryTime = new Date();
 			const pickUp = payWay; /* 自取或外送的選擇,假設為自取 */
 
-			console.log(deliveryTime)
+			// console.log(deliveryTime)
 
 			if (pickUp == '0') {
 				deliveryTime.setMinutes(deliveryTime.getMinutes() + 15);
@@ -906,64 +929,180 @@
 				deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
 			}
 
-			console.log(deliveryTime);
-		
-			// 判斷取餐時間是否超過商家營業時間
-			// 判斷取餐時間是否超過商家營業時間
-			if (deliveryTime < storeOpenTimeDate) {
-				console.log('取餐時間早於商家開店時間');
-			} else if (deliveryTime > storeCloseTimeDate) {
-				console.log('取餐時間晚於商家關店時間');
-			} else {
-				console.log('取餐時間在商家營業時間內');
-			}
+			// console.log(deliveryTime);
+
+
 
 			// 動態生成小時選項
-			// var hoursList = document.getElementById('hours');
-			// for (var i = currentHour; i <= 23; i++) {
-			//    var hourItem = document.createElement('li');
-			//    hourItem.classList.add('list-group-item');
-			//    if (i === currentHour) {
-			//        hourItem.classList.add('active');
-			//    }
-			//    hourItem.textContent = i < 10 ? '0' + i : i;
-			//    hourItem.onclick = function () {
-			//        var selectedHour = this.textContent;
-			//        var selectedMinute = document.querySelector('.minutes .active').textContent;
-			//        document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
-			//    };
-			//    hoursList.appendChild(hourItem);
-			// }
-		
+			// 根據當前時間生成可選取的小時項目，並和商家營業時間做比較，顯示可選取的時間
+			if (currentOpenHour < storeOpenTimeDate.getHours()) {
+				currentOpenHour = storeOpenTimeDate.getHours();
+			} else {
+				currentOpenHour = currentOpenHour
+			}
+
+			var hoursList = document.getElementById('hours');
+			for (var i = currentOpenHour; i <= storeCloseTimeDate.getHours(); i++) {
+				var hourItem = document.createElement('li');
+				hourItem.classList.add('list-group-item');
+				if (i === currentOpenHour) {
+					hourItem.classList.add('active');
+				}
+				hourItem.textContent = i < 10 ? '0' + i : i;
+				hourItem.onclick = function () {
+					var selectedHour = this.textContent;
+					var selectedMinute = document.querySelector('.minutes .active').textContent;
+					document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+				};
+				hoursList.appendChild(hourItem);
+			}
+
+			// 動態生成分鐘選項
+			// 根據當前時間生成可選取的分鐘項目，並和商家營業時間做比較，顯示可選取的時間
+			var minutesList = document.getElementById('minutes');
+			for (var i = currentMinute - (currentMinute % 5); i <= 55; i += 5) {
+				var minuteItem = document.createElement('li');
+				minuteItem.classList.add('list-group-item');
+				if (i === currentMinute - (currentMinute % 5)) {
+					minuteItem.classList.add('active');
+				}
+				minuteItem.textContent = i < 10 ? '0' + i : i;
+				minuteItem.onclick = function () {
+					var selectedHour = document.querySelector('.hours .active').textContent;
+					var selectedMinute = this.textContent;
+					document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+				};
+				minutesList.appendChild(minuteItem);
+			}
+
+			// 監聽小時選擇的變化
+			var hours = document.querySelectorAll('.hours li');
+			hours.forEach(function (hourItem) {
+				hourItem.addEventListener('click', function () {
+
+					hours.forEach(function (item) {
+						item.classList.remove('active');
+					});
+					hourItem.classList.add('active');
+
+					// 重新生成分鐘選項
+					generateMinutes();
+				});
+			});
+
+
+			generateMinutes();
+
+			// 生成分鐘選項的函數
+			function generateMinutes() {
+				var selectedHour = parseInt(document.querySelector('.hours .active').textContent);
+				var minutesList = document.getElementById('minutes');
+
+				// 清空原有的分鐘選項
+				minutesList.innerHTML = '';
+
+				// 根據用戶選擇的小時確定分鐘範圍
+				var startMinute, endMinute;
+				if (selectedHour === currentOpenHour) {
+					startMinute = currentMinute - (currentMinute % 5);
+					endMinute = 55;
+				} else {
+					startMinute = 0;
+					endMinute = 55;
+				}
+
+				// 動態生成分鐘選項
+				for (var i = startMinute; i <= endMinute; i += 5) {
+					var minuteItem = document.createElement('li');
+					minuteItem.classList.add('list-group-item');
+					if (i === currentMinute - (currentMinute % 5)) {
+						minuteItem.classList.add('active');
+					}
+					minuteItem.textContent = i < 10 ? '0' + i : i;
+					minuteItem.onclick = function () {
+						var selectedHour = document.querySelector('.hours .active').textContent;
+						var selectedMinute = this.textContent;
+						document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+					};
+					minutesList.appendChild(minuteItem);
+				}
+			}
+
+			var hoursList = document.getElementById('hours');
+			var minutesList = document.getElementById('minutes');
+			var timePickerInput = document.getElementById('timepicker');
+
+			// 將小時和分鐘選項的點擊事件綁定到各自的父元素上
+			hoursList.addEventListener('click', function (event) {
+				var target = event.target;
+				if (target.tagName === 'LI') {
+					// 取消上一個 active
+					var prevActiveHour = document.querySelector('.hours .active');
+					if (prevActiveHour) {
+						prevActiveHour.classList.remove('active');
+					}
+					// 設定當前選項為 active
+					target.classList.add('active');
+					// 更新時間選擇器的值
+					updateTimePickerValue();
+				}
+			});
+
+			minutesList.addEventListener('click', function (event) {
+				var target = event.target;
+				if (target.tagName === 'LI') {
+					// 取消上一個 active
+					var prevActiveMinute = document.querySelector('.minutes .active');
+					if (prevActiveMinute) {
+						prevActiveMinute.classList.remove('active');
+					}
+					// 設定當前選項為 active
+					target.classList.add('active');
+					// 更新時間選擇器的值
+					updateTimePickerValue();
+				}
+			});
+
+			// 監聽“確定”按鈕的點擊事件
+			var confirmButton = document.querySelector('.date-time-button');
+			confirmButton.addEventListener('click', function () {
+				var selectedDate = document.getElementById('datepicker').value;
+				var selectedTime = document.getElementById('timepicker').value;
+
+				// 將值顯示到<input>元素中
+				var timeInput = document.getElementById('timeInput');
+				timeInput.value = selectedDate + ' ' + selectedTime;
+
+			});
+
+			// 更新時間選擇器的值
+			function updateTimePickerValue() {
+				var selectedHour = document.querySelector('.hours .active').textContent;
+				var selectedMinute = document.querySelector('.minutes .active').textContent;
+				timePickerInput.value = selectedHour + ':' + selectedMinute;
+			}
 		}
 
 
 
-		// function validateTimeForm() {
-		// 	var datepicker = document.getElementById("datepicker").value;
-		// 	var timepicker = document.getElementById("timepicker").value;
+		function validateTimeForm() {
+			var datepicker = document.getElementById("datepicker").value;
+			var timepicker = document.getElementById("timepicker").value;
 
-		// 	if (!datepicker || !timepicker) {
-		// 		alert("請填寫取餐時間！");
-		// 		return false;
-		// 	}
+			if (!datepicker || !timepicker) {
+				alert("請填寫取餐時間！");
+				return false;
+			}
+			$('#timeModal').modal('hide');
 
-		// 	// 如果日期和时间都已填写，可以执行下一步操作，比如关闭模态框
-		// 	// 你可以根据需要添加更多逻辑，比如提交表单或进行其他操作
-		// 	// 这里假设你有一个表单需要提交，可以如下所示：
-		// 	// document.getElementById("yourFormId").submit();
-
-		// 	// 如果不需要自动提交表单，只需关闭模态框即可：
-		// 	$('#timeModal').modal('hide');
-
-		// 	return true;
-		// }
+			return true;
+		}
 
 		//自動帶入會員資料
 		$(document).ready(function () {
 			$('#flexCheckmemberProfile').change(function () {
 				if (this.checked) {
-					
+
 					$.ajax({
 						url: '/CheckedPayment/GetMemberProfile',
 						type: 'GET',
@@ -1021,13 +1160,13 @@
 		});
 
 		function continueShopping() {
-			
+
 			$.ajax({
 				url: '/CheckedPayment/GetShopping',
 				type: 'GET',
 				success: function (data) {
 					// console.log(data);
-					
+
 					if (data.success) {
 
 						if (data.data.length === 0) {
@@ -1037,7 +1176,7 @@
 							// 重新導向至商店
 							window.location.href = '/Store/Index/' + data.data[0].storeId;
 						}
-						
+
 						// 重新導向至首頁
 						// window.location.href = '/';
 					} else {

@@ -1,0 +1,77 @@
+﻿@{
+	var paymentInfo = ViewBag.PaymentInfo;
+
+}
+
+
+<section class="container-lg">
+
+	<div class="order mt-3 row mb-3">
+		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
+				<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+			</div>
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">2</div>
+				<div class="fs-6 fw-bold text-break">確認結帳</div>
+			</div>
+		</div>
+		<div class="order-form row bg-white rounded-2 col-9 mx-auto pt-4 px-5 mb-3">
+
+			<div class="row d-flex justify-content-center py-4">
+				<div class="col-md-8">
+					<div class="fs-5">
+						<dl class="row">
+							<dt class="col-sm-4 fw-bold">訂購門市</dt>
+							<dd class="col-sm-8">@paymentInfo[0].StoreName</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取餐人</dt>
+							<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">聯絡電話</dt>
+							<dd class="col-sm-8">0975123123</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取貨方式</dt>
+							<dd class="col-sm-8">外送</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取餐時間</dt>
+							<dd class="col-sm-8">2024/05/06 06:20</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取貨地址</dt>
+							<dd class="col-sm-8">南投縣草屯鎮中正路102之1號</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">付款方式</dt>
+							<dd class="col-sm-8">現金</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">開立發票方式</dt>
+							<dd class="col-sm-8">本店免用統一發票</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">訂購商品明細</dt>
+							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
+							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
+							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">應付金額</dt>
+							<dd class="col-sm-8">$150</dd>
+							<hr>
+						</dl>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row mb-3 mx-auto w-75">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)" class="text-decoration-none text-black">上一步</a>
+				</button>
+				<button class="btn-next btn btn-dark fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-white">送出訂單</a>
+				</button>
+			</div>
+		</div>
+</section>
