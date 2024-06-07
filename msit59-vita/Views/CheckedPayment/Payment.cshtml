@@ -19,6 +19,13 @@
 			</div>
 		</div>
 		<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
+
+			@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
+			{
+				<input type="hidden" id="storeId" value="@paymentInfo[0]?.StoreId">
+			}
+			
+
 			<form method="post">
 				<div class="order-store-info my-3">
 					@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
@@ -118,13 +125,6 @@
 
 
 
-
-
-
-
-
-
-
 				<div class="order-pick-up mb-2">
 					<div class="d-flex justify-content-between">
 						<div class="fs-5 fw-bold">取餐方式</div>
@@ -138,7 +138,7 @@
 
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPickUp" id="flexRadioPickUp1"
+						<input class="form-check-input pick-up" type="radio" name="flexRadioPickUp" id="flexRadioPickUp1"
 							   value="0" checked required>
 						<label class="form-check-label" for="flexRadioPickUp1">
 							自取 (約 15 分鐘)
@@ -146,7 +146,7 @@
 					</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPickUp" id="flexRadioPickUp2"
+						<input class="form-check-input pick-up" type="radio" name="flexRadioPickUp" id="flexRadioPickUp2"
 							   data-bs-toggle="modal" data-bs-target="#addressModal" value="1">
 						<label class="form-check-label" for="flexRadioPickUp2" data-bs-toggle="modal"
 							   data-bs-toggle="modal" data-bs-target="#addressModal">
@@ -160,13 +160,16 @@
 
 				</div>
 
-				<div class="order-time mb-2">
+				@* <div class="order-time mb-2">
 					<div class="fs-5 fw-bold">預計取餐時間</div>
 					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly"
 						   data-bs-toggle="modal" data-bs-target="#timeModal">
 
+				</div> *@
+				<div class="order-time mb-2">
+					<div class="fs-5 fw-bold">預計取餐時間</div>
+					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
 				</div>
-
 
 
 
@@ -797,6 +800,145 @@
 		// }
 
 
+		// 點擊取餐時間
+		// $('#timeInput').click(function () {
+
+		// 	var storeId = $('#storeId').val();
+
+		// 	if (!storeId) {
+		// 		// console.error('Store ID is missing.');
+		// 		return;
+		// 	}
+
+
+			// 獲取店家營業時間
+			// 判斷是否有營業
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var timeModalElement = document.getElementById('timeModal');
+			var timeModalInstance = bootstrap.Modal.getOrCreateInstance(timeModalElement);
+
+			$('#timeInput').click(function (event) {
+				event.preventDefault(); 
+				var storeId = $('#storeId').val();
+
+				if (!storeId) {
+					console.error('Store ID is missing.');
+					return;
+				}
+
+			
+				$.ajax({
+					url: '/CheckedPayment/GetStoreOpenTime',
+					type: 'POST',
+					data: { storeId: storeId },
+					success: function (data) {
+						if (data.success) {
+							if (!data.data.storeOpenOrNot) {
+								$('#timeInput').val('店家今日未營業');
+								timeModalInstance.hide(); 
+								return;
+							}
+
+							// 顯示取餐時間模態框
+							timeModalInstance.show();
+							const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+							// const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+							console.log(payWay);
+							calculateDeliveryTime(payWay, data.data.storeOpeningTime, data.data.storeClosingTime)
+							console.log(data);
+						} else {
+							console.error('Error: ' + data.message);
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error('Error fetching open time:', error);
+					}
+				});
+			});
+		});
+
+		// 根據當前時間、商家營業時間和取餐方式，計算生成取餐時間
+		function calculateDeliveryTime(payWay, storeOpenTime, storeCloseTime) {
+
+			
+			// console.log(payWay);
+			// console.log(storeOpenTime);
+			// console.log(storeCloseTime);
+
+
+			// 取餐時間日期
+			const today = new Date();
+			const year = today.getFullYear();
+			const month = String(today.getMonth() + 1).padStart(2, '0');
+			const day = String(today.getDate()).padStart(2, '0');
+			const formattedDate = `${year}/${month}/${day}`;
+
+			const datepickerInput = document.getElementById('datepicker');
+			datepickerInput.value = formattedDate;
+
+			// 獲取當前時間
+			var currentTime = new Date();
+			var currentHour = currentTime.getHours();
+			var currentMinute = currentTime.getMinutes();
+
+			console.log(currentTime);
+
+
+			// 商家營業時間
+			const storeOpenTimeDate = new Date( ...storeOpenTime.split(':').map(Number));
+			const storeCloseTimeDate = new Date(...storeCloseTime.split(':').map(Number));
+
+
+
+			console.log(storeOpenTimeDate);
+			console.log(storeCloseTimeDate);
+
+			// 處理付款時間
+			let deliveryTime = new Date();
+			const pickUp = payWay; /* 自取或外送的選擇,假設為自取 */
+
+			console.log(deliveryTime)
+
+			if (pickUp == '0') {
+				deliveryTime.setMinutes(deliveryTime.getMinutes() + 15);
+			} else if (pickUp == '1') {
+				deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
+			}
+
+			console.log(deliveryTime);
+		
+			// 判斷取餐時間是否超過商家營業時間
+			// 判斷取餐時間是否超過商家營業時間
+			if (deliveryTime < storeOpenTimeDate) {
+				console.log('取餐時間早於商家開店時間');
+			} else if (deliveryTime > storeCloseTimeDate) {
+				console.log('取餐時間晚於商家關店時間');
+			} else {
+				console.log('取餐時間在商家營業時間內');
+			}
+
+			// 動態生成小時選項
+			// var hoursList = document.getElementById('hours');
+			// for (var i = currentHour; i <= 23; i++) {
+			//    var hourItem = document.createElement('li');
+			//    hourItem.classList.add('list-group-item');
+			//    if (i === currentHour) {
+			//        hourItem.classList.add('active');
+			//    }
+			//    hourItem.textContent = i < 10 ? '0' + i : i;
+			//    hourItem.onclick = function () {
+			//        var selectedHour = this.textContent;
+			//        var selectedMinute = document.querySelector('.minutes .active').textContent;
+			//        document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+			//    };
+			//    hoursList.appendChild(hourItem);
+			// }
+		
+		}
+
+
+
 		// function validateTimeForm() {
 		// 	var datepicker = document.getElementById("datepicker").value;
 		// 	var timepicker = document.getElementById("timepicker").value;
@@ -829,7 +971,7 @@
 						success: function (response) {
 							if (response.success) {
 								var data = response.data;
-								// 填入会员资料
+								// 填入會員資料
 								$('#addressInput').val(data.address);
 								$('#inputCarrier').val(data.carrier);
 

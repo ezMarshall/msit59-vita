@@ -87,6 +87,36 @@ namespace msit59_vita.Controllers
 
 
 		}
+
+		[HttpPost]
+		public IActionResult GetStoreOpenTime(int storeId)
+		{
+			// 獲取當前星期幾
+			string shortDayOfWeekString = DateTime.Today.DayOfWeek.ToString().Substring(0, 3);
+
+			// 查詢對應的 StoreOpeningTime
+			var storeOpeningTimeQuery = from s in _context.StoreOpeningHours
+										where s.StoreId == storeId && s.MyWeekDay == shortDayOfWeekString
+										select new
+										{
+											myWeekDay = s.MyWeekDay,
+											storeOpenOrNot = s.StoreOpenOrNot,
+											storeOpeningTime = s.StoreOpeningTime,
+											storeClosingTime = s.StoreClosingTime,
+										};
+            
+			var storeOpeningTime = storeOpeningTimeQuery.FirstOrDefault();
+
+			if (storeOpeningTime == null)
+			{
+				return Json(new { success = false, message = "Get Store Open Time Failed" });
+			}
+
+            return Json(new { success = true, message="Get Store Open Time Success", data = storeOpeningTime });
+		}
+
+
+		//帶入會員資料
 		[HttpGet]
 		public IActionResult GetMemberProfile()
 		{
