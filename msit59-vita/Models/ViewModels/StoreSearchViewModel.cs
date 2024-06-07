@@ -6,7 +6,7 @@ namespace msit59_vita.Models.ViewModels
     {
         public string StoreSearch { get; set; } = null!;
 
-        public int StoreId {  get; set; }
+        public int StoreId { get; set; }
         public string StoreName { get; set; } = null!;
 
         public string StoreAddress { get; set; } = null!;
@@ -19,13 +19,14 @@ namespace msit59_vita.Models.ViewModels
 
         public bool StoreOpening { get; set; }
 
-        public decimal averageRating {  get; set; }
+        public decimal averageRating { get; set; }
 
         public int totalReviews { get; set; }
 
-        public bool isFavorite {  get; set; }
+        public bool isFavorite { get; set; }
 
-        public double Dis {  get; set; }
+        public double Dis { get; set; }
 
         public List<string> ProductImageList { get; set; } = null!;
+    }
 }
