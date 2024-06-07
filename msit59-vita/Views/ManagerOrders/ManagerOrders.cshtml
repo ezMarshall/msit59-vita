@@ -228,7 +228,6 @@
                         // 從服務器響應中提取總頁數
                         var pageCount = $(result).find('#hfPageCount').val();
                         $("#hfPageCount").val(pageCount);
-
                         updatePaginationButtons(currentPage);
                     }
                 });
@@ -343,7 +342,7 @@
             // signalR 新進訂單時reload
             connection.on("NewOrders", function () {
                 location.reload()
-            }
+            })
 
             function reloadOrdersTable() {
                 var currentPage = $("#hfCurrentPageIndex").val();
@@ -361,9 +360,16 @@
         });
 
         function filterTable(currentPage) {
+            var endNextDay = "";
+            if (endDateInput.value) {
+                var endDate = new Date(endDateInput.value);
+                endDate.setDate(endDate.getDate() + 1);
+                endNextDay = endDate.toISOString().slice(0, 10);
+            }
+
             var searchString = $('#searchString').val();
             var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
+            var endDate = endNextDay;
             var deliveryVia = $('#deliveryVia').val();
             var orderStatus = $('#orderStatus').val();
 
@@ -407,37 +413,50 @@
         deliveryViaSelect.addEventListener('change', () => filterTable(1));
         orderStatusSelect.addEventListener('change', () => filterTable(1));
 
-        function filterTable(currentPage) {
-            const params = {
-                searchString: searchInput.value,
-                startDate: startDateInput.value,
-                endDate: endDateInput.value,
-                deliveryVia: deliveryViaSelect.value,
-                orderStatus: orderStatusSelect.value,
-                currentPage: currentPage // 添加當前頁碼
-            };
+        // function filterTable(currentPage) {
+        //     var endNextDay = "";
+        //     if (endDateInput.value) {
+        //         var endDate = new Date(endDateInput.value);
+        //         endDate.setDate(endDate.getDate() + 1);
+        //         endNextDay = endDate.toISOString().slice(0, 10);
+        //     }
 
-            $.ajax({
-                url: '/ManagerOrders/FilterOrders',
-                type: 'POST',
-                data: params,
-                success: function (result) {
-                    $('#TableProducts').html(result);
+        //     const params = {
+        //         searchString: searchInput.value,
+        //         startDate: startDateInput.value,
+        //         endDate: endNextDay,
+        //         deliveryVia: deliveryViaSelect.value,
+        //         orderStatus: orderStatusSelect.value,
+        //         currentPage: currentPage // 添加當前頁碼
+        //     };
 
-                    // 從服務器響應中提取總頁數和當前頁碼
-                    var pageCount = $(result).find('#hfPageCount').val();
-                    var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+        //     $.ajax({
+        //         url: '/ManagerOrders/FilterOrders',
+        //         type: 'POST',
+        //         data: params,
+        //         success: function (result) {
+        //             $('#TableProducts').html(result);
 
-                    $("#hfPageCount").val(pageCount);
-                    $("#hfCurrentPageIndex").val(currentPageIndex);
+        //             // 從服務器響應中提取總頁數和當前頁碼
+        //             var pageCount = $(result).find('#hfPageCount').val();
+        //             var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
 
-                    updatePaginationButtons(parseInt(currentPageIndex));
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error in AJAX request:", error);
-                }
-            });
-        }
+        //             $("#hfPageCount").val(pageCount);
+        //             $("#hfCurrentPageIndex").val(currentPageIndex);
+
+        //             if (isNaN(pageCount) || pageCount <= 1) {
+        //                 $('.pagination').addClass("d-none");
+        //             } else {
+        //                 $('.pagination').removeClass("d-none");
+        //             }
+
+        //             updatePaginationButtons(parseInt(currentPageIndex));
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error("Error in AJAX request:", error);
+        //         }
+        //     });
+        // }
 
         // row click
         // 將事件監聽綁到tableproducts上 避免ajax換頁之後row的點擊效果失效
@@ -452,7 +471,26 @@
                 }
             });
         });
-        
+
+
+        // 從首頁今日訂單資訊導引過來訂單狀態
+        function init() {
+            if (sessionStorage.getItem('CustomerOrderStatus') != null & sessionStorage.getItem('todayDate') != null) {
+                orderStatusSelect.value = sessionStorage.getItem('CustomerOrderStatus');
+                startDateInput.value = sessionStorage.getItem('todayDate');
+                endDateInput.value = sessionStorage.getItem('todayDate');
+
+              
+                filterTable(1);
+                sessionStorage.removeItem('CustomerOrderStatus');
+                sessionStorage.removeItem('todayDate');
+
+            }
+        }
+
+        $(function () {
+            init();
+        });
 
 
     </script>

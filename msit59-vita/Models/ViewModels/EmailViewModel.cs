@@ -11,8 +11,8 @@ namespace msit59_vita.Models.ViewModels
         public bool Success { get; set; }
 
         public string? Message { get; set; }
-        public string FromEmail { get; set; } = "null";
-        public string Subject { get; set; } = "null";
-        public string EmailBody { get; set; } = "null";
+        public string FromEmail { get; set; } = null!;
+        public string Subject { get; set; } = null!;
+        public string EmailBody { get; set; } = null!;
     }
 }

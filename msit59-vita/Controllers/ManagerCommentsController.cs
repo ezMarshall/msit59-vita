@@ -20,8 +20,15 @@ namespace msit59_vita.Controllers
 
         public IActionResult ManagerComments(int currentPage = 1)
         {
-            var viewModel = GetReviews(currentPage);
-            return View(viewModel);
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var viewModel = GetReviews(currentPage);
+                return View(viewModel);
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
         }
 
         public IActionResult GetReviewsTable(int currentPage = 1)

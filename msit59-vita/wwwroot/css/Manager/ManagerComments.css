@@ -77,6 +77,7 @@
 
 .comment-tr {
     cursor: pointer;
+    height:65px;
 }
 
 .btn:focus, .btn:active {
