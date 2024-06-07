@@ -174,7 +174,10 @@ namespace msit59_vita.Controllers
 			//判斷使用者是否收藏該店家
 			var customer = from c in _context.Customers
 						   where c.CustomerEmail == User.Identity.Name
-						   select c;
+						   select new
+						   {
+							   c.CustomerId
+						   };
 
 			var customerId = customer.FirstOrDefault();
 
