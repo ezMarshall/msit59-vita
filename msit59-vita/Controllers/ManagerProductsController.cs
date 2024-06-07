@@ -24,9 +24,16 @@ namespace msit59_vita.Controllers
         // 首頁
         public IActionResult Index()
         {
-            TempData["currentPageIndex"] = 1;
-
-            return View(GetProducts(1));
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                TempData["currentPageIndex"] = 1;
+                return View(GetProducts(1));
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
+            
         }
 
 
@@ -64,10 +71,17 @@ namespace msit59_vita.Controllers
         //商品分類彈窗
         public ActionResult CategoryDetails()
         {
-            var categories = GetProductCategories();
-            return PartialView("CategoryDetails", categories);
-
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var categories = GetProductCategories();
+                return PartialView("CategoryDetails", categories);
         }
+            else
+            {
+                return Redirect("/ManagerLogin");
+    }
+
+}
 
         public IActionResult CategoryEdit(int CategoryId, string CategoryName)
         {
@@ -133,8 +147,15 @@ namespace msit59_vita.Controllers
     // ProductCopy頁面
         public IActionResult ProductCopy(int id)
         {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return View(GetSpecificProduct(id));
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
 
-            return View(GetSpecificProduct(id));
+            }
         }
 
    
@@ -180,7 +201,14 @@ namespace msit59_vita.Controllers
         // ProductEdit頁面
         public IActionResult ProductEdit(int id)
         {
-            return View(GetSpecificProduct(id));
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return View(GetSpecificProduct(id));
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
         }
 
         [HttpPost]

@@ -52,11 +52,11 @@
                    
                 <ul class="col-lg-6 col-6 list-unstyled">
                         <li class="fw-bold">訂單狀態概覽 </li>
-                        <li>待接單：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
-                        <li>製作中：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
-                        <li>配送中/等待自取：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
-                        <li>已完成：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
-                        <li>退單/已取消：<a href="" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
+                        <li>待接單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_0()" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
+                        <li>製作中：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_1()" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
+                        <li>配送中/等待自取：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_2()" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
+                        <li>已完成：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_3()" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
+                        <li>退單/已取消：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_4to5()" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
 
                 </ul>
                 <ul class="col-lg-6 col-6 list-unstyled ">
@@ -121,9 +121,27 @@
     <script>
         function redirectToManagerComments() {
             sessionStorage.setItem('startDate', '@ViewBag.Last7DaysDate');
-            sessionStorage.setItem('endDate', '@ViewBag.TodayDate');
-
-          
+            sessionStorage.setItem('endDate', '@ViewBag.TodayDate');          
+        }
+        function CustomserStatusSelect_0(){
+            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+            sessionStorage.setItem('CustomerOrderStatus',1)
+        }
+        function CustomserStatusSelect_1(){
+            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+            sessionStorage.setItem('CustomerOrderStatus',1)
+        }
+        function CustomserStatusSelect_2(){
+            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+            sessionStorage.setItem('CustomerOrderStatus', 1)
+        }
+        function CustomserStatusSelect_3(){
+            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+            sessionStorage.setItem('CustomerOrderStatus', 0)
+        }
+        function CustomserStatusSelect_4to5(){
+            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+            sessionStorage.setItem('CustomerOrderStatus', 2)
         }
         
         
