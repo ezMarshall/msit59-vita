@@ -88,6 +88,96 @@ namespace msit59_vita.Controllers
 
 		}
 
+		[HttpPost]
+		public IActionResult GetStoreOpenTime(int storeId)
+		{
+			// 獲取當前星期幾
+			string shortDayOfWeekString = DateTime.Today.DayOfWeek.ToString().Substring(0, 3);
+
+			// 查詢對應的 StoreOpeningTime
+			var storeOpeningTimeQuery = from s in _context.StoreOpeningHours
+										where s.StoreId == storeId && s.MyWeekDay == shortDayOfWeekString
+										select new
+										{
+											myWeekDay = s.MyWeekDay,
+											storeOpenOrNot = s.StoreOpenOrNot,
+											storeOpeningTime = s.StoreOpeningTime,
+											storeClosingTime = s.StoreClosingTime,
+										};
+            
+			var storeOpeningTime = storeOpeningTimeQuery.FirstOrDefault();
+
+			if (storeOpeningTime == null)
+			{
+				return Json(new { success = false, message = "Get Store Open Time Failed" });
+			}
+
+            return Json(new { success = true, message="Get Store Open Time Success", data = storeOpeningTime });
+		}
+
+
+		//帶入會員資料
+		[HttpGet]
+		public IActionResult GetMemberProfile()
+		{
+
+			var customer = _context.Customers
+			   .FirstOrDefault(c => c.CustomerEmail == User.Identity.Name);
+
+			if (customer == null)
+			{
+				return Json(new { success = false, message = "Customer not found" });
+			}
+
+			var customerProfile = new
+			{
+				address = $"{customer.CustomerAddressCity.Trim()}{customer.CustomerAddressDistrict.Trim()} {customer.CustomerAddressDetails.Trim()}",
+				carrier = string.IsNullOrWhiteSpace(customer.CustomerEinvoiceNumber) ? null : customer.CustomerEinvoiceNumber.Trim(),
+				phone = !string.IsNullOrEmpty(customer.CustomerLocalPhone) ? customer.CustomerLocalPhone.Trim() : null,
+				cellphone = !string.IsNullOrEmpty(customer.CustomerCellPhone) ? customer.CustomerCellPhone.Trim() : null
+			};
+
+			return Json(new { success = true, data = customerProfile });
+
+		}
+
+		// 繼續加購功能
+		[HttpGet]
+		public IActionResult GetShopping()
+		{
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+			var customerID = customerId.CustomerId;/* 獲取當前用戶的CustomerID */
+
+			//select*
+			//from Customers c join ShoppingCarts sc on c.CustomerID = sc.CustomerID
+			//join Products p on p.ProductID = sc.ProductID
+			//join Stores s on s.StoreID = p.StoreID
+			//where c.CustomerID = 4
+
+			var cart = from c in _context.ShoppingCarts
+					   join ct in _context.Customers on c.CustomerId equals ct.CustomerId
+					   join p in _context.Products on c.ProductId equals p.ProductId
+					   join s in _context.Stores on p.StoreId equals s.StoreId
+					   where c.CustomerId == customerID
+                       select new
+					   {
+						   ShoppingCartId = c.ShoppingCartId,
+						   ShoppingCartQuantity = c.ShoppingCartQuantity,
+						   StoreId = s.StoreId,
+					   };
+
+			var shoppingInfo = cart.ToList();
+						   
+
+
+
+			return Json(new { success = true, data = shoppingInfo });
+		}
+
 
 	}
 }

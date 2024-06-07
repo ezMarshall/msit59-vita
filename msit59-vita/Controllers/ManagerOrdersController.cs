@@ -17,8 +17,13 @@ namespace msit59_vita.Controllers
         }
         public IActionResult ManagerOrders(int currentPage = 1)
         {
-            var viewModel = GetOrders(currentPage);
-            return View(viewModel);
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var viewModel = GetOrders(currentPage);
+                return View(viewModel);
+            }else{
+                return Redirect("/ManagerLogin");
+            }
         }
 
 
@@ -202,40 +207,47 @@ namespace msit59_vita.Controllers
         // Order Details
         public IActionResult OrderDetails(int id)
         {
-            var queryDetails = (from o in _context.Orders
-                               join c in _context.Customers on o.CustomerId equals c.CustomerId
-                               join od in _context.OrderDetails on o.OrderId equals od.OrderId
-                               join p in _context.Products on od.ProductId equals p.ProductId
-                               where o.OrderId ==id
-                               select new
-                               {
-                                   OrderId = o.OrderId,
-                                   CustomerOrderStatus = o.CustomerOrderStatus,
-                                   OrderDeliveryVia = o.OrderDeliveryVia,
-                                   CustomerName = c.CustomerName,
-                                   OrderPhoneNumeber = o.OrderPhoneNumber,
-                                   OrderTime = o.OrderTime,
-                                   PredictedArrivalTime = o.PredictedArrivalTime,
-                                   OrderAddressCity = o.OrderAddressCity,
-                                   OrderAddressDistrict = o.OrderAddressDistrict,
-                                   OrderAddressDetails = o.OrderAddressDetails,
-                                   ProductName = p.ProductName,
-                                   Quantity = od.Quantity,
-                                   OrderStoreMemo = o.OrderStoreMemo,
-                                   OrderUniformInvoiceVia = o.OrderUniformInvoiceVia,
-                                   OrderPayment = o.OrderPayment,
-                                   ProductInfo = new { ProductName = p.ProductName, Quantity = od.Quantity ,UnitPrice=od.UnitPrice}
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var queryDetails = (from o in _context.Orders
+                                    join c in _context.Customers on o.CustomerId equals c.CustomerId
+                                    join od in _context.OrderDetails on o.OrderId equals od.OrderId
+                                    join p in _context.Products on od.ProductId equals p.ProductId
+                                    where o.OrderId == id
+                                    select new
+                                    {
+                                        OrderId = o.OrderId,
+                                        CustomerOrderStatus = o.CustomerOrderStatus,
+                                        OrderDeliveryVia = o.OrderDeliveryVia,
+                                        CustomerName = c.CustomerName,
+                                        OrderPhoneNumeber = o.OrderPhoneNumber,
+                                        OrderTime = o.OrderTime,
+                                        PredictedArrivalTime = o.PredictedArrivalTime,
+                                        OrderAddressCity = o.OrderAddressCity,
+                                        OrderAddressDistrict = o.OrderAddressDistrict,
+                                        OrderAddressDetails = o.OrderAddressDetails,
+                                        ProductName = p.ProductName,
+                                        Quantity = od.Quantity,
+                                        OrderStoreMemo = o.OrderStoreMemo,
+                                        OrderUniformInvoiceVia = o.OrderUniformInvoiceVia,
+                                        OrderPayment = o.OrderPayment,
+                                        ProductInfo = new { ProductName = p.ProductName, Quantity = od.Quantity, UnitPrice = od.UnitPrice }
 
-                               })
+                                    })
                                 .GroupBy(x => x.OrderId)
                                 .Select(g => new
                                 {
                                     OrderInfo = g.First(),
                                     Products = g.Select(x => x.ProductInfo),
                                     TotalPrice = g.Sum(x => x.ProductInfo.Quantity * x.ProductInfo.UnitPrice)
-                                }); 
-            ViewBag.OrderDetails = queryDetails.ToList();
-            return View(); 
+                                });
+                ViewBag.OrderDetails = queryDetails.ToList();
+                return View();
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
         }
 
     }
