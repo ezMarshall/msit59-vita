@@ -1,6 +1,7 @@
-﻿@using msit59_vita.Models.ViewModels
+@using msit59_vita.Models.ViewModels
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @model List<StoreSearchViewModel>
+
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_LayoutHome";
@@ -20,6 +21,7 @@
                     <i class="fa-solid fa-bag-shopping"></i>
                     <p>自取</p>
                 </li>
+
             </ul> *@
             <form class="bg-light rounded-3 p-4" action="/Home/StoreSearch" method="post" id="StoreSearchForm">
                 @* <label class="form-label ps-3 mb-2">

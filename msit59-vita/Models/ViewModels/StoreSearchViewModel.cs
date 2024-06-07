@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace msit59_vita.Models.ViewModels
 {
@@ -28,5 +28,4 @@ namespace msit59_vita.Models.ViewModels
         public double Dis {  get; set; }
 
         public List<string> ProductImageList { get; set; } = null!;
-    }
 }
