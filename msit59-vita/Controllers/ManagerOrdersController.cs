@@ -139,10 +139,14 @@ namespace msit59_vita.Controllers
             .Take(maxRows)
             .ToList();
 
+            // 計算實際的當前頁碼
+            int actualCurrentPage = (currentPage - 1) * maxRows < totalCount
+                ? currentPage
+                : (int)Math.Ceiling((double)totalCount / maxRows);
             var viewModel = new ManagerOrders
             {
                 Orders = reviewsList.Cast<OrderViewModel>().ToList(),
-                CurrentPageIndex = currentPage,
+                CurrentPageIndex = actualCurrentPage,
                 PageCount = (int)Math.Ceiling((double)totalCount / maxRows),
                 MaxRows = maxRows,
                 TotalCount = totalCount // 新增：返回總記錄數

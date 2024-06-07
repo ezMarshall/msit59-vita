@@ -6,6 +6,8 @@
 @section MyStyle {
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Manager/ManagerOrders.css" asp-append-version="true" />
+    <title>VITA-Manage Orders</title>
+    <link rel="icon" type="image/x-icon" href="/image/logo/logo_30x30_dark.png">
 }
 
 @section BreadCrumb {
@@ -30,7 +32,7 @@
                     </a>
                     <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3" type="text" id="searchString" placeholder="請輸入訂單編號">
                 </div>
-                <div>
+                <div class="d-flex">
                     <input class="order-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
                     <span class="fw-bold">~</span>
                     <input class="order-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
@@ -357,41 +359,41 @@
             }
         });
 
-        function filterTable(currentPage) {
-            var endNextDay = "";
-            if (endDateInput.value) {
-                var endDate = new Date(endDateInput.value);
-                endDate.setDate(endDate.getDate() + 1);
-                endNextDay = endDate.toISOString().slice(0, 10);
-            }
+        // function filterTable(currentPage) {
+        //     var endNextDay = "";
+        //     if (endDateInput.value) {
+        //         var endDate = new Date(endDateInput.value);
+        //         endDate.setDate(endDate.getDate() + 1);
+        //         endNextDay = endDate.toISOString().slice(0, 10);
+        //     }
 
-            var searchString = $('#searchString').val();
-            var startDate = $('#startDate').val();
-            var endDate = endNextDay;
-            var deliveryVia = $('#deliveryVia').val();
-            var orderStatus = $('#orderStatus').val();
+        //     var searchString = $('#searchString').val();
+        //     var startDate = $('#startDate').val();
+        //     var endDate = endNextDay;
+        //     var deliveryVia = $('#deliveryVia').val();
+        //     var orderStatus = $('#orderStatus').val();
 
-            $.ajax({
-                url: '/ManagerOrders/FilterOrders',
-                type: 'POST',
-                data: {
-                    searchString: searchString,
-                    startDate: startDate,
-                    endDate: endDate,
-                    deliveryVia: deliveryVia,
-                    orderStatus: orderStatus,
-                    currentPage: currentPage
-                },
-                success: function (result) {
-                    $('#TableProducts').html(result);
-                    // 重新設置事件監聽器，因為表格內容已更新
-                    setupEventListeners();
-                },
-                error: function () {
-                    alert('發生錯誤，請稍後再試');
-                }
-            });
-        }
+        //     $.ajax({
+        //         url: '/ManagerOrders/FilterOrders',
+        //         type: 'POST',
+        //         data: {
+        //             searchString: searchString,
+        //             startDate: startDate,
+        //             endDate: endDate,
+        //             deliveryVia: deliveryVia,
+        //             orderStatus: orderStatus,
+        //             currentPage: currentPage
+        //         },
+        //         success: function (result) {
+        //             $('#TableProducts').html(result);
+        //             // 重新設置事件監聽器，因為表格內容已更新
+        //             setupEventListeners();
+        //         },
+        //         error: function () {
+        //             alert('發生錯誤，請稍後再試');
+        //         }
+        //     });
+        // }
         // update order status start end
 
         
@@ -411,50 +413,50 @@
         deliveryViaSelect.addEventListener('change', () => filterTable(1));
         orderStatusSelect.addEventListener('change', () => filterTable(1));
 
-        // function filterTable(currentPage) {
-        //     var endNextDay = "";
-        //     if (endDateInput.value) {
-        //         var endDate = new Date(endDateInput.value);
-        //         endDate.setDate(endDate.getDate() + 1);
-        //         endNextDay = endDate.toISOString().slice(0, 10);
-        //     }
+        function filterTable(currentPage) {
+            var endNextDay = "";
+            if (endDateInput.value) {
+                var endDate = new Date(endDateInput.value);
+                endDate.setDate(endDate.getDate() + 1);
+                endNextDay = endDate.toISOString().slice(0, 10);
+            }
 
-        //     const params = {
-        //         searchString: searchInput.value,
-        //         startDate: startDateInput.value,
-        //         endDate: endNextDay,
-        //         deliveryVia: deliveryViaSelect.value,
-        //         orderStatus: orderStatusSelect.value,
-        //         currentPage: currentPage // 添加當前頁碼
-        //     };
+            const params = {
+                searchString: searchInput.value,
+                startDate: startDateInput.value,
+                endDate: endNextDay,
+                deliveryVia: deliveryViaSelect.value,
+                orderStatus: orderStatusSelect.value,
+                currentPage: currentPage // 添加當前頁碼
+            };
 
-        //     $.ajax({
-        //         url: '/ManagerOrders/FilterOrders',
-        //         type: 'POST',
-        //         data: params,
-        //         success: function (result) {
-        //             $('#TableProducts').html(result);
+            $.ajax({
+                url: '/ManagerOrders/FilterOrders',
+                type: 'POST',
+                data: params,
+                success: function (result) {
+                    $('#TableProducts').html(result);
 
-        //             // 從服務器響應中提取總頁數和當前頁碼
-        //             var pageCount = $(result).find('#hfPageCount').val();
-        //             var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+                    // 從服務器響應中提取總頁數和當前頁碼
+                    var pageCount = $(result).find('#hfPageCount').val();
+                    var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
 
-        //             $("#hfPageCount").val(pageCount);
-        //             $("#hfCurrentPageIndex").val(currentPageIndex);
+                    $("#hfPageCount").val(pageCount);
+                    $("#hfCurrentPageIndex").val(currentPageIndex);
 
-        //             if (isNaN(pageCount) || pageCount <= 1) {
-        //                 $('.pagination').addClass("d-none");
-        //             } else {
-        //                 $('.pagination').removeClass("d-none");
-        //             }
+                    if (isNaN(pageCount) || pageCount <= 1) {
+                        $('.pagination').addClass("d-none");
+                    } else {
+                        $('.pagination').removeClass("d-none");
+                    }
 
-        //             updatePaginationButtons(parseInt(currentPageIndex));
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error("Error in AJAX request:", error);
-        //         }
-        //     });
-        // }
+                    updatePaginationButtons(parseInt(currentPageIndex));
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in AJAX request:", error);
+                }
+            });
+        }
 
         // row click
         // 將事件監聽綁到tableproducts上 避免ajax換頁之後row的點擊效果失效
