@@ -49,7 +49,6 @@ namespace msit59_vita.Controllers
 
                 ViewBag.OrderStatus = OrderStatus;
 
-
                 //今日營業額、銷售數量
                 var order = from o in _context.Orders
                             join os in _context.OrderDetails on o.OrderId equals os.OrderId
@@ -81,6 +80,10 @@ namespace msit59_vita.Controllers
                 ViewBag.NumComment = comment.Count();
                 ViewBag.Last7DaysDate = _todayDate.AddDays(-7).ToString("yyyy-MM-dd") ;
                 ViewBag.TodayDate = _todayDate.Date.ToString("yyyy-MM-dd");
+
+             
+
+
 
 
                 return View();

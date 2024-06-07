@@ -20,7 +20,7 @@
         int counter = (Model.CurrentPageIndex - 1) * Model.MaxRows+1;
         foreach (var item in Model.Reviews)
         {
-            <tr>
+            <tr class="comment-tr">
                 <th class="align-middle" scope="row">@counter</th>
                 <td class="align-middle">@item.CustomerName</td>
                 <td class="align-middle">@item.ReviewTime.ToString("yyyy/MM/dd HH:mm")</td>
@@ -50,7 +50,7 @@
                 </td>
             </tr>
             // accordion start
-            <tr class="comment-tr">
+            <tr>
                 <td colspan="8" class=" p-0">
                     <div class="collapse" id=@($"accordion-{counter}")>
                         <div class="d-lg-flex">
