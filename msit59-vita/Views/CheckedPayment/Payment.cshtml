@@ -121,6 +121,10 @@
 
 				</div>
 
+
+
+
+
 				<div class="order-pick-up mb-2">
 					<div class="d-flex justify-content-between">
 						<div class="fs-5 fw-bold">取餐方式</div>
@@ -156,7 +160,7 @@
 
 				</div>
 
-				<div class="order-time mb-2">
+				@* <div class="order-time mb-2">
 					<div class="fs-5 fw-bold">預計取餐時間</div>
 					<input id="timeInput" name="orderTime" value="" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
 				</div>
@@ -990,6 +994,20 @@
 				});
 			});
 
+		// 地址驗證
+		// function validateAddressForm() {
+		// 	const form = document.querySelector('.address-form');
+		// 	if (form.checkValidity()) {
+		// 		form.classList.remove('was-validated');
+		// 		// 这里可以添加提交表单或保存数据的逻辑
+		// 		// 关闭模态框
+		// 		var myModalEl = document.getElementById('addressModal');
+		// 		var modal = bootstrap.Modal.getInstance(myModalEl);
+		// 		modal.hide();
+		// 	} else {
+		// 		form.classList.add('was-validated');
+		// 	}
+		// }
 
 			generateMinutes();
 
@@ -1114,6 +1132,10 @@
 								$('#addressInput').val(data.address);
 								$('#inputCarrier').val(data.carrier);
 
+				if (!storeId) {
+					console.error('Store ID is missing.');
+					return;
+				}
 
 
 								// 自動選擇外送選項框

@@ -24,50 +24,63 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
-            var queryStore = from s in _context.Stores
-                             where s.StoreId == 1
-                             select s;
-            var store = queryStore.FirstOrDefault();
-            var queryStoreOpeningHours = from o in _context.StoreOpeningHours
-                                         where o.StoreId == 1
-                                         select new StoreOpeningHour
-                                         {
-                                             MyWeekDay = o.MyWeekDay,
-                                             StoreOpenOrNot = o.StoreOpenOrNot,
-                                             StoreOpeningTime = o.StoreOpeningTime,
-                                             StoreClosingTime = o.StoreClosingTime
-                                         };
+            if(User.Identity?.IsAuthenticated ?? false)
+            {
+                var queryStore = from s in _context.Stores
+                                 where s.StoreId == 1
+                                 select s;
+                var store = queryStore.FirstOrDefault();
+                var queryStoreOpeningHours = from o in _context.StoreOpeningHours
+                                             where o.StoreId == 1
+                                             select new StoreOpeningHour
+                                             {
+                                                 MyWeekDay = o.MyWeekDay,
+                                                 StoreOpenOrNot = o.StoreOpenOrNot,
+                                                 StoreOpeningTime = o.StoreOpeningTime,
+                                                 StoreClosingTime = o.StoreClosingTime
+                                             };
 
 
-            ViewBag.StoreOpeningHours = queryStoreOpeningHours.ToList();
+                ViewBag.StoreOpeningHours = queryStoreOpeningHours.ToList();
 
-            return View(store);
+                return View(store);
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
+            
         }
 
         public ActionResult StoreInfoEdit()
         {
-            var queryStore = from s in _context.Stores
-                             where s.StoreId == 1
-                             select s;
-            var store = queryStore.FirstOrDefault();
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var queryStore = from s in _context.Stores
+                                 where s.StoreId == 1
+                                 select s;
+                var store = queryStore.FirstOrDefault();
 
-            var queryStoreOpeningHours = from o in _context.StoreOpeningHours
-                                         where o.StoreId == 1
-                                         select new StoreOpeningHour
-                                         {
-                                             MyWeekDay = o.MyWeekDay,
-                                             StoreOpenOrNot = o.StoreOpenOrNot,
-                                             StoreOpeningTime = o.StoreOpeningTime,
-                                             StoreClosingTime = o.StoreClosingTime
-                                         };
-
-
-
-            ViewBag.StoreOpeningHours = queryStoreOpeningHours.ToList();
+                var queryStoreOpeningHours = from o in _context.StoreOpeningHours
+                                             where o.StoreId == 1
+                                             select new StoreOpeningHour
+                                             {
+                                                 MyWeekDay = o.MyWeekDay,
+                                                 StoreOpenOrNot = o.StoreOpenOrNot,
+                                                 StoreOpeningTime = o.StoreOpeningTime,
+                                                 StoreClosingTime = o.StoreClosingTime
+                                             };
 
 
 
-            return PartialView("StoreInfoEdit", store);
+                ViewBag.StoreOpeningHours = queryStoreOpeningHours.ToList();
+
+                return PartialView("StoreInfoEdit", store);
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
 
         }
 

@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Text
 @{
     ViewData["Title"] = "OrderDetails";
 }
@@ -9,6 +9,13 @@
 @section MyStyle {
     <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Manager/ManagerOrders.css" asp-append-version="true" />
+ <title>VITA-Order Details</title>
+ <link rel="icon" type="image/x-icon" href="/image/logo/logo_30x30_dark.png">
+<style>
+    .content-area{
+        height: calc(100vh - 80px);
+    }
+</style>
 }
 
 
@@ -53,13 +60,16 @@
                 <p class="fw-bold">外送地址：</p>
                 <p>@((@item.OrderInfo.OrderAddressCity != "") ? $"{item.OrderInfo.OrderAddressCity}{item.OrderInfo.OrderAddressDistrict}{item.OrderInfo.OrderAddressDetails}" : "無")</p>
             </div>
-            <div class=" pt-2">
+                <div class=" d-lg-flex pt-2">
                 <p class="fw-bold">訂購內容/數量：</p>
-                @foreach (var product in item.Products)
-                {
-                    <p>@product.ProductName x @product.Quantity</p>
-                }
-               
+                    @{
+                        var sb = new StringBuilder();
+                        foreach (var product in item.Products)
+                        {
+                            sb.Append($"{product.ProductName} x {product.Quantity}、");
+                        }
+                        @Html.Raw(sb.ToString().TrimEnd('、'))
+                    }
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">給店家留言：</p>
