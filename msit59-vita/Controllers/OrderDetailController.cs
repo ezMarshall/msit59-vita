@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using msit59_vita.Models;
 
 namespace msit59_vita.Controllers
 {
-    //  後台訂單詳細資訊頁面
-    public class OrderDetailController : Controller
-    {
+	//  後台訂單詳細資訊頁面
+	public class OrderDetailController : Controller
+	{
 		//public IActionResult Index()
 		//{
 		//    return View();
@@ -18,27 +20,141 @@ namespace msit59_vita.Controllers
 			_context = context;
 		}
 
-		
+
 
 
 		[HttpPost]
-		public IActionResult PayMentOrderDetail(int flexRadioReceipt)
+		public IActionResult PayMentOrderDetail(string flexRadioPickUp, string flexRadioReceipt, string flexRadioPay, string flexRadioPhone, string carrier, string address, string phoneNumber, string orderTime, string orderNote)
 		{
-			//訂購門市
-			//取餐人
-			//取餐方式
-			//聯絡電話
-			//----------------------
 
-			//取餐方式
+
 			//取餐時間
-			//外送要顯示取餐地址
-			//付款方式
-			//開立發票方式
+			HttpContext.Session.SetString("orderTime", orderTime);
 
-			//----------------------
-			//訂單商品明細
-			//訂單總金額
+			var inputTime = HttpContext.Session.GetString("orderTime");
+
+			ViewBag.OrderTime = inputTime;
+
+
+
+			//取餐方式
+
+			HttpContext.Session.SetString("pickupMethod", flexRadioPickUp);
+
+			var pickup = HttpContext.Session.GetString("pickupMethod");
+
+			if (pickup == "0")
+			{
+				//到店取貨
+
+				ViewBag.PickupMethod = "自取";
+
+			}
+			else if (pickup == "1")
+			{
+				ViewBag.PickupMethod = "外送";
+
+				//外送要顯示取餐地址
+				HttpContext.Session.SetString("address", address);
+
+				var inputAddress = HttpContext.Session.GetString("address");
+
+				ViewBag.Address = inputAddress;
+
+			}
+
+			//付款方式
+			HttpContext.Session.SetString("PayMethod", flexRadioPay);
+
+			var payMethod = HttpContext.Session.GetString("PayMethod");
+
+
+			if (payMethod == "0")
+			{
+				//現金付款
+
+				ViewBag.PayMethod = "現金";
+
+			}
+			else if (payMethod == "1")
+			{
+				//LINEPAY付款
+				ViewBag.PayMethod = "LINEPAY";
+			}
+
+
+
+			//開立發票方式
+			HttpContext.Session.SetString("invoiceMethod", flexRadioReceipt);
+
+			var invoice = HttpContext.Session.GetString("invoiceMethod");
+
+			//Console.WriteLine($"invoice: {invoice}");
+
+			if (invoice == "0")
+			{
+				// 不開立發票
+				ViewBag.InvoiceMethod = "本店免用統一發票";
+			}
+			else if (invoice == "1")
+			{
+				//紙本發票
+				ViewBag.InvoiceMethod = "紙本發票";
+			}
+			else if (invoice == "2")
+			{
+				//手機載具
+				ViewBag.InvoiceMethod = "手機載具";
+				HttpContext.Session.SetString("Carrier", carrier);
+
+				var inputCarrier = HttpContext.Session.GetString("Carrier");
+
+				ViewBag.Carrier = inputCarrier;
+
+			}
+
+
+			//聯絡電話
+
+			HttpContext.Session.SetString("phoneMethod", flexRadioPhone);
+
+			var phone = HttpContext.Session.GetString("phoneMethod");
+
+			//Console.WriteLine($"phone: {phone}");
+
+			HttpContext.Session.SetString("phoneNumber", phoneNumber);
+
+			var phoneNum = HttpContext.Session.GetString("phoneNumber");
+
+
+			if (phone == "0")
+			{
+				// 手機
+				ViewBag.phoneNum = phoneNumber;
+			}
+			else if (phone == "1")
+			{
+				// 市話
+				ViewBag.phoneNum = phoneNumber;
+			}
+
+
+			//備註
+
+			if (orderNote == null)
+			{
+				ViewBag.OrderNote = "無";
+			}
+			else
+			{
+				HttpContext.Session.SetString("orderNote", orderNote);
+				var inputNote = HttpContext.Session.GetString("orderNote");
+				ViewBag.OrderNote = inputNote;
+			}
+
+
+
+
 
 
 			var customer = from c in _context.Customers
@@ -70,9 +186,18 @@ namespace msit59_vita.Controllers
 						   ProductUnitsInStock = p.ProductUnitsInStock,
 					   };
 
+
+
+
 			var paymentInfo = cart.ToList();
 
 			ViewBag.PaymentInfo = paymentInfo;
+
+			var totalAmount = (int)paymentInfo.Sum(x => x.ProductUnitPrice * x.ShoppingCartQuantity);
+
+			ViewBag.TotalAmount = totalAmount;
+
+
 
 			//return Content($"flexRadioReceipt: {flexRadioReceipt}");
 			return View();

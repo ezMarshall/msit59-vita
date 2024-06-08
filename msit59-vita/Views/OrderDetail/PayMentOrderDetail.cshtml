@@ -30,30 +30,54 @@
 							<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">聯絡電話</dt>
-							<dd class="col-sm-8">0975123123</dd>
+							<dd class="col-sm-8">@ViewBag.phoneNum</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">取貨方式</dt>
-							<dd class="col-sm-8">外送</dd>
+							<dd class="col-sm-8">@ViewBag.PickupMethod</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">取餐時間</dt>
-							<dd class="col-sm-8">2024/05/06 06:20</dd>
+							<dd class="col-sm-8">@ViewBag.OrderTime</dd>
 							<hr>
-							<dt class="col-sm-4 fw-bold">取貨地址</dt>
-							<dd class="col-sm-8">南投縣草屯鎮中正路102之1號</dd>
-							<hr>
+							@if (ViewBag.PickupMethod == "外送")
+							{
+								<dt class="col-sm-4 fw-bold">取貨地址</dt>
+								<dd class="col-sm-8">@ViewBag.Address</dd>
+								<hr>
+							}							
 							<dt class="col-sm-4 fw-bold">付款方式</dt>
-							<dd class="col-sm-8">現金</dd>
+							<dd class="col-sm-8">@ViewBag.PayMethod</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">開立發票方式</dt>
-							<dd class="col-sm-8">本店免用統一發票</dd>
+							<dd class="col-sm-8">@ViewBag.InvoiceMethod @if(ViewBag.Carrier != null){@ViewBag.Carrier}</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">訂購商品明細</dt>
-							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
-							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
-							<dd class="col-sm-8">韓式豬里肌 *1 150元</dd>
+							<dd class="col-sm-8">
+								<table class="table">
+									<thead>
+										<tr>
+											<th class="py-0">商品名稱</th>
+											<th class="py-0">數量</th>
+											<th class="py-0">總價</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in paymentInfo)
+										{
+											<tr>
+												<td>@item.ProductName</td>
+												<td>@item.ShoppingCartQuantity</td>
+												<td>@((int)item.ProductUnitPrice * item.ShoppingCartQuantity)元</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</dd>
 							<hr>
 							<dt class="col-sm-4 fw-bold">應付金額</dt>
-							<dd class="col-sm-8">$150</dd>
+							<dd class="col-sm-8">$@ViewBag.TotalAmount</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">備註</dt>
+							<dd class="col-sm-8">@ViewBag.OrderNote</dd>
 							<hr>
 						</dl>
 					</div>
@@ -68,7 +92,7 @@
 				<button class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
 					<a href="javascript:void(0)" class="text-decoration-none text-black">上一步</a>
 				</button>
-				<button class="btn-next btn btn-dark fs-5 fw-bold" type="button">
+				<button class="btn-next btn btn-dark fs-5 fw-bold" type="submit">
 					<a href="javascript:void(0)"
 					   class="text-decoration-none text-white">送出訂單</a>
 				</button>

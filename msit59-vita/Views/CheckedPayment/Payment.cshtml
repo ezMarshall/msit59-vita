@@ -151,14 +151,14 @@
 					</div>
 
 					<input type="text" class="form-control" placeholder="請輸入地址" id="addressInput"
-						   readonly="readonly" data-bs-toggle="modal" data-bs-target="#addressModal"
+						   name="address" value="" readonly="readonly" data-bs-toggle="modal" data-bs-target="#addressModal"
 						   onclick="focusRadio('flexRadioPickUp2')">
 
 				</div>
 
 				<div class="order-time mb-2">
 					<div class="fs-5 fw-bold">預計取餐時間</div>
-					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
+					<input id="timeInput" name="orderTime" value="" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
 				</div>
 
 
@@ -186,7 +186,7 @@
 								   onclick="focusInput('inputCarrier')" value="2">
 							<label class="form-check-label" for="flexRadioReceipt2" onclick="handleReceiptTypeChange('paper')"
 								   data-bs-focus="inputCarrier">手機載具</label>
-							<input id="inputCarrier" class="form-control" type="text" placeholder="首位為 / ，英文字母為大寫"
+							<input id="inputCarrier" class="form-control" type="text" value="" name="carrier" placeholder="首位為 / ，英文字母為大寫"
 								   aria-label="default input carrier" onfocus="focusRadio('flexRadioReceipt2')"
 								   autocomplete="off" oninput="validateCarrier()">
 							<div id="carrierFeedback" class="invalid-feedback">請輸入有效的手機載具，首位應為 / ，英文字母需為大寫</div>
@@ -198,22 +198,22 @@
 					<div class="fs-5 fw-bold">聯絡電話</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioCellphone"
+						<input class="form-check-input" type="radio" name="flexRadioPhone" value="0" id="flexRadioCellphone"
 							   onclick="handlePhoneTypeChange('cellphone')" >
 						<label class="form-check-label" for="flexRadioCellphone"
 							   onclick="handlePhoneTypeChange('cellphone')">手機號碼</label>
-						<input id="inputCellphone" class="form-control" type="text" placeholder="請輸入手機號碼"
+						<input id="inputCellphone" class="form-control" name="phoneNumber" valur="" type="text" placeholder="請輸入手機號碼"
 							   aria-label="default input cellphone" onfocus="focusRadio('flexRadioCellphone')"
 							   oninput="validatePhone('cellphone')" autocomplete="off">
 						<div id="cellphoneFeedback" class="invalid-feedback">請輸入有效的手機號碼式</div>
 					</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioPhone"
+						<input class="form-check-input" type="radio" name="flexRadioPhone" value="1" id="flexRadioPhone"
 							   onclick="handlePhoneTypeChange('phone')">
 						<label class="form-check-label" for="flexRadioPhone"
 							   onclick="handlePhoneTypeChange('phone')">市話</label>
-						<input id="inputPhone" class="form-control" type="text" placeholder="請輸入市話"
+						<input id="inputPhone" class="form-control" name="phoneNumber" valur="" type="text" placeholder="請輸入市話"
 							   aria-label="default input phone" onfocus="focusRadio('flexRadioPhone')"
 							   oninput="validatePhone('phone')" autocomplete="off">
 						<div id="phoneFeedback" class="invalid-feedback">請輸入有效的市話</div>
@@ -224,7 +224,7 @@
 
 				<div class="order-textarea">
 					<div class="fs-5 fw-bold">給店家留言 <span class="fs-6 fw-light text-muted">(最大長度250個字)</div>
-					<textarea class="form-control mb-4" id="orderFormControlTextarea1" rows="10"></textarea>
+					<textarea class="form-control mb-4" id="orderFormControlTextarea1" name="orderNote" value="" rows="10"></textarea>
 				</div>
 
 
