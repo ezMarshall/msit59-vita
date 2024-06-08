@@ -1026,7 +1026,7 @@
 			}
 
 
-			generateMinutes();
+			
 
 			var hoursList = document.getElementById('hours');
 			var minutesList = document.getElementById('minutes');
@@ -1081,6 +1081,8 @@
 				var selectedMinute = document.querySelector('.minutes .active').textContent;
 				timePickerInput.value = selectedHour + ':' + selectedMinute;
 			}
+
+			generateMinutes();
 		}
 
 
