@@ -197,10 +197,14 @@ namespace msit59_vita.Controllers
 
 			ViewBag.TotalAmount = totalAmount;
 
-
-
-			//return Content($"flexRadioReceipt: {flexRadioReceipt}");
 			return View();
 		}
+
+
+		[HttpPost]
+		public IActionResult ConfirmOrder()
+		{
+			return Json(new { success = true, message = "訂單已成功完成" });
+		}	
 	}
 }
