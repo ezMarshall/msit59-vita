@@ -31,7 +31,7 @@
 								<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
 								<hr>
 								<dt class="col-sm-4 fw-bold">聯絡電話</dt>
-							<dd class="col-sm-8" data-phone-num="@ViewBag.phoneNum">@ViewBag.phoneNum</dd>
+							<dd class="col-sm-8">@ViewBag.phoneNum</dd>
 								<hr>
 								<dt class="col-sm-4 fw-bold">取貨方式</dt>
 								<dd class="col-sm-8">@ViewBag.PickupMethod</dd>
@@ -127,6 +127,12 @@
 						if (data.success) {
 							alert('訂單已成功送出');
 							window.location.href = '/CurrentOrder';
+							var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
+							connection.start().then(function () {
+								connection.invoke("MakeOrders", "訂單已成功送出");
+							}).catch(function (err) {
+								return console.error(err.toString());
+							});
 						} else {
 							alert('訂單送出失敗，請重新確認');
 						}

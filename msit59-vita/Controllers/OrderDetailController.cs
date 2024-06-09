@@ -121,7 +121,7 @@ namespace msit59_vita.Controllers
 
 			var phone = HttpContext.Session.GetString("phoneMethod");
 
-			//Console.WriteLine($"phone: {phone}");
+			//Console.WriteLine($"/*phone*/: {phone}");
 
 			HttpContext.Session.SetString("phoneNumber", phoneNumber);
 
