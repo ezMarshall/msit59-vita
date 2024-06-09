@@ -25,7 +25,7 @@ namespace msit59_vita.Controllers
 
 
 		[HttpPost]
-		public IActionResult PayMentOrderDetail(string flexRadioPickUp, string flexRadioReceipt, string flexRadioPay, string flexRadioPhone, string carrier, string address, string phoneNumber, string orderTime, string orderNote)
+		public IActionResult PayMentOrderDetail(string flexRadioPickUp, string flexRadioReceipt, string flexRadioPay, string flexRadioPhone, string carrier, string address, string cellPhoneNumber, string phoneNumber, string orderTime, string orderNote)
 		{
 
 
@@ -121,21 +121,25 @@ namespace msit59_vita.Controllers
 
 			var phone = HttpContext.Session.GetString("phoneMethod");
 
-			//Console.WriteLine($"/*phone*/: {phone}");
+			Console.WriteLine($"/*phone*/: {phone}");
 
-			HttpContext.Session.SetString("phoneNumber", phoneNumber);
-
-			var phoneNum = HttpContext.Session.GetString("phoneNumber");
 
 
 			if (phone == "0")
 			{
 				// 手機
-				ViewBag.phoneNum = phoneNumber;
+
+				HttpContext.Session.SetString("cellPhoneNumber", cellPhoneNumber);
+
+				var phoneNum = HttpContext.Session.GetString("cellPhoneNumber");
+				ViewBag.phoneNum = cellPhoneNumber;
 			}
 			else if (phone == "1")
 			{
 				// 市話
+				HttpContext.Session.SetString("phoneNumber", phoneNumber);
+
+				var phoneNum = HttpContext.Session.GetString("phoneNumber");
 				ViewBag.phoneNum = phoneNumber;
 			}
 
@@ -206,6 +210,8 @@ namespace msit59_vita.Controllers
 		public IActionResult ConfirmOrder()
 		{
 			var phoneNum = HttpContext.Session.GetString("phoneNumber");
+			var cellPhoneNumber = HttpContext.Session.GetString("cellPhoneNumber");
+			var phoneMethod = HttpContext.Session.GetString("phoneMethod");
 			var orderTime = HttpContext.Session.GetString("orderTime");
 			var pickupMethod = HttpContext.Session.GetString("pickupMethod");
 			var payMethod = HttpContext.Session.GetString("PayMethod");
@@ -213,6 +219,9 @@ namespace msit59_vita.Controllers
 			var carrier = HttpContext.Session.GetString("Carrier");
 			var address = HttpContext.Session.GetString("address");
 			var orderNote = HttpContext.Session.GetString("orderNote");
+
+
+			var phone = phoneMethod == "0" ? cellPhoneNumber : phoneNum;
 
 
 			var customer = from c in _context.Customers
@@ -293,7 +302,7 @@ namespace msit59_vita.Controllers
 					OrderTime = currentDateTime,
 					PredictedArrivalTime = predictedArrivalTime,
 					OrderDeliveryVia = orderDeliveryVia,
-					OrderPhoneNumber = phoneNum,
+					OrderPhoneNumber = phone,
 					OrderStoreMemo = orderNote,
 					OrderPayment = orderPayment,
 					OrderUniformInvoiceVia = orderInvoice,
@@ -320,7 +329,7 @@ namespace msit59_vita.Controllers
 				}
 			}
 
-			
+
 
 
 			//刪除購物車
