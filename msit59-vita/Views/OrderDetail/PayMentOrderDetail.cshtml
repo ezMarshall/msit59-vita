@@ -6,7 +6,7 @@
 
 <section class="container-lg">
 
-	<form action="/OrderDetail/ConfirmOrder" method="post">
+@* 	<form action="/OrderDetail/ConfirmOrder" method="post"> *@
 		<div class="order mt-3 row mb-3">
 			<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
 				<div class="step active col-2 text-center fw-bold ">
@@ -31,7 +31,7 @@
 								<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
 								<hr>
 								<dt class="col-sm-4 fw-bold">聯絡電話</dt>
-								<dd class="col-sm-8">@ViewBag.phoneNum</dd>
+							<dd class="col-sm-8" data-phone-num="@ViewBag.phoneNum">@ViewBag.phoneNum</dd>
 								<hr>
 								<dt class="col-sm-4 fw-bold">取貨方式</dt>
 								<dd class="col-sm-8">@ViewBag.PickupMethod</dd>
@@ -104,8 +104,8 @@
 					</button>
 				</div>
 			</div>
-
-	</form>
+@* 
+	</form> *@
 
 </section>
 
@@ -119,58 +119,22 @@
 
 		$(document).ready(function () {
 			$('#confirm-order').click(function () {
-				const paymentInfo = JSON.parse('@Html.Raw(Json.Serialize(paymentInfo))');
-				const phoneNum = '@ViewBag.phoneNum';
-				const PickupMethod = '@ViewBag.PickupMethod';
-				const OrderTime = '@ViewBag.OrderTime';
-				const Address = '@ViewBag.Address';
-				const PayMethod = '@ViewBag.PayMethod';
-				const InvoiceMethod = '@ViewBag.InvoiceMethod';
-				const Carrier = '@ViewBag.Carrier';
-				const TotalAmount = '@ViewBag.TotalAmount';
-				const OrderNote = '@ViewBag.OrderNote';
-
-
-				console.log(paymentInfo);
-				console.log(phoneNum);
-				console.log(PickupMethod);
-				console.log(OrderTime);
-				console.log(Address);
-				console.log(PayMethod);
-				console.log(InvoiceMethod);
-				console.log(Carrier);
-				console.log(TotalAmount);
-				console.log(OrderNote);
-
-				// $.ajax({
-				// 	url: '/OrderDetail/ConfirmOrder',
-				// 	type: 'POST',
-				// 	contentType: 'application/json',
-				// 	data: JSON.stringify({
-				// 		paymentInfo: paymentInfo,
-				// 		phoneNum: phoneNum,
-				// 		PickupMethod: PickupMethod,
-				// 		OrderTime: OrderTime,
-				// 		Address: Address,
-				// 		PayMethod: PayMethod,
-				// 		InvoiceMethod: InvoiceMethod,
-				// 		Carrier: Carrier,
-				// 		TotalAmount: TotalAmount,
-				// 		OrderNote: OrderNote
-				// 	}),
-				// 	success: function (data) {
-				// 		console.log(data);
-				// 		if (data.success) {
-				// 			alert('訂單已成功送出');
-				// 			window.location.href = '/OrderDetail/OrderDetail';
-				// 		} else {
-				// 			alert('訂單送出失敗，請重新確認');
-				// 		}
-				// 	},
-				// 	error: function (xhr, ajaxOptions, thrownError) {
-				// 		alert('訂單送出失敗，請重新確認');
-				// 	}
-				// });
+				$.ajax({
+					url: '/OrderDetail/ConfirmOrder',
+					type: 'POST',
+					success: function (data) {
+						console.log(data);
+						if (data.success) {
+							alert('訂單已成功送出');
+							window.location.href = '/CurrentOrder';
+						} else {
+							alert('訂單送出失敗，請重新確認');
+						}
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert('訂單送出失敗，請重新確認');
+					}
+				});
 			});
 		});
 	</script>
