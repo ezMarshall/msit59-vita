@@ -24,18 +24,8 @@ namespace msit59_vita.Controllers
         { 
             return View(); 
         }
-
-        /*
-         * 經使用者id取得資料
-         * 
-         */
-        public IActionResult Index()
+        public object GetUserData()
         {
-            //未登入 倒回首頁
-            if (!User.Identity?.IsAuthenticated?? false)
-            {
-                return Redirect("/");
-            }
 
             //取得使用者ID
             var queryCustomerID = from c in _context.Customers
@@ -58,8 +48,21 @@ namespace msit59_vita.Controllers
                                         c.CustomerAddressDetails,
                                         c.CustomerAddressDistrict
                                     };
+            return queryCustomerData.First();
+        }
 
-            return View(queryCustomerData.First());
+        /*
+         * 經使用者id取得資料
+         * 
+         */
+        public IActionResult Index()
+        {
+            //未登入 倒回首頁
+            if (!User.Identity?.IsAuthenticated?? false)
+            {
+                return Redirect("/");
+            }
+            return View(GetUserData());
         }
 
         /*
@@ -73,12 +76,16 @@ namespace msit59_vita.Controllers
             Customer customer = _context.Customers.Find(id);
             VitaUser user = await _userManager.FindByEmailAsync(CustomerEmail);
             var result = await _signInManager.PasswordSignInAsync(user, originPassword, false, false);
+
             //密碼不一樣
             if (!result.Succeeded)
             {
                 Console.WriteLine("密碼錯誤");
-
-                return Redirect("/FavoriteStores");
+                ViewBag.Invalid = new
+                {
+                    originPassword="密碼錯誤"
+                };
+                return View("index", GetUserData());
             }
 
             await _userManager.ChangePasswordAsync(user, originPassword, String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword.Trim() : CustomerPassword);
