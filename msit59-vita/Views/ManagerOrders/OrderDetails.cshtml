@@ -53,23 +53,30 @@
                 <p>@item.OrderInfo.CustomerName</p>
             </div>
             <div class="d-lg-flex pt-2">
+                <p class="fw-bold">訂餐時間：</p>
+                <p>@item.OrderInfo.OrderTime.ToString("yyyy/MM/dd HH:mm")</p>
+            </div>
+            <div class="d-lg-flex pt-2">
                 <p class="fw-bold">預計取餐時間：</p>
                 <p>@item.OrderInfo.PredictedArrivalTime.ToString("yyyy/MM/dd HH:mm")</p>
             </div>
-            <div class="d-lg-flex pt-2">
-                <p class="fw-bold">外送地址：</p>
-                <p>@((@item.OrderInfo.OrderAddressCity != "") ? $"{item.OrderInfo.OrderAddressCity}{item.OrderInfo.OrderAddressDistrict}{item.OrderInfo.OrderAddressDetails}" : "無")</p>
-            </div>
-                <div class=" d-lg-flex pt-2">
-                <p class="fw-bold">訂購內容/數量：</p>
-                    @{
-                        var sb = new StringBuilder();
-                        foreach (var product in item.Products)
-                        {
-                            sb.Append($"{product.ProductName} x {product.Quantity}、");
-                        }
-                        @Html.Raw(sb.ToString().TrimEnd('、'))
+            @if (!string.IsNullOrEmpty(item.OrderInfo.OrderAddressCity) || !string.IsNullOrEmpty(item.OrderInfo.OrderAddressDistrict) || !string.IsNullOrEmpty(item.OrderInfo.OrderAddressDetails))
+            {
+                <div class="d-lg-flex pt-2">
+                    <p class="fw-bold">外送地址：</p>
+                    <p>@((@item.OrderInfo.OrderAddressCity != "") ? $"{item.OrderInfo.OrderAddressCity}{item.OrderInfo.OrderAddressDistrict}{item.OrderInfo.OrderAddressDetails}" : "")</p>
+                </div>
+            }
+            <div class=" d-lg-flex pt-2">
+            <p class="fw-bold">訂購內容/數量：</p>
+                @{
+                    var sb = new StringBuilder();
+                    foreach (var product in item.Products)
+                    {
+                        sb.Append($"{product.ProductName} * {product.Quantity}、");
                     }
+                    @Html.Raw(sb.ToString().TrimEnd('、'))
+                }
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">給店家留言：</p>
@@ -82,13 +89,13 @@
                     {
                         0 => "不開立發票",
                         1 => "紙本發票",
-                        2 => "手機載具",
+                            2 => $"手機載具 - {item.OrderInfo.OrderEinvoiceNumber}",
                     })
                 </p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">付款方式：</p>
-                <p>@((item.OrderInfo.OrderPayment) ? "linepay" : "現金")</p>
+                    <p>@((item.OrderInfo.OrderPayment) ? "LINE PAY" : "現金")</p>
             </div>
             <div class="d-lg-flex pt-2">
                 <p class="fw-bold">訂單金額：</p>

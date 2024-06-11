@@ -144,7 +144,7 @@ namespace msit59_vita.Controllers
             // 根據搜尋字串過濾
             if (!string.IsNullOrEmpty(searchString))
             {
-                queryReviews = queryReviews.Where(r => r.ReviewContent.Contains(searchString) || r.CustomerName.Contains(searchString));
+                queryReviews = queryReviews.Where(r => r.ProductName.Contains(searchString) || r.CustomerName.Contains(searchString));
             }
 
             // 根據回覆狀態過濾

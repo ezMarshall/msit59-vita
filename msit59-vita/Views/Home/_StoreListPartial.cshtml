@@ -2,65 +2,71 @@
 @model List<StoreSearchViewModel>
 
 <section class="container-lg mx-auto py-3">
-
-    @if (Model.Count() > 0)
+    @if(ViewBag.isSearched ?? false)
     {
-        <p>共顯示 @Model.Count() 家餐廳</p>
-        <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
-
-        @foreach(var store in Model)
+        @if (Model.Count() > 0)
         {
-            <div class="col">
-                <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-storeid="@store.StoreId">
-                    <div class="d-flex flex-column position-relative">
+            <p>共顯示 @Model.Count() 家餐廳</p>
+            <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
 
-                            <div class="position-relative home-div-img @(store.StoreOpening ? "" : "opening-soon")">
-                            <img src="~/@store.StoreImage" class="home-store-img rounded-start" alt="商品圖">
-                            <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                        </div>
-                        <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                            <div class="d-flex justify-content-between">
-                                <h2 class="card-title h6 d-inline-block align-top m-0">@store.StoreName</h2>
-                                <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore" data-storeid="@store.StoreId">
-                                    @if (store.isFavorite)
+            @foreach(var store in Model)
+            {
+                <div class="col">
+                    <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-storeid="@store.StoreId">
+                        <div class="d-flex flex-column position-relative">
+
+                                <div class="position-relative home-div-img @(store.StoreOpening ? "" : "opening-soon")">
+                                <img src="~/@store.StoreImage" class="home-store-img rounded-start" alt="商品圖">
+                                <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
+                            </div>
+                            <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
+                                <div class="d-flex justify-content-between">
+                                    <h2 class="card-title h6 d-inline-block align-top m-0">@store.StoreName</h2>
+                                    <span href="#" class="d-block" id="homeFavoriteStore" data-storeid="@store.StoreId">
+                                        @if (store.isFavorite)
+                                        {
+                                            <i class="fa-regular fa-heart fs-4 text-danger"></i>
+                                            <i class="fa-solid fa-heart fs-4 text-danger home-favorite-checked"></i>
+                                        } else
+                                        {
+                                            <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
+                                            <i class="fa-solid fa-heart fs-4 text-danger"></i>
+                                        }
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 @(store.averageRating*20)%, #F2F2E7 @(store.averageRating*20)% 100%)"></div>
+                                    <span class="align-middle text-dark">@store.averageRating</span>
+                                    <span class="align-middle link-dark">
+                                        (@store.totalReviews 則評論)
+                                    </span>
+                                </div>
+                                <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>@store.StoreAddress</p>
+                                <p class="card-text mt-1">
+                                    <i class="fa-solid fa-clock"></i>
+                                    @store.StoreOpeningTime
+                                </p>
+                                <ul class="list-unstyled home-product-img-list mb-0">
+                                    @for(int i = 0; i <4; i++)
                                     {
-                                        <i class="fa-regular fa-heart fs-4 text-danger"></i>
-                                        <i class="fa-solid fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                    } else
-                                    {
-                                        <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                        <i class="fa-solid fa-heart fs-4 text-danger"></i>
+                                        <li><img src="~/@store.ProductImageList[i]" class="home-product-img" alt="商品圖 @i+1"></li>
                                     }
-                                </a>
+                                </ul>
                             </div>
-                            <div>
-                                <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 @(store.averageRating*20)%, #F2F2E7 @(store.averageRating*20)% 100%)"></div>
-                                <span class="align-middle text-dark">@store.averageRating</span>
-                                <span class="align-middle link-dark">
-                                    (@store.totalReviews 則評論)
-                                </span>
-                            </div>
-                            <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>@store.StoreAddress</p>
-                            <p class="card-text mt-1">
-                                <i class="fa-solid fa-clock"></i>
-                                @store.StoreOpeningTime
-                            </p>
-                            <ul class="list-unstyled home-product-img-list mb-0">
-                                @for(int i = 0; i <4; i++)
-                                {
-                                    <li><img src="~/@store.ProductImageList[i]" class="home-product-img" alt="商品圖 @i+1"></li>
-                                }
-                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
         
-            <!-- order-status-stop -->
-        </div>
-    } else
+                <!-- order-status-stop -->
+            </div>
+        } else
+        {
+            <p class="text-dark fw-bold fs-6 text-center opacity-75">五公里內無合作健康餐</p>
+        }
+    }
+    else
     {
-        <p class="text-dark fw-bold fs-6 text-center opacity-75">五公里內無合作健康餐</p>
+        <p class="text-dark fw-bold fs-6 text-center opacity-75">尚未查詢，請先輸入地址或餐廳</p>
     }
 </section>

@@ -205,9 +205,11 @@
             updatePaginationButtons(parseInt($('#hfCurrentPageIndex').val()));
         });
         function PagerClick(currentPage) {
+
             if ($('#searchString').val() || $('#startDate').val() || $('#endDate').val() || $('#replyStatus').val()) {
                 // 如果有篩選條件，使用篩選函數
                 filterTable(currentPage);
+
             } else {
                 // 否則使用原有的分頁函數
                 $.ajax({
@@ -251,23 +253,21 @@
                     $link.text(i);
                 }
             } else {
-                if (currentPage == 1) {
-                    setPageBox(1, 1, true);
-                    setPageBox(2, 2, false);
-                    setPageBox(3, 3, false);
-                } else if (currentPage == pageCount) {
-                    setPageBox(1, pageCount - 2, false);
-                    setPageBox(2, pageCount - 1, false);
-                    setPageBox(3, pageCount, true);
-                } else {
-                    setPageBox(1, currentPage - 1, false);
-                    setPageBox(2, currentPage, true);
-                    setPageBox(3, currentPage + 1, false);
+                // 總頁數大於 3 頁
+                var startPage = Math.max(1, currentPage - 1);
+                var endPage = Math.min(pageCount, currentPage + 1);
+
+                for (var i = 1; i <= 3; i++) {
+                    var pageNumber = startPage + i - 1;
+                    var $btn = $('#pageBox' + i);
+                    var $link = $('#pageBox' + i + '-link');
+                    $btn.toggleClass('active', currentPage == pageNumber);
+                    $btn.toggleClass('disabled', pageNumber < 1 || pageNumber > pageCount);
+                    $link.attr('href', 'javascript:PagerClick(' + pageNumber + ')');
+                    $link.text(pageNumber);
                 }
             }
-        }
-
-        function setPageBox(boxIndex, pageNumber, isActive) {
+        } function setPageBox(boxIndex, pageNumber, isActive) {
             var $btn = $('#pageBox' + boxIndex);
             var $link = $('#pageBox' + boxIndex + '-link');
             $btn.toggleClass('active', isActive);
@@ -293,6 +293,7 @@
 
 
         function filterTable(currentPage) {
+
             var endNextDay = "";
             if (endDateInput.value) {
                 var endDate = new Date(endDateInput.value);
@@ -319,14 +320,11 @@
 
                     // 從服務器響應中提取總頁數和當前頁碼
                     var pageCount = $(result).find('#hfPageCount').val();
-
-                    if (isNaN(pageCount) ||  pageCount <= 1) {
-                        $('.pagination').addClass("d-none");
-                    } else {
-                        $('.pagination').removeClass("d-none");
-                    }
-
                     var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+
+                    // 重置分頁按鈕狀態
+                    $('.page-item').removeClass('active disabled');
+
 
                     $("#hfPageCount").val(pageCount);
                     $("#hfCurrentPageIndex").val(currentPageIndex);
