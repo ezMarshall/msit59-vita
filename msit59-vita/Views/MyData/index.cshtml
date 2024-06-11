@@ -4,9 +4,9 @@
     string CustomerName = Model.CustomerName;
     string CustomerEmail = Model.CustomerEmail;
     string CustomerNickName = Model.CustomerNickName ?? defaultValue;
-    string CustomerEinvoiceNumber = Model.CustomerEinvoiceNumber.Trim() ?? defaultValue;
-    string CustomerCellPhone = Model.CustomerCellPhone.Trim() ?? defaultValue;
-    string CustomerLocalPhone = Model.CustomerLocalPhone.Trim() ?? defaultValue;
+    string CustomerEinvoiceNumber = Model.CustomerEinvoiceNumber?.Trim() ?? defaultValue;
+    string CustomerCellPhone = Model.CustomerCellPhone?.Trim() ?? defaultValue;
+    string CustomerLocalPhone = Model.CustomerLocalPhone?.Trim() ?? defaultValue;
     string CustomerAddressCity = Model.CustomerAddressCity ?? defaultValue;
     string CustomerAddressDistrict = Model.CustomerAddressDistrict ?? defaultValue;
     string CustomerAddressDetails = Model.CustomerAddressDetails ?? defaultValue;
