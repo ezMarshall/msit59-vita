@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using msit59_vita.Models;
 
 namespace msit59_vita.Controllers
@@ -6,11 +7,15 @@ namespace msit59_vita.Controllers
     public class MyDataController : Controller
     {
         private VitaContext _context;
+        private readonly SignInManager<VitaUser> _signInManager;
+        private readonly UserManager<VitaUser> _userManager;
 
         private int _customerId = 31;
 
-        public MyDataController(VitaContext context)
+        public MyDataController(VitaContext context, SignInManager<VitaUser> signInManager, UserManager<VitaUser> userManager)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;
         }
 
@@ -62,23 +67,23 @@ namespace msit59_vita.Controllers
          * 
          * 
          */
-        public IActionResult Edit(int id,string originPassword,string CustomerPassword, string CustomerName,string CustomerLocalPhone,string CustomerEmail,string CustomerEinvoiceNumber,string CustomerNickName,string CustomerCellPhone,string CustomerAddressCity,string CustomerAddressDetails,string CustomerAddressDistrict)
+        public async Task<IActionResult> Edit(int id,string originPassword,string CustomerPassword, string CustomerName,string CustomerLocalPhone,string CustomerEmail,string CustomerEinvoiceNumber,string CustomerNickName,string CustomerCellPhone,string CustomerAddressCity,string CustomerAddressDetails,string CustomerAddressDistrict)
         {
 
             Customer customer = _context.Customers.Find(id);
-            //沒有該id
-            if (customer == null)
-            {
-
-                return View();
-            }
+            VitaUser user = await _userManager.FindByEmailAsync(CustomerEmail);
+            var result = await _signInManager.PasswordSignInAsync(user, originPassword, false, false);
             //密碼不一樣
-            if (customer.CustomerPassword != originPassword)
+            if (!result.Succeeded)
             {
-                return View();
+                Console.WriteLine("密碼錯誤");
+
+                return Redirect("/FavoriteStores");
             }
+
+            await _userManager.ChangePasswordAsync(user, originPassword, String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword.Trim() : CustomerPassword);
             //必填項目
-            customer.CustomerPassword = String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword : CustomerPassword; 
+            customer.CustomerPassword = String.IsNullOrEmpty(CustomerPassword) ? customer.CustomerPassword.Trim() : CustomerPassword;
             customer.CustomerName = String.IsNullOrEmpty(CustomerName) ? customer.CustomerName: CustomerName;
             //customer.CustomerNickName = String.IsNullOrEmpty(CustomerNickName) ? customer.CustomerNickName : CustomerNickName;
             customer.CustomerNickName = CustomerNickName;
