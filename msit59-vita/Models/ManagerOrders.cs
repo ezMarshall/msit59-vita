@@ -19,6 +19,7 @@
             public DateTime? OrderFinishedTime { get; set; }
             public int CustomerId { get; set; }
 
+            public int StoreId { get; set; }
 
         }
     }
