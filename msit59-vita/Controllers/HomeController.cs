@@ -23,20 +23,20 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
-            // §PÂ_¬O§_µn¤J
+            // åˆ¤æ–·æ˜¯å¦ç™»å…¥
             if(User.Identity?.IsAuthenticated ?? false)
             {
                 string myEmail = User.Identity?.Name ?? "";
                 var Customer = _context.Customers
                     .Where(c => c.CustomerEmail == myEmail)
                     .FirstOrDefault();
-
+                    
                 ViewBag.Address = Customer.CustomerAddressCity ?? "" + Customer.CustomerAddressDistrict + Customer.CustomerAddressDetails;
 
-                // ¬O§_¦³¦s±`¥Î¦a§}
+                // æ˜¯å¦æœ‰å­˜å¸¸ç”¨åœ°å€
                 if (Customer.CustomerAddressMemo != null)
                 {
-                    // ¦³ªº¸Ü®Ú¾Ú±`¥Î¦a§}·j´M
+                    // æœ‰çš„è©±æ ¹æ“šå¸¸ç”¨åœ°å€æœå°‹
                     string[] Memo = Customer.CustomerAddressMemo.Split(',');
                     double result1, result2, lat, lng;
                     if (double.TryParse(Memo[0], out result1) && double.TryParse(Memo[1], out result2))
@@ -103,7 +103,7 @@ namespace msit59_vita.Controllers
                 var openingQuery = _context.StoreOpeningHours.Where(o => o.StoreId == item.StoreId && o.MyWeekDay == weekDate).FirstOrDefault();
                 var currentTime = DateTime.Now.TimeOfDay;
 
-                // ¶ZÂ÷¤­¤½¨½¥H¤º
+                // è·é›¢äº”å…¬é‡Œä»¥å…§
                 string[] Memo = item.StoreAddressMemo.Split(",");
                 double result1, result2, storelat, storelng;
                 double Dis = 99999;
@@ -114,7 +114,7 @@ namespace msit59_vita.Controllers
                     Dis = (int)new GeoCoordinate(storelat, storelng).GetDistanceTo(coord);
                 }
 
-                // ¤µ¤éµLÀç·~||¤w¸gÃö¤F||¶ZÂ÷¶W¹L¤­¤½¨½
+                // ä»Šæ—¥ç„¡ç‡Ÿæ¥­||å·²ç¶“é—œäº†||è·é›¢è¶…éäº”å…¬é‡Œ
                 bool StoreOpenToday = openingQuery.StoreOpenOrNot ?? false;
                 bool StoreClosing = (openingQuery.StoreClosingTime.HasValue && currentTime > openingQuery.StoreClosingTime.Value.ToTimeSpan());
                 if (!StoreOpenToday || StoreClosing || Dis > 5000)
@@ -122,21 +122,21 @@ namespace msit59_vita.Controllers
                     continue;
                 }
 
-                // ¬P¯Å
+                // æ˜Ÿç´š
                 var averageReviewRating = from s in _context.Stores
                                           join o in _context.Orders on s.StoreId equals o.StoreId
                                           join r in _context.Reviews on o.OrderId equals r.OrderId
                                           where s.StoreId == item.StoreId && r.ReviewRating != null
                                           select (decimal?)(r.ReviewRating);
                 Decimal averageRating = Math.Round(averageReviewRating.Average() ?? 0, 1);
-                // µû½×¼Æ
+                // è©•è«–æ•¸
                 var reviewCount = from s in _context.Stores
                                   join o in _context.Orders on s.StoreId equals o.StoreId
                                   join r in _context.Reviews on o.OrderId equals r.OrderId
                                   where s.StoreId == item.StoreId
                                   select r;
                 int totalReviews = reviewCount.Count();
-                // ¦¬ÂÃ
+                // æ”¶è—
                 bool isFavorite = false;
                 if (User.Identity?.IsAuthenticated ?? false)
                 {
@@ -145,7 +145,7 @@ namespace msit59_vita.Controllers
                     isFavorite = favoriteStoreChecker.FavoriteStore(customerId, item.StoreId);
                 }
 
-                // °Ó«~¹Ï
+                // å•†å“åœ–
                 List<string> ProductImageList = new List<string>();
                 var Products = _context.Products.Where(p => p.ProductImage != "").ToList();
                 var RandomProducts = Products.OrderBy(x => Guid.NewGuid()).Take(4).ToList();
