@@ -110,12 +110,17 @@
 </section>
 
 @section Scripts {
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script>
 		$(document).ready(function () {
 			$('#btn-prev').click(function () {
 				window.location.href = '/CheckedPayment/Payment';
 			});
 		});
+		var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
+		connection.start(console.log("連線成功"))
+			.catch(err => console.error(err.toString()));
+
 
 		$(document).ready(function () {
 			$('#confirm-order').click(function () {
@@ -126,13 +131,15 @@
 						console.log(data);
 						if (data.success) {
 							alert('訂單已成功送出');
-							window.location.href = '/CurrentOrder';
-							var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-							connection.start().then(function () {
-								connection.invoke("MakeOrders", "訂單已成功送出");
-							}).catch(function (err) {
+							
+							
+							connection.invoke("MakeOrders").catch(function (err) {
 								return console.error(err.toString());
 							});
+							
+							
+
+							window.location.href = '/CurrentOrder';
 						} else {
 							alert('訂單送出失敗，請重新確認');
 						}

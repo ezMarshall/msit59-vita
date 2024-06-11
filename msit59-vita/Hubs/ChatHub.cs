@@ -14,9 +14,9 @@ namespace SignalRChat.Hubs
             await Clients.All.SendAsync("StatusChange", CustomerId, OrderId, CustomerOrderStatus);
         }
 
-        public async Task MakeOrders(string OrderStatus)
+        public async Task MakeOrders()
         {
-            await Clients.All.SendAsync("NewOrders", OrderStatus);
+            await Clients.All.SendAsync("NewOrders");
         }
     }
 }
