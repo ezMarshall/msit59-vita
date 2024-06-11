@@ -11,15 +11,11 @@
 }
 
 @section BreadCrumb {
-    <div class="col-lg-10 col-sm-9 bg-light  ps-0 pe-0">
-        <ol class="breadcrumb pt-3">
-            <li class="breadcrumb-item" aria-current="page">
-                <a href="./ManagerHome.html"
-                   class="text-dark text-decoration-none fw-bolder">首頁</a>
-            </li>
-            <li class="breadcrumb-item">訂單管理</li>
-        </ol>
-    </div>
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="~/ManagerHome/index"
+           class="text-dark text-decoration-none fw-bolder">首頁</a>
+    </li>
+    <li class="breadcrumb-item">訂單管理</li>
 }
 
 @section Content{
@@ -359,41 +355,6 @@
             }
         });
 
-        // function filterTable(currentPage) {
-        //     var endNextDay = "";
-        //     if (endDateInput.value) {
-        //         var endDate = new Date(endDateInput.value);
-        //         endDate.setDate(endDate.getDate() + 1);
-        //         endNextDay = endDate.toISOString().slice(0, 10);
-        //     }
-
-        //     var searchString = $('#searchString').val();
-        //     var startDate = $('#startDate').val();
-        //     var endDate = endNextDay;
-        //     var deliveryVia = $('#deliveryVia').val();
-        //     var orderStatus = $('#orderStatus').val();
-
-        //     $.ajax({
-        //         url: '/ManagerOrders/FilterOrders',
-        //         type: 'POST',
-        //         data: {
-        //             searchString: searchString,
-        //             startDate: startDate,
-        //             endDate: endDate,
-        //             deliveryVia: deliveryVia,
-        //             orderStatus: orderStatus,
-        //             currentPage: currentPage
-        //         },
-        //         success: function (result) {
-        //             $('#TableProducts').html(result);
-        //             // 重新設置事件監聽器，因為表格內容已更新
-        //             setupEventListeners();
-        //         },
-        //         error: function () {
-        //             alert('發生錯誤，請稍後再試');
-        //         }
-        //     });
-        // }
         // update order status start end
 
         
@@ -441,14 +402,11 @@
                     var pageCount = $(result).find('#hfPageCount').val();
                     var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
 
+                    // 重置分頁按鈕狀態
+                    $('.page-item').removeClass('active disabled');
+
                     $("#hfPageCount").val(pageCount);
                     $("#hfCurrentPageIndex").val(currentPageIndex);
-
-                    if (isNaN(pageCount) || pageCount <= 1) {
-                        $('.pagination').addClass("d-none");
-                    } else {
-                        $('.pagination').removeClass("d-none");
-                    }
 
                     updatePaginationButtons(parseInt(currentPageIndex));
                 },
@@ -457,7 +415,6 @@
                 }
             });
         }
-
         // row click
         // 將事件監聽綁到tableproducts上 避免ajax換頁之後row的點擊效果失效
         document.addEventListener('DOMContentLoaded', function () {
