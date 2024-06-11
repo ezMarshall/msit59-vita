@@ -28,7 +28,7 @@ public partial class Customer
 
     public string? CustomerEinvoiceNumber { get; set; }
 
-    public string CustomerPassword { get; set; } = null!;
+    public string? CustomerPassword { get; set; }
 
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 

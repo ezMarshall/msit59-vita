@@ -23,20 +23,19 @@ namespace msit59_vita.Controllers
 
         public IActionResult Index()
         {
-            //GetStorList(24.150746063617376, 120.65106781177566);
-            //return View(_nowStoreList);
-            
             // 判斷是否登入
             if(User.Identity?.IsAuthenticated ?? false)
             {
+                string myEmail = User.Identity?.Name ?? "";
                 var Customer = _context.Customers
-                    .Where(c => c.CustomerEmail == User.Identity.Name)
+                    .Where(c => c.CustomerEmail == myEmail)
                     .FirstOrDefault();
-                ViewBag.Address = (Customer.CustomerAddressCity + Customer.CustomerAddressDistrict + Customer.CustomerAddressDetails) ?? "";
+
+                ViewBag.Address = Customer.CustomerAddressCity ?? "" + Customer.CustomerAddressDistrict + Customer.CustomerAddressDetails;
 
                 // 是否有存常用地址
-                if (Customer.CustomerAddressMemo != null ) { 
-
+                if (Customer.CustomerAddressMemo != null)
+                {
                     // 有的話根據常用地址搜尋
                     string[] Memo = Customer.CustomerAddressMemo.Split(',');
                     double result1, result2, lat, lng;
@@ -49,13 +48,39 @@ namespace msit59_vita.Controllers
                     }
                 }
             }
-			return View(_nowStoreList);
+            return View(_nowStoreList);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult ToggleFavorite(int StoreId)
+        {
+            if (!(User.Identity?.IsAuthenticated ?? false))
+            {
+                return Json(new { success = false });
+            }
+            int CustomerId = _context.Customers.Where(c => c.CustomerEmail == User.Identity.Name).FirstOrDefault()!.CustomerId;
+            IsFavoriteStore FavoriteChecker = new IsFavoriteStore(_context);
+            bool isFavorite = FavoriteChecker.FavoriteStore(CustomerId, StoreId);
+            if (isFavorite)
+            {
+                var favorite = _context.Favorites.FirstOrDefault(f => f.CustomerId == CustomerId && f.StoreId == StoreId);
+                if (favorite != null)
+                {
+                    _context.Favorites.Remove(favorite);
+                }
+            }
+            else
+            {
+                _context.Favorites.Add(new Favorite { CustomerId = CustomerId, StoreId = StoreId });
+            }
+            _context.SaveChanges();
+            return Json(new { success = true });
         }
 
         [HttpPost]
