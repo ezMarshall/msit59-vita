@@ -31,7 +31,7 @@ namespace msit59_vita.Controllers
             {
                 var Customer = _context.Customers
                     .Where(c => c.CustomerEmail == User.Identity.Name)
-                    .FirstOrDefault();
+                    .FirstOrDefault();              
                 ViewBag.Address = (Customer.CustomerAddressCity + Customer.CustomerAddressDistrict + Customer.CustomerAddressDetails) ?? "";
 
                 // 是否有存常用地址

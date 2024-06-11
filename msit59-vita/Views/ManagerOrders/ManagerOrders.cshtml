@@ -338,6 +338,7 @@
             // signalR 新進訂單時reload
             connection.on("NewOrders", function () {
                 location.reload()
+                console.log("NewOrders111111111111");
             })
 
             function reloadOrdersTable() {
@@ -390,6 +391,7 @@
                 orderStatus: orderStatusSelect.value,
                 currentPage: currentPage // 添加當前頁碼
             };
+
 
             $.ajax({
                 url: '/ManagerOrders/FilterOrders',
