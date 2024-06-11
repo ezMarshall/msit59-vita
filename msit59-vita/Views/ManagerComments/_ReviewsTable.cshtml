@@ -40,7 +40,7 @@
                             data-review-content="@item.ReviewContent"
                             data-review-id="@item.ReviewId"
                             data-store-reply-content="@(item.StoreReplyContent ?? "")">
-                        回覆
+                        @((item.StoreReplyContent!=null)?"查看":"回覆")
                     </button>
                 </td>
                 <td>

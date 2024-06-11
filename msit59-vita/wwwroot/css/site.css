@@ -12070,8 +12070,8 @@ body {
     }
 
 .faq-banner {
-    height: 500px;
-    background-image: url("../img/home_banner.png");
+    height: 300px;
+    background-image: url("../image/Common/banner.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -12105,8 +12105,8 @@ body {
 }
 
 .join-us-banner {
-    height: 500px;
-    background-image: url("../img/home_banner.png");
+    height: 300px;
+    background-image: url("../image/Common/banner.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -12122,26 +12122,26 @@ body {
 }
 
 .join-img-1 {
-    background-image: url("../img/join_1.svg");
+    background-image: url("../image/JoinUs/join_1.svg");
 }
 
 .join-img-2 {
-    background-image: url("../img/join_2.svg");
+    background-image: url("../image/JoinUs/join_2.svg");
 }
 
 .join-img-3 {
-    background-image: url("../img/join_3.svg");
+    background-image: url("../image/JoinUs/join_3.svg");
 }
 
 .join_store_bg {
-    background-image: url("../img/food_1.png");
+    background-image: url("../image/JoinUs/food_1.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
 
 .join-contact-bg {
-    background-image: url("../img/join_contact_bg.png");
+    background-image: url("../image/JoinUs/join_contact_bg.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: left center;
