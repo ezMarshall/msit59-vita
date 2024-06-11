@@ -384,29 +384,29 @@
 
 			orderProductItems.forEach(function (item) {
 				var orderProductItemsHtml = `
-															<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
-																<div class="product-info col-6">
-																	<div class="product-name fw-bold">
-																		<div class="fs-5">${item.productName}</div>
-																		<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
-																	</div>
-																</div>
-																<div class="col-6 d-flex justify-content-around align-items-center">
-																	<div class="input-group w-50">
-																		<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-																			<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
-																		</button>
-																		<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="${item.quantity}"
-																				id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-																		<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
-																			<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
-																		</button>
-																	</div>
-																	<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
-																	<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
-																</div>
-															</div>
-																		`;
+																			<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
+																				<div class="product-info col-6">
+																					<div class="product-name fw-bold">
+																						<div class="fs-5">${item.productName}</div>
+																						<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+																					</div>
+																				</div>
+																				<div class="col-6 d-flex justify-content-around align-items-center">
+																					<div class="input-group w-50">
+																						<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+																							<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
+																						</button>
+																						<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="${item.quantity}"
+																								id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+																						<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
+																							<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
+																						</button>
+																					</div>
+																					<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
+																					<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
+																				</div>
+																			</div>
+																						`;
 				orderProductList.append(orderProductItemsHtml);
 			});
 
@@ -932,7 +932,9 @@
 			// 根據當前時間生成可選取的小時項目，並和商家營業時間做比較，顯示可選取的時間
 			if (currentOpenHour < storeOpenTimeDate.getHours()) {
 				currentOpenHour = storeOpenTimeDate.getHours();
-			} else {
+			} else if (currentOpenHour === storeOpenTimeDate.getHours()) {
+				currentOpenHour = currentMinute > 55 ? storeOpenTimeDate.getHours() + 1 : storeOpenTimeDate.getHours();
+			}else {
 				currentOpenHour = currentOpenHour
 			}
 
@@ -955,10 +957,10 @@
 			// 動態生成分鐘選項
 			// 根據當前時間生成可選取的分鐘項目，並和商家營業時間做比較，顯示可選取的時間
 			var minutesList = document.getElementById('minutes');
-			for (var i = currentMinute - (currentMinute % 5); i <= 55; i += 5) {
+			for (var i = Math.ceil(currentMinute / 5) * 5; i <= 55; i += 5) {
 				var minuteItem = document.createElement('li');
 				minuteItem.classList.add('list-group-item');
-				if (i === currentMinute - (currentMinute % 5)) {
+				if (i === (Math.ceil(currentMinute / 5) * 5)) {
 					minuteItem.classList.add('active');
 				}
 				minuteItem.textContent = i < 10 ? '0' + i : i;
@@ -998,7 +1000,7 @@
 				// 根據用戶選擇的小時確定分鐘範圍
 				var startMinute, endMinute;
 				if (selectedHour === storeOpenTimeHours) {
-					startMinute = storeOpenTimeMinutes - (storeOpenTimeMinutes % 5);
+					startMinute = currentMinute > storeOpenTimeMinutes ? Math.ceil(currentMinute / 5) * 5 : storeOpenTimeMinutes - (storeOpenTimeMinutes % 5);
 					endMinute = 55;
 
 				} else if (selectedHour === storeCloseTimeHours) {
@@ -1006,7 +1008,7 @@
 					endMinute = storeCloseTimeMinutes;
 
 				} else if (selectedHour === currentOpenHour) {
-					startMinute = currentMinute - (currentMinute % 5);
+					startMinute = Math.ceil(currentMinute / 5) * 5;
 					endMinute = 55;
 				} else {
 					startMinute = 0;
@@ -1017,7 +1019,7 @@
 				for (var i = startMinute; i <= endMinute; i += 5) {
 					var minuteItem = document.createElement('li');
 					minuteItem.classList.add('list-group-item');
-					if (i === currentMinute - (currentMinute % 5)) {
+					if (i === (Math.ceil(currentMinute / 5) * 5)) {
 						minuteItem.classList.add('active');
 					}
 					minuteItem.textContent = i < 10 ? '0' + i : i;
