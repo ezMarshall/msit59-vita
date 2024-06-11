@@ -39,8 +39,10 @@ namespace msit59_vita.Controllers
             int maxRows = 10; //每頁幾列'
             var queryOrders = from o in _context.Orders
                               orderby o.CustomerOrderStatus, o.OrderTime descending
+                              where o.StoreId == 1
                               select new OrderViewModel
                               {
+                                  StoreId = o.StoreId,
                                   OrderId = o.OrderId,
                                   OrderTime = o.OrderTime,
                                   OrderPayment=o.OrderPayment,
@@ -86,15 +88,18 @@ namespace msit59_vita.Controllers
             }
             var queryOrders = from o in _context.Orders
                               orderby o.CustomerOrderStatus,o.OrderTime descending
+                              where o.StoreId == 1
                               select new OrderViewModel
                               {
+                                  StoreId = o.StoreId, 
                                   OrderId = o.OrderId,
                                   OrderTime = o.OrderTime,
                                   OrderPayment = o.OrderPayment,
                                   OrderDeliveryVia = o.OrderDeliveryVia,
                                   CustomerOrderStatus = o.CustomerOrderStatus,
                                   OrderFinishedTime= o.OrderFinishedTime,
-                              };
+                              }
+                              ;
 
             // 根據搜尋字串過濾
             if (!string.IsNullOrEmpty(searchString))
@@ -220,6 +225,7 @@ namespace msit59_vita.Controllers
                                     where o.OrderId == id
                                     select new
                                     {
+                                        OrderEinvoiceNumber = o.OrderEinvoiceNumber,
                                         OrderId = o.OrderId,
                                         CustomerOrderStatus = o.CustomerOrderStatus,
                                         OrderDeliveryVia = o.OrderDeliveryVia,
