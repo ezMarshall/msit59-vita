@@ -23,7 +23,7 @@
                   <th class="align-middle" scope="row">@counter</th>
                   <td class="align-middle" scope="row">@item.OrderId</td>
                   <td class="align-middle">@item.OrderTime.ToString("yyyy/MM/dd HH:mm")</td>
-                  <td class="align-middle">@((item.OrderPayment) ? "linepay" : "現金")</td>
+                  <td class="align-middle">@((item.OrderPayment) ? "LINE PAY" : "現金")</td>
                   <td class="align-middle">@((item.OrderDeliveryVia) ? "外送" : "自取")</td>
                   <td class="align-middle">
                       @(item.CustomerOrderStatus switch
