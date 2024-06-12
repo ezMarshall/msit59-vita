@@ -67,7 +67,7 @@ namespace msit59_vita.Controllers
                              {
                                  o.OrderId,
                                  o.Store.StoreId,
-                                 OrderPayment = o.OrderPayment ? "現金":"LINE PAY",
+                                 OrderPayment = o.OrderPayment ? "LINE PAY":"現金",
                                  o.Store.StoreName,
                                  o.Store.StoreImage,
                                  OrderAddress= o.OrderAddressCity + o.OrderAddressDistrict + o.OrderAddressDetails,
