@@ -46,7 +46,7 @@
 @await Html.PartialAsync("_AlertPartial");
 
 @section Scripts{
-    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])&region=TW&language=zh-TW" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])" async defer></script>
     <script>
         $(document).ready(function () {
             // 地址搜尋
@@ -58,7 +58,7 @@
                 // 創建地理編碼服務實例
                 const geocoder = new google.maps.Geocoder();
                 // 地點名稱或地址
-                let address = $('#StoreSearch').val();
+                let address = $('#HomeStoreSearch').val();
 
                 // 發送地理編碼請求
                 geocoder.geocode({ 'address': address }, function (results, status) {
@@ -72,7 +72,6 @@
                             url: '/Home/StoreSearch',
                             data: data,
                             success: function (response) {
-                                console.log(1);
                                 $("#StoreListContainer").html(response);
                                 bindEvents();
                                 saveSearchState(data, scrollPos);
@@ -115,7 +114,6 @@
 
         // partial view事件綁定
         function bindEvents(){
-            console.log(2);
             // 收藏店家 & 跳轉頁面
             $('.home-store').each(function (index, item) {
                 $(item).on('click', function (e) {
