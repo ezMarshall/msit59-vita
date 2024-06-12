@@ -66,6 +66,7 @@ namespace msit59_vita.Controllers
                                     join s in _context.Stores on o.StoreId equals s.StoreId
                                     join so in _context.StoreOpeningHours on o.StoreId equals so.StoreId
                                     where o.CustomerId == _customerId
+                                    orderby o.FavoriteId descending
                                     select new
                                     {                                        
                                         so.Store.StoreId,
