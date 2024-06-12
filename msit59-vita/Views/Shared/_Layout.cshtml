@@ -80,14 +80,13 @@
 
 					<li>
 						<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
-						   class="position-relative ms-4 d-none d-lg-block">
+						   class="position-relative ms-4 d-none d-lg-block show-cart-link">
 							<i class="fa-solid fa-cart-shopping fs-3 nav-icon"></i>
 							<span class="d-block rounded-circle position-absolute translate-middle top-0 start-100 bg-info text-center text-light fw-bold d-none"
 								  id="cartNum"></span>
 						</a>
 
-						<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"
-						   class="d-block d-lg-none text-decoration-none p-2">購物車</a>
+						<a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart" class="d-block d-lg-none text-decoration-none p-2 show-cart-link">購物車</a>
 
 					</li>
 					<!-- 購物車 end -->
@@ -174,26 +173,28 @@
 
 	<!-- 購物車頁面開始 -->
 
-	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-		<div class="offcanvas-header justify-content-end">
-			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
-					aria-label="Close"></button>
-		</div>
-		<div id="qqaa" class="offcanvas-body cart-list d-flex flex-column justify-content-between">
-
-			<div class="cart-container overflow-auto">
+		<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+			<div class="offcanvas-header justify-content-end">
+				<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+						aria-label="Close"></button>
 			</div>
+			<div class="offcanvas-body cart-list d-flex flex-column justify-content-between">
+				<div class="cart-container overflow-auto">
+				</div>
 
 
-			<div class="total-price pt-3">
-				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+				<div class="total-price pt-3">
+					<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
 
-				<div class="d-grid col-10 mx-auto">
-					<button id="checkoutBtn" class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+					<div class="d-grid col-10 mx-auto">
+						<button id="checkoutBtn" class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	
+
+	
 
 
 	<!-- 購物車頁面結束 -->

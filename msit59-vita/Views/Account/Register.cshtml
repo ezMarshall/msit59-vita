@@ -10,8 +10,8 @@
         <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
             <form class="needs-validation" novalidate action="/Account/Register" method="post">
                 <div class="mb-3">
-                    <label for="CustomerName" class="form-label is-required ps-3 mb-1">姓名</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerName" name="CustomerName" required>
+                    <label for="CustomerName" class="form-label is-required ps-3 mb-1" id="RegisterCustomerNameLabel">姓名</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="RegisterCustomerName" name="CustomerName" required>
                     <div class="invalid-feedback ps-3" data-valmsg-for="CustomerName" data-valmsg-replace="true">
                         <span id="CustomerName-error">請輸入姓名</span>
                     </div>
@@ -20,18 +20,18 @@
                         {
                             foreach (var error in ViewBag.ModelState["CustomerName"])
                             {
-                                <span class="text-danger ps-3">@error</span>
+                                    <span class="text-danger ps-3">@error</span>
                             }
                         }
                     }
                 </div>
                 <div class="mb-3">
-                    <label for="CustomerNickName" class="form-label ps-3 mb-1">暱稱</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerNickName" name="CustomerNickName">
+                    <label for="CustomerNickName" class="form-label ps-3 mb-1" id="RegisterCustomerNickNameLabel">暱稱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="RegisterCustomerNickName" name="CustomerNickName">
                 </div>
                 <div class="mb-3">
-                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required>
+                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1" id="RegisterCustomerEmailLabel">電子信箱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="RegisterCustomerEmail" name="CustomerEmail" required>
                     <span id="EmailAvail"></span>
                     <div class="invalid-feedback ps-3">
                         請輸入有效的電子信箱
@@ -41,14 +41,14 @@
                         {
                             foreach (var error in ViewBag.ModelState["CustomerEmail"])
                             {
-                                <span class="text-danger ps-3">@error</span>
+                                    <span class="text-danger ps-3">@error</span>
                             }
                         }
                     }
                 </div>
                 <div class="mb-3">
-                    <label for="CustomerCellPhone" class="form-label ps-3 mb-1">手機號碼</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerCellPhone" name="CustomerCellPhone">
+                    <label for="CustomerCellPhone" class="form-label ps-3 mb-1" id="RegisterCustomerCellPhoneLabel">手機號碼</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="RegisterCustomerCellPhone" name="CustomerCellPhone">
                     <div class="invalid-feedback ps-3">
                         請輸入正確格式
                     </div>
@@ -57,14 +57,14 @@
                         {
                             foreach (var error in ViewBag.ModelState["CustomerCellPhone"])
                             {
-                                <span class="text-danger ps-3">@error</span>
+                                    <span class="text-danger ps-3">@error</span>
                             }
                         }
                     }
                 </div>
                 <div class="mb-3 position-relative">
-                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1">密碼</label>
-                    <input type="password" class="form-control text-dark rounded-pill" id="CustomerPassword" name="CustomerPassword" required>
+                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1" id="RegisterCustomerPasswordLabel">密碼</label>
+                    <input type="password" class="form-control text-dark rounded-pill" id="RegisterCustomerPassword" name="CustomerPassword" required>
                     <div class="invalid-feedback ps-3">
                         請輸入正確格式
                     </div>
@@ -73,7 +73,7 @@
                         {
                             foreach (var error in ViewBag.ModelState["CustomerPassword"])
                             {
-                                <span class="text-danger ps-3">@error</span>
+                                    <span class="text-danger ps-3">@error</span>
                             }
                         }
                     }
@@ -81,8 +81,8 @@
                     <p class="psw-memo ps-3 mb-0">至少有一個大寫英文、小寫英文及數字。</p>
                 </div>
                 <div class="mb-3 position-relative">
-                    <label for="ConfirmPassword" class="form-label is-required ps-3 mb-1">確認密碼</label>
-                    <input type="password" class="form-control text-dark rounded-pill" id="ConfirmPassword" name="ConfirmPassword" required>
+                    <label for="ConfirmPassword" class="form-label is-required ps-3 mb-1" id="RegisterConfirmPasswordLabel">確認密碼</label>
+                    <input type="password" class="form-control text-dark rounded-pill" id="RegisterConfirmPassword" name="ConfirmPassword" required>
                     <div class="invalid-feedback ps-3">
                         密碼不符
                     </div>
@@ -171,6 +171,32 @@
                 }
 
                 form.addClass('was-validated');
+            })
+
+            // DEMO
+            $('#RegisterCustomerNameLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterCustomerName').val('張綺容');
+            })
+            $('#RegisterCustomerNickNameLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterCustomerNickName').val('小容');
+            })
+            $('#RegisterCustomerEmailLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterCustomerEmail').val('7ronggg@gmail.com');
+            })
+            $('#RegisterCustomerCellPhoneLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterCustomerCellPhone').val('0933123456');
+            })
+            $('#RegisterCustomerPasswordLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterCustomerPassword').val('Zz123456');
+            })
+            $('#RegisterConfirmPasswordLabel').click(function (e) {
+                e.preventDefault();
+                $('#RegisterConfirmPassword').val('Zz123456');
             })
         })
     </script>

@@ -32,7 +32,7 @@ namespace msit59_vita.Controllers
 
 
 			var products = _context.Products
-							.Where(x => x.StoreId == id)
+							.Where(x => x.StoreId == id && x.ProductOnSell)
 							.ToList();
 
 			ViewData["Products"] = products;

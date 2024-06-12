@@ -83,6 +83,9 @@
 .btn:focus, .btn:active {
     box-shadow: none;
 }
+.disabled {
+    opacity: 0.6;
+}
 
 
 /*# sourceMappingURL=manage_comments.css.map */
