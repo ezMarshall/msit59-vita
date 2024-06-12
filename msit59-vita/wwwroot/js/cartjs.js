@@ -45,7 +45,7 @@ $(document).ready(function () {
                 if (window.location.pathname === "/CheckedPayment/Payment") {
                     getOrderCart();
                 }
-               
+
             },
             error: function () {
                 alert('發生錯誤');
@@ -66,7 +66,12 @@ function getCart() {
                 return;
             }
             //console.log(data);
-            renderCartItems(data.cart);
+            //renderCartItems(data.cart);
+
+            if (data.success) {
+                // 已登入,可以顯示購物車
+                renderCartItems(data.cart);
+            }
 
         },
         error: function (xhr, status, error) {
@@ -79,9 +84,14 @@ function renderCartItems(cartItems) {
     var cartContainer = $(".cart-container");
     cartContainer.empty();
 
-    cartItems.forEach(function (item) {
-        var productImage = item.productImage ? item.productImage : 'image/Common/300x300_default.png';
-        var cartItemHtml = `
+    if (cartItems.length === 0) {
+        // 購物車為空,顯示訊息
+        var emptyCartMessage = '<div class="fs-5 fw-bold text-center text-dark">沒有任何商品在購物車!</div>';
+        cartContainer.append(emptyCartMessage);
+    } else {
+        cartItems.forEach(function (item) {
+            var productImage = item.productImage ? item.productImage : 'image/Common/300x300_default.png';
+            var cartItemHtml = `
 							<div class="cart-item d-flex justify-content-between pb-3" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
 								<img src="/${productImage}" class="cart-image img-fluid rounded-2 me-2" alt="食物圖片">
 								<div class="cart-details">
@@ -109,8 +119,9 @@ function renderCartItems(cartItems) {
 								</div>
 							</div>
 						`;
-        cartContainer.append(cartItemHtml);
-    });
+            cartContainer.append(cartItemHtml);
+        });
+    }
 
     calculateTotalPrice();
     countCartItems();
@@ -192,7 +203,7 @@ function adjustValue(button, increment, cartItemId, maxStock) {
             if (window.location.pathname === "/CheckedPayment/Payment") {
                 getOrderCart();
             }
-            
+
 
         },
         error: function () {
@@ -236,11 +247,12 @@ function deleteCartItem(cartItemId) {
                 $(`.cart-item[data-id=${cartItemId}]`).remove();
                 calculateTotalPrice(); // 成功更新後重新獲取購物車資料
                 countCartItems();
+                getCart();
 
                 if (window.location.pathname === "/CheckedPayment/Payment") {
                     getOrderCart();
                 }
-               
+
                 //console.log("Item deleted successfully.");
             } else {
                 console.error("Error: ", data.message);

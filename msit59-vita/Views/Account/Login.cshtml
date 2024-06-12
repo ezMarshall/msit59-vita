@@ -10,17 +10,17 @@
         <div class="p-5 bg-light border border-2 border-success rounded-3 col-12 col-sm-8">
             <form class="needs-validation" novalidate action="/Account/Login" method="post" id="LoginForm">
                 <div class="mb-3">
-                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1">電子信箱</label>
-                    <input type="text" class="form-control text-dark rounded-pill" id="CustomerEmail" name="CustomerEmail" required />
+                    <label for="CustomerEmail" class="form-label is-required ps-3 mb-1" id="LoginCustomerEmailLabel">電子信箱</label>
+                    <input type="text" class="form-control text-dark rounded-pill" id="LoginCustomerEmail" name="CustomerEmail" required />
                     <div class="invalid-feedback ps-3">
                         請輸入電子信箱
                     </div>
                 </div>
                 <div class="mb-3 position-relative">
-                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1">密碼</label>
+                    <label for="CustomerPassword" class="form-label is-required ps-3 mb-1" id="LoginCustomerPasswordLabel">密碼</label>
                     <a href="javascriot:void(0)" class="link-dark position-absolute end-0" data-bs-toggle="modal"
                        data-bs-target="#modalForgetPwd">忘記密碼</a>
-                    <input type="password" class="form-control text-dark rounded-pill" id="CustomerPassword"
+                    <input type="password" class="form-control text-dark rounded-pill" id="LoginCustomerPassword"
                            name="CustomerPassword" required />
                     <div class="invalid-feedback ps-3">
                         請輸入密碼
@@ -92,6 +92,21 @@
 
                 form.addClass('was-validated');
             })
+
+            // DEMO
+            $('#LoginCustomerEmailLabel').click(function (e) {
+                e.preventDefault();
+                $('#LoginCustomerEmail').val('777meng@gmail.com');
+            })
+            $('#LoginCustomerPasswordLabel').click(function (e) {
+                e.preventDefault();
+                $('#LoginCustomerPassword').val('Xyz789Pqr');
+            })
+            $('#ForgetPwdEmailLabel').click(function (e) {
+                e.preventDefault();
+                $('#ForgetPwdEmail').val('7ronggg@gmail.com');
+            })
+
         })
     </script>
 }
