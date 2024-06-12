@@ -89,6 +89,21 @@
                 });
             })
 
+            // 精選推薦
+            $('#recommendBtn').on('click',function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: '/Home/SortRating',
+                    success: function (response) {
+                        $("#StoreListContainer").html(response);
+                    },
+                    error: function () {
+                        alert("出現未預期錯誤，請稍後重試");
+                    }
+                })
+            })
+
             bindEvents();
         })
 
@@ -143,8 +158,8 @@
                 $.ajax({
                     url: '/Home/StoreSearch',
                     data: { data: data },
-                    success: function (res) {
-                        $("#StoreListContainer").html(res);
+                    success: function (response) {
+                        $("#StoreListContainer").html(response);
                         $(window).scrollTop(scrollPos);
                     }
                 });
