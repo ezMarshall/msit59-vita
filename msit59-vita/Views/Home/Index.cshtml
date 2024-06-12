@@ -13,10 +13,10 @@
         <div class="col-12 col-md-6">
         <h2 class="fw-bold mx-3 text-primary text-shadow text-center text-md-start">預約附近健康餐</h2>
             <form class="bg-light rounded-3 p-4" action="/Home/StoreSearch" method="post" id="StoreSearchForm">
-                <label for="StoreSearch" class="form-label ps-3 mb-2">
+                <label for="StoreSearch" class="form-label ps-3 mb-2" id="HomeStoreSearchLabel">
                     在哪裡附近
                 </label> 
-                <input type="text" name="StoreSearch" id="StoreSearch" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4"
+                <input type="text" name="StoreSearch" id="HomeStoreSearch" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4"
                        value=@ViewBag.Address>
                 <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill w-100 border-0" id="bannerSearchBtn">開始尋找美食</button>
             </form>
@@ -105,6 +105,12 @@
             })
 
             bindEvents();
+
+            // DEMO
+            $('#HomeStoreSearchLabel').click(function (e) {
+                e.preventDefault();
+                $('#HomeStoreSearch').val('公益路51號');
+            })
         })
 
         // partial view事件綁定
