@@ -394,7 +394,7 @@ namespace msit59_vita.Controllers
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
 
                 // 月每日營收、訂單數趨勢圖
-                var monthlysalesperday = (from o in _context.
+                var monthlysalesperday = (from o in _context.Orders
                                           join od in _context.OrderDetails on o.OrderId equals od.OrderId
                                           where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
                                           select new
