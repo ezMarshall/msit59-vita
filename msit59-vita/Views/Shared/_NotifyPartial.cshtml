@@ -1,0 +1,40 @@
+﻿@using msit59_vita.Models.ViewModels
+@model List<NotifyViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (NotifyViewModel message in Model)
+    {
+        <li class="mb-3 position-relative @(message.MessageStatus ? "":"unread")">
+            @switch (message.MessageContent)
+            {
+                @* 1: 製作中
+                2: 配送中/等待自取
+                3: 已完成
+                4: 退單	 *@
+                case 1:
+                    <h4 class="fs-5">訂單製作中</h4>
+                    <p class="fs-6 mb-0 notify-content">訂單 <span class="text-success">@message.OrderId</span> 的餐點製作中。店家已經開始製作美味又健康的餐點啦～</p>
+                    break;
+                case 2:
+                    <h4 class="fs-5">訂單@(message.DeliveryVia ? "配送中" : "等待自取")</h4>
+                    <p class="fs-6 mb-0 notify-content">
+                        訂單 <span class="text-success">@message.OrderId</span>
+                        @(message.DeliveryVia
+                            ? "的餐點配送中。快到了！肚子再撐一下～並請隨時注意外送夥伴的來電呦！"
+                            : "的餐點已經做好囉～為求美味新鮮，請盡快取餐呦！")
+                    </p>
+                    break;
+                case 3:
+                    <h4 class="fs-5">訂單已完成</h4>
+                    <p class="fs-6 mb-0 notify-content">訂單 <span class="text-success">@message.OrderId</span> 已完成。好吃嗎？好吃嗎？歡迎到評論區留下您寶貴的反饋喔！</p>
+                    break;
+                default:
+                    <h4 class="fs-5">訂單已退單</h4>
+                    <p class="fs-6 mb-0 notify-content">訂單 <span class="text-success">@message.OrderId</span> 已退單。店家太忙了，暫時無法製作訂單，歡迎看看其他美味健康餐！</p>
+                    break;
+            }
+            <p class="mb-0 notify-time mt-2">@message.MessageInformedTime.ToString("yyyy-MM-dd HH:mm")</p>
+        </li>
+    }
+}
