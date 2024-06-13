@@ -184,7 +184,7 @@ namespace msit59_vita.Controllers
                     // 檢查庫存量是否足夠
                     if (product.ProductUnitsInStock < detail.Quantity)
                     {
-                        // 處理庫存不足的情況，例如返回錯誤訊息
+                        // 處理庫存不足的情況
                         return BadRequest("庫存不足");
                     }
 
