@@ -153,12 +153,15 @@
 </section>
  
 @section Scripts {
-
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script>
 		let baseLoginPayUrl = '/api/LinePay/';
 		let transactionId = "2024060602134460110";
 		let orderId = "1717601209796";
 
+		var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
+		connection.start(console.log("連線成功"))
+			.catch(err => console.error(err.toString()));
 		function initOrder() {
 
 			$.ajax({
@@ -167,7 +170,7 @@
 				success: function (data) {
 					console.log(data);
 					if (data.success) {
-						alert('訂單已成功送出');
+						alert('LinePay 付款完成,即將回到當前訂單頁面');
 
 
 						connection.invoke("MakeOrders").catch(function (err) {
@@ -204,7 +207,6 @@
 						$("#paymentStatus").text("交易狀態 : 失敗");
 						return
 					}
-
 					initOrder();
 					$("#paymentStatus").text("交易狀態 : 成功");
 					//todo將資料存到db

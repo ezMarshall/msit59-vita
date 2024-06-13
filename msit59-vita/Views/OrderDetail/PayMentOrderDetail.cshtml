@@ -150,6 +150,7 @@
 					//todo 後續linepay流程
 					if (res.returnCode === "0000") {
 						// initOrder();
+						//todo 存入regKey
 						setTimeout(x => window.location = res.info.paymentUrl.web, 500);
 ;						
 					}
