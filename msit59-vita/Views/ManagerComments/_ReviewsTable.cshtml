@@ -44,8 +44,8 @@
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target=@($"#accordion-{counter}") aria-expanded="false" aria-controls="accordion-1">
-                        <i class="fa-solid fa-chevron-down"></i>
+                    <button class="btn btn-accordion" data-bs-toggle="collapse" data-bs-target="#accordion-@(counter)" aria-expanded="false" aria-controls="accordion-@(counter)" id="chevron-btn-@(counter)">
+                        <i class="fa-solid fa-chevron-down" id="chevron-icon-@(counter)"></i>
                     </button>
                 </td>
             </tr>
