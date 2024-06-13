@@ -161,7 +161,7 @@ namespace msit59_vita.Controllers
             return PartialView("_OrdersTable", viewModel);
         }
 
-        // 更改訂單狀態
+        // 更改訂單狀態 & 寫進通知 & 扣除商品庫存
         [HttpPost]
         public IActionResult ChangeOrderStatus(int orderId, string action)
         {
