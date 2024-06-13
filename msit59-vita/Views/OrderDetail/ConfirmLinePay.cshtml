@@ -1,0 +1,225 @@
+﻿@{
+	ViewData["Title"] = "LinePay付款";
+	// ViewData["Title"] = "會員資料";
+	// var paymentInfo = ViewBag.PaymentInfo;
+	// ViewData["Title"] = "LinePay付款";
+}
+
+
+<section class="container-lg">
+
+	<body>
+
+		<div class="topnav">
+			<a href="https://7838-114-37-157-213.jp.ngrok.io/login.html">Line Login</a>
+			<a href="https://7838-114-37-157-213.jp.ngrok.io/profile.html">User Profile</a>
+			<a href="https://7838-114-37-157-213.jp.ngrok.io/products.html">Line Pay</a>
+		</div>
+		<center>
+			<table>
+				<thead>
+					<tr>
+						<th colspan="2"> 測試商品 </th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="2"><img src="https://static.accupass.com/org/2011051025162614811630.jpg"></td>
+					</tr>
+					<tr>
+						<td colspan="2"> 價格 : 1999 </td>
+					</tr>
+					<tr>
+						<td colspan="2"> 購買數量 : 2 </td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: right;"> 總金額 : 3998 </td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2"><button onclick="confirmPayment('@(ViewBag.transactionId)','@(ViewBag.orderId)')"> 確認付款</button></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="Container">
+				<a id="paymentStatus">交易狀態 : 交易已授權，等待確認<a>
+			</div>
+		</center>
+
+		<!-- 最上方的 bar -->
+	</body>
+
+	@* 	<form action="/OrderDetail/ConfirmOrder" method="post"> *@
+	@* <div class="order mt-3 row mb-3">
+		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
+				<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+			</div>
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">2</div>
+				<div class="fs-6 fw-bold text-break">確認結帳</div>
+			</div>
+		</div>
+		<div class="order-form row bg-white rounded-2 col-9 mx-auto pt-4 px-5 mb-3">
+
+			<div class="row d-flex justify-content-center py-4">
+				<div class="col-md-8">
+					<div class="fs-5">
+						<dl class="row">
+							<dt class="col-sm-4 fw-bold">訂購門市</dt>
+							<dd class="col-sm-8" id="store-name">@paymentInfo[0].StoreName</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取餐人</dt>
+							<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">聯絡電話</dt>
+							<dd class="col-sm-8">@ViewBag.phoneNum</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取貨方式</dt>
+							<dd class="col-sm-8">@ViewBag.PickupMethod</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">取餐時間</dt>
+							<dd class="col-sm-8">@ViewBag.OrderTime</dd>
+							<hr>
+							@if (ViewBag.PickupMethod == "外送")
+							{
+								<dt class="col-sm-4 fw-bold">取貨地址</dt>
+								<dd class="col-sm-8">@ViewBag.Address</dd>
+								<hr>
+							}
+							<dt class="col-sm-4 fw-bold">付款方式</dt>
+							<dd class="col-sm-8" id="PayMethod">@ViewBag.PayMethod</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">開立發票方式</dt>
+							<dd class="col-sm-8">
+								@ViewBag.InvoiceMethod @if (ViewBag.Carrier != null)
+								{
+									@ViewBag.Carrier
+								}
+							</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">訂購商品明細</dt>
+							<dd class="col-sm-8">
+								<table class="table">
+									<thead>
+										<tr>
+											<th class="py-0 ">商品名稱</th>
+											<th class="py-0">數量</th>
+											<th class="py-0">總價</th>
+										</tr>
+									</thead>
+									<tbody id="product-detail">
+										@foreach (var item in paymentInfo)
+										{
+											<tr>
+												<td class="product-name">@item.ProductName</td>
+												<td>@item.ShoppingCartQuantity</td>
+												<td>$@((int)item.ProductUnitPrice * item.ShoppingCartQuantity)</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">應付金額</dt>
+							<dd class="col-sm-8">$@ViewBag.TotalAmount</dd>
+							<hr>
+							<dt class="col-sm-4 fw-bold">備註</dt>
+							<dd class="col-sm-8">@ViewBag.OrderNote</dd>
+							<hr>
+						</dl>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row mb-3 mx-auto w-75">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button id="btn-prev" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)" class="text-decoration-none text-black">上一步</a>
+				</button>
+				<button id="confirm-order" class="btn-next btn btn-dark fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-white">送出訂單</a>
+				</button>
+			</div>
+		</div>
+		@*
+		</form> *@
+
+</section>
+ 
+@section Scripts {
+
+	<script>
+		let baseLoginPayUrl = '/api/LinePay/';
+		let transactionId = "2024060602134460110";
+		let orderId = "1717601209796";
+
+		function initOrder() {
+
+			$.ajax({
+				url: '/OrderDetail/ConfirmOrder',
+				type: 'POST',
+				success: function (data) {
+					console.log(data);
+					if (data.success) {
+						alert('訂單已成功送出');
+
+
+						connection.invoke("MakeOrders").catch(function (err) {
+							return console.error(err.toString());
+						});
+
+
+						// window.location.href = '/CurrentOrder';
+					} else {
+						alert('訂單送出失敗，請重新確認');
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert('訂單送出失敗，請重新確認');
+				}
+			});
+		}
+
+		function confirmPayment(transactionId, orderId) {
+			// 交易訂單假資料
+			payment = {
+				amount: @(ViewBag.TotalAmount),
+				currency: "TWD",
+			};
+			//  送出確認交易
+			$.post({
+				url: baseLoginPayUrl + `Confirm?transactionId=${transactionId}&orderId=${orderId}`,
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify(payment),
+				success: (res) => {
+					console.log(res);
+					if (res.returnCode !== "0000") {
+						$("#paymentStatus").text("交易狀態 : 失敗");
+						return
+					}
+
+					initOrder();
+					$("#paymentStatus").text("交易狀態 : 成功");
+					//todo將資料存到db
+
+
+					setTimeout(() => {
+					    window.location = "/CurrentOrder";
+					        }, 2000);
+				},
+				error: (err) => {
+					console.log("[err]");
+
+					console.log(err);
+				}
+			})
+		}
+	</script>
+}
