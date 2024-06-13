@@ -85,12 +85,9 @@ namespace msit59_vita.Controllers
 
 
         }
-            else
-            {
-                return Redirect("/ManagerLogin");
-    }
+    
 
-}
+
 
         public IActionResult CategoryEdit(int CategoryId, string CategoryName)
         {
@@ -488,6 +485,6 @@ namespace msit59_vita.Controllers
             return viewModel;
         }
     }
-
+    
 
 }
