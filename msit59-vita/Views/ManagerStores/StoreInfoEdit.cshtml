@@ -30,6 +30,7 @@
         <label class="form-label" for="StorePhoneNumber">連絡電話</label>
         <input class="form-control" id="StorePhoneNumber" name="StorePhoneNumber" value="@Model.StorePhoneNumber"
                type="text" placeholder="連絡電話" required />
+        <div class="invalid-feedback"></div>
     </div>
 </div>
 <div class="row mb-3">
@@ -172,6 +173,7 @@
                        name="clientOpeningHours[6].StoreClosingTime" type="time" />
             </div>
         </div>
+        <div class="invalid-feedback"></div>
     </div>
 
     <div class="mb-3 col-lg-4">
@@ -200,8 +202,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label d-block" for="StoreImage">請選擇店家首圖檔案</label>
-            <input class="form-control" type="file" name="clientStoreImage" accept="image/*" />
-
+            <input class="form-control" type="file" name="clientStoreImage" id="ClientStoreImage" accept="image/*" />
+            <div class="invalid-feedback"></div>
         </div>
     </div>
 </div>
@@ -238,6 +240,95 @@
 
 
         }
+    });
+
+    // StoreInfoEdit驗證
+    $('#StoreInfoEditForm').on('submit', function (event) {
+        var allValidated = true;
+        var storePhoneNumber = $('#StorePhoneNumber').val().trim().replace(/[-()]/g, '')
+        document.getElementById('StorePhoneNumber').value;
+        var fileInput = $('#ClientStoreImage');
+        var file = fileInput[0].files[0];
+
+        // 檢查當StoreOpenOrNot = true時 StoreStoreOpeningTime, StoreClosingTime不為null
+        var MyWeekdays = ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        // StoreSaturday
+        // StoreOpeningTimeSaturday
+        // StoreClosingTimeSaturday
+
+        for (var i = 0; i < MyWeekdays.length; i++) {
+            if ($('#Store' + MyWeekdays[i]).is(':checked')) {
+                var openingTime = $('#StoreOpeningTime' + MyWeekdays[i]).val();
+                var closingTime = $('#StoreClosingTime' + MyWeekdays[i]).val();
+                console.log(openingTime);
+                console.log(closingTime);
+
+                if (openingTime === null || closingTime === null || openingTime.trim() === "" || closingTime.trim() === "") {
+                    allValidated = false;
+                    $('#StoreOpeningTime' + MyWeekdays[i]).removeClass('is-valid').addClass('is-invalid');
+                    $('#StoreClosingTime' + MyWeekdays[i]).removeClass('is-valid').addClass('is-invalid');
+
+                    var errorFeedback = $('#StoreClosingTimeSaturday').closest('.weekday-area').next('.invalid-feedback');
+                    errorFeedback.text('必須提供有營業的開關門時間').show();
+                    break;
+                } else {
+                    $('#StoreOpeningTime' + MyWeekdays[i]).removeClass('is-invalid').addClass('is-valid');
+                    $('#StoreClosingTime' + MyWeekdays[i]).removeClass('is-invalid').addClass('is-valid');
+                    $('#StoreClosingTimeSaturday').closest('.weekday-area').next('.invalid-feedback').hide();
+                }
+            }
+        }
+
+        // 这里你可以根据 allValidated 的值进行进一步操作，例如提交表单或者其他逻辑处理
+
+
+
+        // 檢查 storePhoneNumber 條件
+        let phonePattern = /^(09\d{8}|0\d{1,2}-?\d{6,8})$/;
+        if (isNaN(storePhoneNumber)) {
+            $('#StorePhoneNumber').removeClass('is-valid').addClass('is-invalid');
+            var errorFeedback = $('#StorePhoneNumber').next('.invalid-feedback');
+            errorFeedback.text('電話號碼為空').show();
+            allValidated = false;
+        } else if (!phonePattern.test(storePhoneNumber)) {
+            $('#StorePhoneNumber').removeClass('is-valid').addClass('is-invalid');
+            var errorFeedback = $('#StorePhoneNumber').next('.invalid-feedback');
+            errorFeedback.text('電話號碼不符合台灣市話或手機格式').show();
+            allValidated = false;
+        } else {
+            $('#StorePhoneNumber').removeClass('is-invalid').addClass('is-valid');
+            $('#StorePhoneNumber').next('.invalid-feedback').hide();
+            $('#StorePhoneNumber').val(storePhoneNumber);
+        }
+
+        
+
+        // 檢查 StoreImage 條件
+        if (!file) {
+            $('#ClientStoreImage').removeClass('is-invalid').addClass('is-valid');
+            $('#ClientStoreImage').next('.invalid-feedback').hide();
+        } else {
+            var allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (allowedTypes.indexOf(file.type) === -1) {
+                $('#ClientStoreImage').removeClass('is-valid').addClass('is-invalid');
+                var errorFeedback = $('#ClientStoreImage').next('.invalid-feedback');
+                errorFeedback.text('圖片格式不正確，請上傳 JPEG、PNG 或 GIF 格式的圖片').show();
+                allValidated = false;
+            } else {
+                $('#ClientStoreImage').removeClass('is-invalid').addClass('is-valid');
+                $('#ClientStoreImage').next('.invalid-feedback').hide();
+            }
+        }
+
+        if (allValidated) {
+            $('#ProductCopyForm').addClass('was-validated');
+            $('#ProductCopyForm').submit();
+
+        } else {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
     });
 </script>
 

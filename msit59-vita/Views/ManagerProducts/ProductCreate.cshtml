@@ -1,0 +1,293 @@
+﻿@model List<msit59_vita.Models.ProductCategory>
+
+@{
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+    var categoryNames = new List<string>();
+}
+
+@section MyStyle {
+
+    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+    <style>
+        .content-area {
+            height: calc(100vh - 80px);
+        }
+
+        .category-font {
+            font-size: larger !important;
+        }
+
+        @@media (min-width: 992px) and (max-width: 1400px) {
+            .category-font {
+                font-size: large !important;
+            }
+        }
+
+        @@media (max-width: 992px) {
+
+            .category-font {
+                font-size: medium !important;
+            }
+        }
+
+        #TableAreas {
+            padding-top: 45px;
+        }
+
+        @@media (max-width: 992px) {
+
+            #TableAreas {
+                padding-top: 0;
+            }
+        }
+
+    </style>
+
+}
+
+@section BreadCrumb {
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="~/ManagerHome/index"
+           class="text-dark text-decoration-none fw-bolder">首頁</a>
+    </li>
+    <li class="breadcrumb-item">菜單管理</li>
+}
+
+@section Content {
+    <div class="row">
+        <div class="col-lg-2 pt-4 text-center">
+            <button class="btn btn-dark btn-lg category-font" id="btnEditProductCategoriesModal">設定商品分類</button>
+            <hr />
+            <ul id="ProductsCategoryList" class="row list-unstyled">
+
+                @{
+                    @foreach (ProductCategory category in Model)
+                    {
+                        categoryNames.Add(category.CategoryName);
+                        <li class="pb-1 text-center col-lg-12 col-3 category-font">
+                            @category.CategoryName
+                        </li>
+                    }
+                }
+
+            </ul>
+            <hr class="d-lg-none" />
+        </div>
+
+
+        <div id="TableAreas" class="col-lg-10 col-sm-12 row pb-4 min-vh-100">
+
+
+            <form action="/ManagerProducts/ProductCreate" method="post" enctype="multipart/form-data" id="ProductCreateForm" class="needs-validation" novalidate>
+
+
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductName">商品名稱</label>
+                            <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="" value="" required />
+                            <div class="invalid-feedback">不可和現有商品名稱重複</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
+                            <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="" value="" required />
+                            <div class="invalid-feedback">商品價格必須大於0元</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
+                            <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
+                           placeholder="" value="" required />
+                            <div class="invalid-feedback">庫存數必須大於0單位</div>
+                        </div>
+                        <input type="hidden" id="ProductOnSell" name="ProductOnSell" value="True" />
+                        <div class="form-group">
+                            <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">商品分類</label>
+                            <select class="form-select" id="CategoryList" name="CategoryId" required>
+                                <!option value="" selected disabled>選擇分類</!option>
+                                @{
+                                    @foreach (ProductCategory category in Model)
+                                {
+                                    <!option value="@category.CategoryId">@category.CategoryName</!option>
+                                }
+                                }
+                            </select>
+                            <div class="invalid-feedback">請選擇產品分類</div>
+                        </div>
+                        <div class="form-group  mt-5">
+                            <label class="form-label d-block mb-0 mt-2" for="ProductImage">商品圖片</label>
+                            <input class="form-control d-inline" type="file" id="ProductImage" name="ProductImage"
+                                   accept="image/*" />
+                        </div>
+
+                        <div class="form-group text-center mt-5">
+                            <input type="submit" value="新增" class="btn btn-success mt-3" />
+                            <a href="/ManagerProducts/Index" class="btn btn-danger mt-3">取消</a>
+                        </div>
+
+                    </form>
+
+        </div>
+    </div>
+
+
+}
+
+
+@section Scripts {
+        <script>
+
+        // 商品分類新增
+        $(function () {
+
+                $("#btnEditProductCategoriesModal").on('click', function () {
+                    $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                        $("#EditProductCategoriesModal").modal("show");
+                    });
+
+                });
+
+            });
+
+        var categoryNameList = @Html.Raw(Json.Serialize(categoryNames));
+        $('#ProductCategoryCreateEnsure').on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var CategoryName = $('#CreateCategoryName').val().trim();
+
+            if (CategoryName.trim() == "") {
+                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
+                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+            } else if (categoryNameList.includes(CategoryName)) {
+                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱已存在，請重新輸入");
+                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+            } else {
+                $.ajax({
+                    url: '/ManagerProducts/CategoryCreate',
+                    method: 'POST',
+                    data: { CategoryName: CategoryName },
+                    success: function (response) {
+                        categoryNameList.push(CategoryName);
+                        $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                            $("#CreateProductCategoryModal").modal("hide");
+                            $("#EditProductCategoriesModal").modal("show");
+
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#btnAlertCloseCategoryCreate').on("click", function () {
+            $('#alertPlaceholderCategoryCreate .alert-warning p').empty();
+            $('#alertPlaceholderCategoryCreate').addClass("d-none");
+        })
+
+
+        // ProductCreate 表單驗證
+    @{
+            var ProductNameList = ViewBag.ProductNameList;
+            }
+
+                // 获取所有带有 'needs-validation' 类的表单
+                $('#ProductCreateForm').on('submit', function (event) {
+
+
+                    var allValidated = true;
+                    var productName = document.getElementById('ProductName').value;
+                    var productUnitPrice = parseFloat(document.getElementById('ProductUnitPrice').value);
+                    var productUnitsInStock = parseFloat(document.getElementById('ProductUnitsInStock').value);
+                    var categorySelected = document.getElementById('CategoryList').selectedIndex;
+                    var fileInput = $('#ProductImage');
+                    var file = fileInput[0].files[0];
+
+
+
+                    // 檢查 productName 條件
+                    var productNameList = @Html.Raw(Json.Serialize(ProductNameList));
+                    if (productName === '') {
+                        $('#ProductName').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductName').next('.invalid-feedback');
+                        errorFeedback.text('商品名稱不可為空').show();
+                        allValidated = true;
+
+                } else if (productNameList && productNameList.includes(productName)) {
+                        $('#ProductName').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductName').next('.invalid-feedback');
+                        errorFeedback.text('商品名稱不能和既有商品重複').show();
+                        allValidated = false;
+                    }
+                    else {
+                        $('#ProductName').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductName').next('.invalid-feedback').hide();
+                    }
+
+
+                    // 檢查 productUnitPrice 條件
+                    if (productUnitPrice <= 0 || isNaN(productUnitPrice)) {
+                        $('#ProductUnitPrice').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductUnitPrice').next('.invalid-feedback');
+                        errorFeedback.text('商品價格必須大於0元').show();
+                        allValidated = false;
+
+                    } else {
+                        $('#ProductUnitPrice').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductUnitPrice').next('.invalid-feedback').hide();
+
+                    }
+
+                    // 檢查 productUnitsInStock 條件
+                    if (productUnitsInStock <= 0 || isNaN(productUnitsInStock)) {
+                        $('#ProductUnitsInStock').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductUnitsInStock').next('.invalid-feedback');
+                        errorFeedback.text('商品庫存必須大於0單位').show();
+                        allValidated = false;
+
+                    } else {
+                        $('#ProductUnitsInStock').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductUnitsInStock').next('.invalid-feedback').hide();
+
+                    }
+
+                    // 檢查 CategoryList 條件
+                    if (categorySelected < 1) {
+                        $('#CategoryList').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#CategoryList').next('.invalid-feedback');
+                        errorFeedback.text('請選擇商品分類').show();
+                        allValidated = false;
+
+                    } else {
+                        $('#CategoryList').removeClass('is-invalid').addClass('is-valid');
+                        $('#CategoryList').next('.invalid-feedback').hide();
+
+                    }
+
+                    // 檢查 ProductImage 條件
+                    if (!file) {
+                        $('#ProductImage').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductImage').next('.invalid-feedback').hide();
+                    } else {
+                        var allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (allowedTypes.indexOf(file.type) === -1) {
+                            $('#ProductImage').removeClass('is-valid').addClass('is-invalid');
+                            var errorFeedback = $('#ProductImage').next('.invalid-feedback');
+                            errorFeedback.text('圖片格式不正確，請上傳 JPEG、PNG 或 GIF 格式的圖片').show();
+                            allValidated = false;
+                        } else {
+                            $('#ProductImage').removeClass('is-invalid').addClass('is-valid');
+                            $('#ProductImage').next('.invalid-feedback').hide();
+                        }
+                    }
+
+                    if (allValidated) {
+                        $('#ProductCreateForm').addClass('was-validated');
+                        $('#ProductCreateForm').submit();
+
+                    } else {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                });
+            
+
+
+        </script>
+}

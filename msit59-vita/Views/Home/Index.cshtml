@@ -31,8 +31,8 @@
             <button type="button" class="btn btn-light border-1 border-dark w-100 rounded-pill fw-bold" id="recommendBtn">精選推薦</button>
         </div>
         <div class="col-12 col-sm-8 position-relative">
-            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="searchInput" placeholder="餐廳或料理">
-            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="startSearch">
+            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="HomeSearchInput" placeholder="餐廳或料理">
+            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="HomeSearchBtn">
                 <i class="fa-solid fa-magnifying-glass fs-4"></i>
             </button>
         </div>
@@ -43,10 +43,10 @@
     @await Html.PartialAsync("_StoreListPartial", Model)
 </div>
 
-@await Html.PartialAsync("_AlertPartial");
+@await Html.PartialAsync("_AlertPartial")
 
 @section Scripts{
-    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])&region=TW&language=zh-TW" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])" async defer></script>
     <script>
         $(document).ready(function () {
             // 地址搜尋
@@ -58,7 +58,7 @@
                 // 創建地理編碼服務實例
                 const geocoder = new google.maps.Geocoder();
                 // 地點名稱或地址
-                let address = $('#StoreSearch').val();
+                let address = $('#HomeStoreSearch').val();
 
                 // 發送地理編碼請求
                 geocoder.geocode({ 'address': address }, function (results, status) {
@@ -72,7 +72,6 @@
                             url: '/Home/StoreSearch',
                             data: data,
                             success: function (response) {
-                                console.log(1);
                                 $("#StoreListContainer").html(response);
                                 bindEvents();
                                 saveSearchState(data, scrollPos);
@@ -104,6 +103,26 @@
                 })
             })
 
+            // 搜尋
+            $('#HomeSearchBtn').on('click', function (e) {
+                e.preventDefault();
+                let data = {
+                    search: $('#HomeSearchInput').val()
+                };
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/MealSearch',
+                    data: data,
+                    success: function (response) {
+                        $("#StoreListContainer").html(response);
+                    },
+                    error: function () {
+                        alert("出現未預期錯誤，請稍後重試");
+                    }
+                })
+            })
+
             bindEvents();
 
             // DEMO
@@ -115,7 +134,6 @@
 
         // partial view事件綁定
         function bindEvents(){
-            console.log(2);
             // 收藏店家 & 跳轉頁面
             $('.home-store').each(function (index, item) {
                 $(item).on('click', function (e) {
@@ -152,24 +170,9 @@
         // 儲存搜尋關鍵字及頁面滾動位置到 History API
         function saveSearchState(data, scrollPos) {
             var state = { 'data': data, 'scrollPos': scrollPos };
-            history.pushState(state, null, '?data=' + encodeURIComponent(data));
+            var stateJson = JSON.stringify(state);
+            history.pushState(state, null, '?state=' + encodeURIComponent(stateJson));
         }
 
-        // 從 History API 中取出之前儲存的資訊,重新載入搜尋結果
-        $(window).on('popstate', function (event) {
-            if (event.originalEvent.state) {
-                var data = event.originalEvent.state.data;
-                var scrollPos = event.originalEvent.state.scrollPos;
-
-                $.ajax({
-                    url: '/Home/StoreSearch',
-                    data: { data: data },
-                    success: function (response) {
-                        $("#StoreListContainer").html(response);
-                        $(window).scrollTop(scrollPos);
-                    }
-                });
-            }
-        });
     </script>
 }

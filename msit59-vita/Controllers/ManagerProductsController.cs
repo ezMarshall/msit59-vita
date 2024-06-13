@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using msit59_vita.Models;
@@ -14,6 +15,7 @@ namespace msit59_vita.Controllers
     {
         private readonly VitaContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly int StoreId = 1;
 
         public ManagerProductsController(VitaContext context, IWebHostEnvironment webHostEnvironment)
         {
@@ -33,7 +35,6 @@ namespace msit59_vita.Controllers
             {
                 return Redirect("/ManagerLogin");
             }
-            
         }
 
 
@@ -61,7 +62,7 @@ namespace msit59_vita.Controllers
                 item.ProductOnSell = ProductOnSell;
                 _context.SaveChanges();
 
-                return Json(new { success = true,  message="修改上架狀態成功" });
+                return Json(new { success = true, message = "修改上架狀態成功" });
             }
 
 
@@ -74,7 +75,15 @@ namespace msit59_vita.Controllers
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 var categories = GetProductCategories();
+
                 return PartialView("CategoryDetails", categories);
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
+
+
         }
             else
             {
@@ -101,7 +110,7 @@ namespace msit59_vita.Controllers
             ProductCategory item = _context.ProductCategories.Find(CategoryId);
             //_context.ProductCategories.Remove(item);
 
-            var products = _context.Products.Where(p => p.CategoryId == CategoryId && p.StoreId == 1).ToList();
+            var products = _context.Products.Where(p => p.CategoryId == CategoryId && p.StoreId == StoreId).ToList();
 
             if (products == null)
             {
@@ -131,7 +140,7 @@ namespace msit59_vita.Controllers
             ProductCategory item = new ProductCategory()
             {
                 CategoryName = CategoryName,
-                StoreId = 1,
+                StoreId = StoreId,
                 CategoryOnDelete = false,
             };
             _context.ProductCategories.Add(item);
@@ -143,22 +152,33 @@ namespace msit59_vita.Controllers
 
 
 
-       
-    // ProductCopy頁面
+
+        // ProductCopy頁面
         public IActionResult ProductCopy(int id)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
+                 Product item = _context.Products.Find(id);
+                if (item != null)
+                {
+                     int thisCategoryId = item.CategoryId;
+                    var productname = from p in _context.Products
+                                      where p.CategoryId == thisCategoryId 
+                                      select p.ProductName;
+
+                    var productnamelist = productname.Distinct().ToList();
+                    ViewBag.ProductNameList = productnamelist;
+                }
+                                
                 return View(GetSpecificProduct(id));
             }
             else
             {
                 return Redirect("/ManagerLogin");
-
             }
         }
 
-   
+
         [HttpPost]
         public IActionResult ProductCopy(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
         {
@@ -170,7 +190,7 @@ namespace msit59_vita.Controllers
                 ProductUnitsInStock = ProductUnitsInStock,
                 ProductOnSell = Convert.ToBoolean(ProductOnSell),
                 CategoryId = CategoryId,
-                StoreId = 1
+                StoreId = StoreId
             };
             _context.Products.Add(item);
             _context.SaveChanges();
@@ -197,13 +217,83 @@ namespace msit59_vita.Controllers
 
         }
 
+        public IActionResult ProductCreate()
+        {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var categories = GetProductCategories();
+                var productname = from p in _context.Products
+                                  where p.StoreId == StoreId
+                                  select p.ProductName;
+                var productnamelist = productname.Distinct().ToList();
+                ViewBag.ProductNameList = productnamelist;
+
+                return View(categories);
+            }
+            else
+            {
+                return Redirect("/ManagerLogin");
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult ProductCreate(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, int CategoryId, IFormFile? ProductImage)
+        {
+            Product item = new Product()
+            {
+                ProductName = ProductName,
+                ProductUnitPrice = ProductUnitPrice,
+                ProductUnitsInStock = ProductUnitsInStock,
+                ProductOnSell = true,
+                CategoryId = CategoryId,
+                StoreId = StoreId
+            };
+
+
+            _context.Products.Add(item);
+            _context.SaveChanges();
+
+            // 若有上傳圖片，則儲存圖片檔案
+            if (ProductImage != null)
+            {
+                var fileName = $"Product_{item.ProductId}_" + Path.GetFileName(ProductImage.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Image", "Store", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ProductImage.CopyTo(stream);
+                }
+
+                item.ProductImage = "image/Store/" + fileName;
+                _context.SaveChanges();
+            }
+
+            return View("Index", GetProducts(1));
+
+
+        }
+
 
         // ProductEdit頁面
         public IActionResult ProductEdit(int id)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                return View(GetSpecificProduct(id));
+                Product item = _context.Products.Find(id);
+                if (item != null)
+                {
+                    int thisCategoryId = item.CategoryId;
+                    var productname = from p in _context.Products
+                                      where p.CategoryId == thisCategoryId && p.ProductName != item.ProductName
+                                      select p.ProductName;
+
+                    var productnamelist = productname.Distinct().ToList();
+                    ViewBag.ProductNameList = productnamelist;
+                }
+
+
+                    return View(GetSpecificProduct(id));
             }
             else
             {
@@ -259,7 +349,7 @@ namespace msit59_vita.Controllers
             {
                 return Json(new { success = false, message = "圖片無法上傳，請稍後再試" });
             }
-            
+
         }
 
         [HttpPost]
@@ -293,7 +383,7 @@ namespace msit59_vita.Controllers
         private List<ProductCategory> GetProductCategories()
         {
             var queryProductCategories = from c in _context.ProductCategories
-                                         where c.StoreId == 1 && c.CategoryOnDelete == false
+                                         where c.StoreId == StoreId && c.CategoryOnDelete == false
                                          select new ProductCategory
                                          {
                                              CategoryId = c.CategoryId,
@@ -312,8 +402,8 @@ namespace msit59_vita.Controllers
 
             var queryProducts = from p in _context.Products
                                 join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
-                                where p.StoreId == 1
-                                orderby p.ProductOnSell descending, p.StoreId ascending
+                                where p.StoreId == StoreId
+                                orderby p.ProductOnSell descending, p.CategoryId ascending
                                 select new ProductViewModel
                                 {
                                     ProductId = p.ProductId,
@@ -330,13 +420,13 @@ namespace msit59_vita.Controllers
             var products = queryProducts.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
 
             var queryCategories = from c in _context.ProductCategories
-                                  where c.StoreId == 1 && c.CategoryOnDelete == false
+                                  where c.StoreId == StoreId && c.CategoryOnDelete == false
                                   select new ProductCategory
                                   {
                                       CategoryId = c.CategoryId,
                                       CategoryName = c.CategoryName,
                                       CategoryOnDelete = c.CategoryOnDelete,
-                                      StoreId = 1
+                                      StoreId = StoreId
                                   };
             var categories = queryCategories.ToList();
 
@@ -379,13 +469,13 @@ namespace msit59_vita.Controllers
             var products = queryProducts.ToList();
 
             var queryCategories = from c in _context.ProductCategories
-                                  where c.StoreId == 1 && c.CategoryOnDelete == false
+                                  where c.StoreId == StoreId && c.CategoryOnDelete == false
                                   select new ProductCategory
                                   {
                                       CategoryId = c.CategoryId,
                                       CategoryName = c.CategoryName,
                                       CategoryOnDelete = c.CategoryOnDelete,
-                                      StoreId = 1
+                                      StoreId = StoreId
                                   };
             var categories = queryCategories.ToList();
 
