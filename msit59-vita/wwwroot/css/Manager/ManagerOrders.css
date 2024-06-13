@@ -16,6 +16,7 @@
     padding: 6px;
     font-weight: bold;
     height: 34px;
+    width:80px;
 }
 
 .search-icon i {
@@ -67,4 +68,7 @@
 
 .btn-modal{
     height:30px
+}
+.disabled {
+    opacity: 0.6;
 }

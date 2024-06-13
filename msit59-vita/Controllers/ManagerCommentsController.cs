@@ -55,7 +55,7 @@ namespace msit59_vita.Controllers
                                 join s in _context.Stores on o.StoreId equals s.StoreId
                                 where s.StoreId == 1
                                 group new { c, o, r, od, p } by r.ReviewId into g
-                                orderby g.Min(x => x.r.ReviewTime)
+                                orderby g.Min(x => x.r.ReviewTime) descending
                                 select new ReviewViewModel
                                 {
                                     ReviewId = g.Key,
@@ -126,7 +126,7 @@ namespace msit59_vita.Controllers
                                 join s in _context.Stores on o.StoreId equals s.StoreId
                                 where s.StoreId == 1
                                 group new { c, o, r, od, p } by r.ReviewId into g
-                                orderby g.Min(x => x.r.ReviewTime)
+                                orderby g.Min(x => x.r.ReviewTime) descending
                                 select new ReviewViewModel
                                 {
                                     ReviewId = g.Key,
@@ -144,7 +144,7 @@ namespace msit59_vita.Controllers
             // 根據搜尋字串過濾
             if (!string.IsNullOrEmpty(searchString))
             {
-                queryReviews = queryReviews.Where(r => r.ReviewContent.Contains(searchString) || r.CustomerName.Contains(searchString));
+                queryReviews = queryReviews.Where(r => r.ProductName.Contains(searchString) || r.CustomerName.Contains(searchString));
             }
 
             // 根據回覆狀態過濾

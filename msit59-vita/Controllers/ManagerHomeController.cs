@@ -124,6 +124,7 @@ namespace msit59_vita.Controllers
                                             TotalAmount = g.Sum(x => x.TotalAmount)
                                         };
 
+
                 int[,] OrderTotalAmountByCategory = new int[ProductCategoryList.Length, 5];
 
                 for (int i = 0; i < ProductCategoryList.Length; i++)
@@ -196,6 +197,7 @@ namespace msit59_vita.Controllers
                                                  TotalAmount = g.Sum(x => x.TotalAmount)
                                              };
 
+
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
                 foreach (var item in weeklycommentbyproduct)
                 {
@@ -251,6 +253,7 @@ namespace msit59_vita.Controllers
                     {
                         var temp = weeklycommentbyproductandrating.Where(x => x.ProductName == weeklycommentbyproduct.ElementAt(i).ProductName && x.ReviewRating == (5 - j));
                         if (temp != null)
+
                         {
                             productInfo.Add(temp.Sum(x => x.TotalAmount));
                         }
@@ -348,6 +351,7 @@ namespace msit59_vita.Controllers
                 // 月客戶銷售甜甜圈圖
                 var monthlycustomersales = (from o in _context.Orders
                                             join od in _context.OrderDetails on o.OrderId equals od.OrderId
+
                                             join c in _context.Customers on o.CustomerId equals c.CustomerId
                                             where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
                                             select new
@@ -390,7 +394,7 @@ namespace msit59_vita.Controllers
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
 
                 // 月每日營收、訂單數趨勢圖
-                var monthlysalesperday = (from o in _context.Orders
+                var monthlysalesperday = (from o in _context.
                                           join od in _context.OrderDetails on o.OrderId equals od.OrderId
                                           where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
                                           select new
@@ -409,6 +413,7 @@ namespace msit59_vita.Controllers
                                               TotalAmount = g.Sum(x => x.TotalAmount),
                                               DistinctOrderIDCount = g.Select(x => x.OrderID).Distinct().Count()
                                           }).OrderBy(x => x.OrderDate);
+
 
                 string[] MonthlyOrderDates = new string[monthlysalesperday.Count()];
                 int[] MonthlyTotalAmountPerDay = new int[monthlysalesperday.Count()];

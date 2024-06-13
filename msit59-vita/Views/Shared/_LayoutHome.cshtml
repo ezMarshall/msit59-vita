@@ -34,10 +34,10 @@
 						</li>
 						@* 分隔線 *@
 						<li class="d-lg-none border-light border-top opacity-25 my-3"></li>
-						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">會員資料</a></li>
-						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的訂單</a></li>
-						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">收藏店家</a></li>
-						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#">我的評論</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyData">會員資料</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/CurrentOrder">我的訂單</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/FavoriteStores">收藏店家</a></li>
+						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="/MyComment">我的評論</a></li>
 						<li><a class="d-lg-none d-block p-2 text-decoration-none" href="#" onclick="logout()">登出</a></li>
 						<li class="nav-item dropdown d-none d-lg-block z-index-1">
 							<button type="button" class="dropdown-toggle btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" href="#"
@@ -46,10 +46,10 @@
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end text-center rounded-3 bg-primary border border-dark border-5 p-3"
 								aria-labelledby="navbarDropdownMenuLink">
-								<li><a class="dropdown-item py-2" href="#">會員資料</a></li>
-								<li><a class="dropdown-item py-2" href="#">我的訂單</a></li>
-								<li><a class="dropdown-item py-2" href="#">收藏店家</a></li>
-								<li><a class="dropdown-item py-2" href="#">我的評論</a></li>
+								<li><a class="dropdown-item py-2" href="/MyData">會員資料</a></li>
+								<li><a class="dropdown-item py-2" href="/CurrentOrder">我的訂單</a></li>
+								<li><a class="dropdown-item py-2" href="/FavoriteStores">收藏店家</a></li>
+								<li><a class="dropdown-item py-2" href="/MyComment">我的評論</a></li>
 								<li><a class="dropdown-item py-2" href="javascript:void(0)" onclick="logout()">登出</a></li>
 							</ul>
 						</li>
@@ -87,6 +87,7 @@
 							class="d-block d-lg-none text-decoration-none p-2">購物車</a>
 
 					</li>
+
 					<!-- 購物車 end -->
 					@* 通知 *@
 					@if (User.Identity?.IsAuthenticated ?? false)
@@ -133,6 +134,7 @@
     <!-- contact us end -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/js/popper.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/cartjs.js" asp-append-version="true"></script>
@@ -170,5 +172,55 @@
         }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
+
+	<!-- 購物車頁面開始 -->
+	<div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+		<div class="offcanvas-header justify-content-end">
+			<button type="button" class="btn-close text-reset text-dark fs-3 fw-bold" data-bs-dismiss="offcanvas"
+					aria-label="Close"></button>
+		</div>
+		<div id="qqaa" class="offcanvas-body cart-list d-flex flex-column justify-content-between">
+
+			<div class="cart-container overflow-auto">
+			</div>
+
+
+			<div class="total-price pt-3">
+				<div class="fs-5 fw-bold text-center text-success mb-3">總金額：<span class="totalPriceNum"></span></div>
+
+				<div class="d-grid col-10 mx-auto">
+					<button id="checkoutBtn" class="btn btn-success text-white fs-5 fw-bold badge rounded-pill" type="submit">立即結帳</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 購物車頁面結束 -->
+	<!-- 顯示請登入開始 -->
+
+	<form method="get" action="/Account/Login">
+		<!-- 登入模態對話框 -->
+		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header border-0">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-center fs-3 fw-bold">
+						<i class="fa-solid fa-circle-exclamation text-danger fs-2"></i>
+						<p id="loginMessage"></p>
+						<!-- 在這裡添加登入表單或其他內容 -->
+					</div>
+					<div class="modal-footer border-0 d-flex justify-content-center">
+						<button type="submit" class="btn btn-info text-white col-4">登入</button>
+						<button type="button" class="btn btn-secondary col-4" data-bs-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+	<!-- 顯示請登入結束 -->
 </body>
 </html>

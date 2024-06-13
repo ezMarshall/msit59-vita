@@ -9,7 +9,6 @@ namespace msit59_vita.Controllers
         public IsFavoriteStore(VitaContext context)
         {
 			_context = context;
-;
         }
 
 		public bool FavoriteStore(int customerId, int storeId)

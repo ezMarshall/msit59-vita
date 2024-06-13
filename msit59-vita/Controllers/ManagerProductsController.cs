@@ -35,7 +35,6 @@ namespace msit59_vita.Controllers
             {
                 return Redirect("/ManagerLogin");
             }
-
         }
 
 
@@ -77,7 +76,6 @@ namespace msit59_vita.Controllers
             {
                 var categories = GetProductCategories();
 
-
                 return PartialView("CategoryDetails", categories);
             }
             else
@@ -85,7 +83,14 @@ namespace msit59_vita.Controllers
                 return Redirect("/ManagerLogin");
             }
 
+
         }
+            else
+            {
+                return Redirect("/ManagerLogin");
+    }
+
+}
 
         public IActionResult CategoryEdit(int CategoryId, string CategoryName)
         {
@@ -170,7 +175,6 @@ namespace msit59_vita.Controllers
             else
             {
                 return Redirect("/ManagerLogin");
-
             }
         }
 

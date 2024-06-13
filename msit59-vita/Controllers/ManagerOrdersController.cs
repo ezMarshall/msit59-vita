@@ -22,9 +22,7 @@ namespace msit59_vita.Controllers
             {
                 var viewModel = GetOrders(currentPage);
                 return View(viewModel);
-            }
-            else
-            {
+            }else{
                 return Redirect("/ManagerLogin");
             }
         }
@@ -90,19 +88,19 @@ namespace msit59_vita.Controllers
                 endDateParsed = DateTime.Parse(endDate);
             }
             var queryOrders = from o in _context.Orders
-                              orderby o.CustomerOrderStatus, o.OrderTime descending
+                              orderby o.CustomerOrderStatus,o.OrderTime descending
                               where o.StoreId == 1
                               select new OrderViewModel
                               {
-                                  StoreId = o.StoreId,
+                                  StoreId = o.StoreId, 
                                   OrderId = o.OrderId,
                                   OrderTime = o.OrderTime,
                                   OrderPayment = o.OrderPayment,
                                   OrderDeliveryVia = o.OrderDeliveryVia,
                                   CustomerOrderStatus = o.CustomerOrderStatus,
-                                  OrderFinishedTime = o.OrderFinishedTime,
-                              }
-                              ;
+                                  OrderFinishedTime= o.OrderFinishedTime,
+                              };
+                              
 
             // 根據搜尋字串過濾
             if (!string.IsNullOrEmpty(searchString))

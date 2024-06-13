@@ -1,4 +1,7 @@
-﻿@model msit59_vita.Models.ViewModels.StoreSearchViewModel
+@using msit59_vita.Models.ViewModels
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model List<StoreSearchViewModel>
+
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_LayoutHome";
@@ -7,26 +10,14 @@
 <!-- banner -->
 <section class="home-banner">
     <div class="container-lg row align-items-center justify-content-end h-100 mx-auto">
-        <div class="bg-light rounded-3 p-4 col-12 col-md-6">
-            <ul class="list-unstyled text-center fs-0 fw-bold text-dark border-bottom border-2 border-dark" id="bannerForm">
-                <li class="d-inline-block w-50 fs-6 deliver-hover" data-deliver="Delivery">
-                    <i class="fa-solid fa-car-side"></i>
-                    <p>外送</p>
-                </li>
-                <li class="d-inline-block w-50 fs-6" data-deliver="Self-pickup">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <p>自取</p>
-                </li>
-            </ul>
-            <form class="p-1">
-                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
-                    預計送達時間
-                </label>
-                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-3" value="2024/05/16 17:30">
-                <label for="PredictedArrivalTime" id="ArrivalTimeLabel" class="form-label ps-3 mb-2">
+        <div class="col-12 col-md-6">
+        <h2 class="fw-bold mx-3 text-primary text-shadow text-center text-md-start">預約附近健康餐</h2>
+            <form class="bg-light rounded-3 p-4" action="/Home/StoreSearch" method="post" id="StoreSearchForm">
+                <label for="StoreSearch" class="form-label ps-3 mb-2" id="HomeStoreSearchLabel">
                     在哪裡附近
-                </label>
-                <input type="text" name="" id="PredictedArrivalTime" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4">
+                </label> 
+                <input type="text" name="StoreSearch" id="HomeStoreSearch" class="form-control d-block rounded-pill fs-6 w-100 border-1 px-3 py-2 mb-4"
+                       value=@ViewBag.Address>
                 <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill w-100 border-0" id="bannerSearchBtn">開始尋找美食</button>
             </form>
         </div>
@@ -40,43 +31,148 @@
             <button type="button" class="btn btn-light border-1 border-dark w-100 rounded-pill fw-bold" id="recommendBtn">精選推薦</button>
         </div>
         <div class="col-12 col-sm-8 position-relative">
-            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="searchInput" placeholder="餐廳或料理">
-            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="startSearch">
+            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="HomeSearchInput" placeholder="餐廳或料理">
+            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="HomeSearchBtn">
                 <i class="fa-solid fa-magnifying-glass fs-4"></i>
             </button>
         </div>
     </div>
 </section>
 
-@await Html.PartialAsync("_StoreListPartial", Model);
+<div id="StoreListContainer">
+    @await Html.PartialAsync("_StoreListPartial", Model)
+</div>
 
+@await Html.PartialAsync("_AlertPartial")
 
 @section Scripts{
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration["GoogleMapsApiKey"])" async defer></script>
     <script>
         $(document).ready(function () {
-            // banner deliver via
-            $('#bannerForm').find('li').on('click', function (e) {
-                $(this).addClass('deliver-hover').siblings().removeClass('deliver-hover');
-                if ($(this).data('deliver') == "Delivery") {
-                    $('#ArrivalTimeLabel').text('預計送達時間');
-                } else if ($(this).data('deliver') == "Self-pickup") {
-                    $('#ArrivalTimeLabel').text('預計取貨時間');
-                }
+            // 地址搜尋
+            $('#StoreSearchForm').on('submit',function(e){
+                e.preventDefault();
+
+                let scrollPos = $(window).scrollTop();
+                
+                // 創建地理編碼服務實例
+                const geocoder = new google.maps.Geocoder();
+                // 地點名稱或地址
+                let address = $('#HomeStoreSearch').val();
+
+                // 發送地理編碼請求
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === 'OK') {
+                        let data = {
+                            lat: results[0].geometry.location.lat(), 
+                            lng: results[0].geometry.location.lng() 
+                        };
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/StoreSearch',
+                            data: data,
+                            success: function (response) {
+                                $("#StoreListContainer").html(response);
+                                bindEvents();
+                                saveSearchState(data, scrollPos);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(error);
+                                alert("出現無法預期的問題，請稍後再試。")
+                            }
+                        });
+                    } else {
+                        alert("請輸入正確地址");
+                        console.error('無法獲取地點坐標:', status);
+                    }
+                });
             })
 
-            // click to store page
-            $('.home-store').each(function (index, item) {
-                $(item).on('click', function (e) {
-                    e.preventDefault();
-                    if ($(e.target).hasClass('fa-heart')) {
-                        // favorite store toggle
-                        $(e.target).removeClass('home-favorite-checked').siblings().addClass('home-favorite-checked');
-                    } else {
-                        // go to store page
-                        console.log("go to store page");
+            // 精選推薦
+            $('#recommendBtn').on('click',function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: '/Home/SortRating',
+                    success: function (response) {
+                        $("#StoreListContainer").html(response);
+                    },
+                    error: function () {
+                        alert("出現未預期錯誤，請稍後重試");
                     }
                 })
             })
+
+            // 搜尋
+            $('#HomeSearchBtn').on('click', function (e) {
+                e.preventDefault();
+                let data = {
+                    search: $('#HomeSearchInput').val()
+                };
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/MealSearch',
+                    data: data,
+                    success: function (response) {
+                        $("#StoreListContainer").html(response);
+                    },
+                    error: function () {
+                        alert("出現未預期錯誤，請稍後重試");
+                    }
+                })
+            })
+
+            bindEvents();
+
+            // DEMO
+            $('#HomeStoreSearchLabel').click(function (e) {
+                e.preventDefault();
+                $('#HomeStoreSearch').val('公益路51號');
+            })
         })
+
+        // partial view事件綁定
+        function bindEvents(){
+            // 收藏店家 & 跳轉頁面
+            $('.home-store').each(function (index, item) {
+                $(item).on('click', function (e) {
+                    let id = $(e.currentTarget).data('storeid');
+                    if ($(e.target).hasClass('fa-heart')) {
+                        // favorite store toggle
+                        let data = {
+                            storeId: id
+                        }
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/ToggleFavorite',
+                            data: data,
+                            success: function (response) {
+                                if (response.success) {
+                                    $(e.target).removeClass('home-favorite-checked').siblings().addClass('home-favorite-checked');
+                                } else {
+                                    $('#alertModal').modal('show');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(error);
+                                alert("出現無法預期的問題，請稍後再試。")
+                            }
+                        });
+                    } else {
+                        // go to store page
+                        window.location.href = `/Store/Index/${id}`;
+                    }
+                })
+            })
+        }
+
+        // 儲存搜尋關鍵字及頁面滾動位置到 History API
+        function saveSearchState(data, scrollPos) {
+            var state = { 'data': data, 'scrollPos': scrollPos };
+            var stateJson = JSON.stringify(state);
+            history.pushState(state, null, '?state=' + encodeURIComponent(stateJson));
+        }
+
     </script>
 }

@@ -2,7 +2,7 @@
 
 namespace msit59_vita.Controllers
 {
-    public class QAController : Controller
+    public class FaqController : Controller
     {
         public IActionResult Index()
         {

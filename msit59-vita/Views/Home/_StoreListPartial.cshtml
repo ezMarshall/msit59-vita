@@ -1,200 +1,72 @@
-﻿<!-- store list -->
+@using msit59_vita.Models.ViewModels
+@model List<StoreSearchViewModel>
+
 <section class="container-lg mx-auto py-3">
-    <!-- 未輸入地址 -->
-    <!-- <p class="mt-3 text-center fw-bold">請輸入位置</p> -->
-    <p>共顯示30家餐廳</p>
+    @if(ViewBag.isSearched ?? false)
+    {
+        @if (Model.Count() > 0)
+        {
+            <p>共顯示 @Model.Count() 家餐廳</p>
+            <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
 
-    <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
-        <!-- new normal -->
-        <div class="col">
-            <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-id="自定義id">
-                <div class="d-flex flex-column position-relative">
-                    <div class="position-relative home-div-img">
-                        <img src="~/image/Store/Store_1.jpeg" class="home-store-img rounded-start" alt="商品圖">
-                        <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                    </div>
-                    <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h2 class="card-title h6 d-inline-block align-top m-0">澄禾食光 低GI健康餐盒（崇德店）</h2>
-                            <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore">
-                                <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 50%, #F2F2E7 50% 100%)"></div>
-                            <span class="align-middle text-dark">4.3</span>
-                            <span class="align-middle link-dark">
-                                (403則評論)
-                            </span>
-                        </div>
-                        <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>台中市南屯區大墩十二街153號</p>
-                        <p class="card-text mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            11:00 - 20:00
-                        </p>
-                        <ul class="list-unstyled home-product-img-list mb-0">
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- order-status-stop -->
-        <div class="col">
-            <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-id="自定義id">
-                <div class="d-flex flex-column position-relative">
-                    <div class="position-relative home-div-img order-status-stop">
-                        <img src="~/image/Store/Store_1.jpeg" class="home-store-img rounded-start" alt="商品圖">
-                        <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                    </div>
-                    <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h2 class="card-title h6 d-inline-block align-top m-0">澄禾食光 低GI健康餐盒（崇德店）</h2>
-                            <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore">
-                                <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 50%, #F2F2E7 50% 100%)"></div>
-                            <span class="align-middle text-dark">4.3</span>
-                            <span class="align-middle link-dark">
-                                (403則評論)
-                            </span>
-                        </div>
-                        <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>台中市南屯區大墩十二街153號</p>
-                        <p class="card-text mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            11:00 - 20:00
-                        </p>
-                        <ul class="list-unstyled home-product-img-list mb-0">
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- opening-soon -->
-        <div class="col">
-            <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-id="自定義id">
-                <div class="d-flex flex-column position-relative">
-                    <div class="position-relative home-div-img opening-soon">
-                        <img src="~/image/Store/Store_1.jpeg" class="home-store-img rounded-start" alt="商品圖">
-                        <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                    </div>
-                    <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h2 class="card-title h6 d-inline-block align-top m-0">澄禾食光 低GI健康餐盒（崇德店）</h2>
-                            <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore">
-                                <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 50%, #F2F2E7 50% 100%)"></div>
-                            <span class="align-middle text-dark">4.3</span>
-                            <span class="align-middle link-dark">
-                                (403則評論)
-                            </span>
-                        </div>
-                        <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>台中市南屯區大墩十二街153號</p>
-                        <p class="card-text mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            11:00 - 20:00
-                        </p>
-                        <ul class="list-unstyled home-product-img-list mb-0">
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+            @foreach(var store in Model)
+            {
+                <div class="col">
+                    <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-storeid="@store.StoreId">
+                        <div class="d-flex flex-column position-relative">
 
-        <!-- new normal -->
-        <div class="col">
-            <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-id="自定義id">
-                <div class="d-flex flex-column position-relative">
-                    <div class="position-relative home-div-img">
-                        <img src="~/image/Store/Store_1.jpeg" class="home-store-img rounded-start" alt="商品圖">
-                        <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                    </div>
-                    <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h2 class="card-title h6 d-inline-block align-top m-0">澄禾食光 低GI健康餐盒（崇德店）</h2>
-                            <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore">
-                                <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
-                            </a>
+                                <div class="position-relative home-div-img @(store.StoreOpening ? "" : "opening-soon")">
+                                <img src="~/@store.StoreImage" class="home-store-img rounded-start" alt="商品圖">
+                                <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
+                            </div>
+                            <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
+                                <div class="d-flex justify-content-between">
+                                    <h2 class="card-title h6 d-inline-block align-top m-0">@store.StoreName</h2>
+                                    <span href="#" class="d-block" id="homeFavoriteStore" data-storeid="@store.StoreId">
+                                        @if (store.isFavorite)
+                                        {
+                                            <i class="fa-regular fa-heart fs-4 text-danger"></i>
+                                            <i class="fa-solid fa-heart fs-4 text-danger home-favorite-checked"></i>
+                                        } else
+                                        {
+                                            <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
+                                            <i class="fa-solid fa-heart fs-4 text-danger"></i>
+                                        }
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 @(store.averageRating*20)%, #F2F2E7 @(store.averageRating*20)% 100%)"></div>
+                                    <span class="align-middle text-dark">@store.averageRating</span>
+                                    <span class="align-middle link-dark">
+                                        (@store.totalReviews 則評論)
+                                    </span>
+                                </div>
+                                <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>@store.StoreAddress</p>
+                                <p class="card-text mt-1">
+                                    <i class="fa-solid fa-clock"></i>
+                                    @store.StoreOpeningTime
+                                </p>
+                                <ul class="list-unstyled home-product-img-list mb-0">
+                                    @for(int i = 0; i <4; i++)
+                                    {
+                                        <li><img src="~/@store.ProductImageList[i]" class="home-product-img" alt="商品圖 @i+1"></li>
+                                    }
+                                </ul>
+                            </div>
                         </div>
-                        <div>
-                            <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 50%, #F2F2E7 50% 100%)"></div>
-                            <span class="align-middle text-dark">4.3</span>
-                            <span class="align-middle link-dark">
-                                (403則評論)
-                            </span>
-                        </div>
-                        <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>台中市南屯區大墩十二街153號</p>
-                        <p class="card-text mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            11:00 - 20:00
-                        </p>
-                        <ul class="list-unstyled home-product-img-list mb-0">
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- new normal -->
-        <div class="col">
-            <div class="card mb-3 rounded-3 overflow-hidden bg-light border-1 border-success home-store h-100" data-id="自定義id">
-                <div class="d-flex flex-column position-relative">
-                    <div class="position-relative home-div-img">
-                        <img src="~/image/Store/Store_1.jpeg" class="home-store-img rounded-start" alt="商品圖">
-                        <button type="button" class="position-absolute btn btn-success rounded-pill px-4 py-2 text-light border-0 fs-5 fw-bold" id="viewStoreBtn">瀏覽店家</button>
-                    </div>
-                    <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h2 class="card-title h6 d-inline-block align-top m-0">澄禾食光 低GI健康餐盒（崇德店）</h2>
-                            <a href="#" class="d-block text-decoration-none" id="homeFavoriteStore">
-                                <i class="fa-regular fa-heart fs-4 text-danger home-favorite-checked"></i>
-                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 50%, #F2F2E7 50% 100%)"></div>
-                            <span class="align-middle text-dark">4.3</span>
-                            <span class="align-middle link-dark">
-                                (403則評論)
-                            </span>
-                        </div>
-                        <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>台中市南屯區大墩十二街153號</p>
-                        <p class="card-text mt-1">
-                            <i class="fa-solid fa-clock"></i>
-                            11:00 - 20:00
-                        </p>
-                        <ul class="list-unstyled home-product-img-list mb-0">
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                            <li><img src="~/image/Store/Product_1.png" class="home-product-img" alt=""></li>
-                        </ul>
                     </div>
                 </div>
+            }
+        
+                <!-- order-status-stop -->
             </div>
-        </div>
-    </div>
+        } else
+        {
+            <p class="text-dark fw-bold fs-6 text-center opacity-75">五公里內無合作健康餐</p>
+        }
+    }
+    else
+    {
+        <p class="text-dark fw-bold fs-6 text-center opacity-75">尚未查詢，請先輸入地址或餐廳</p>
+    }
 </section>

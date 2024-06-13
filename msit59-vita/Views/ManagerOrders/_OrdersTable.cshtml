@@ -11,7 +11,7 @@
         <th scope="col" style="width: 13%">付款方式</th>
         <th scope="col" style="width: 13%">訂單種類</th>
         <th scope="col" style="width: 13%">訂單狀態</th>
-        <th scope="col" style="width: 18%">操作</th>
+        <th scope="col" style="width: 18% ;min-width: 165px;">操作</th>
     </tr>
 </thead>
 <tbody>
@@ -23,7 +23,7 @@
                   <th class="align-middle" scope="row">@counter</th>
                   <td class="align-middle" scope="row">@item.OrderId</td>
                   <td class="align-middle">@item.OrderTime.ToString("yyyy/MM/dd HH:mm")</td>
-                  <td class="align-middle">@((item.OrderPayment) ? "linepay" : "現金")</td>
+                  <td class="align-middle">@((item.OrderPayment) ? "LINE PAY" : "現金")</td>
                   <td class="align-middle">@((item.OrderDeliveryVia) ? "外送" : "自取")</td>
                   <td class="align-middle">
                       @(item.CustomerOrderStatus switch
@@ -36,7 +36,8 @@
                           5 => "已取消",
                       })
                   </td>
-                  <td class="align-middle update-status">
+                <td class="align-middle">
+                    <div class=" d-flex align-items-center justify-content-center">
                       <button class="btn @((item.CustomerOrderStatus==0)?"btn-success":"btn-dark") @((item.CustomerOrderStatus>=3)?"d-none":"") me-1 fw-bold btn-accept show-alert"
                               id="@((item.CustomerOrderStatus == 0) ? "acceptOrder" : "dishUp")"
                               data-bs-toggle="modal" data-bs-target="#orderModal"
@@ -52,9 +53,10 @@
                               data-action="@((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")"
                               data-order-id="@item.OrderId"
                               data-customer-id="@item.CustomerId"
-                    @((item.CustomerOrderStatus == 1) ? "disabled" : "")>
+                          @((item.CustomerOrderStatus == 1) ? "disabled" : "")>
                           @((item.CustomerOrderStatus == 0) ? "退單" : "完成訂單")
                       </button>
+                    </div>
                   </td>
               </tr>
             <input type="hidden" id="hfCurrentPageIndex" name="currentPage" value="@Model.CurrentPageIndex" />

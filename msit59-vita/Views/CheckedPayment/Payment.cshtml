@@ -6,20 +6,27 @@
 
 
 <section class="container-lg">
+	<form id="paymentOrderDetail" action="/OrderDetail/PayMentOrderDetail" method="post">
+		<div class="order mt-3 row mb-3">
+			<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+				<div class="step active col-2 text-center fw-bold ">
+					<div class="circle d-inline-block mb-1 rounded-circle">1</div>
+					<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+				</div>
+				<div class="step inactive col-2 text-center fw-bold ">
+					<div class="circle  d-inline-block mb-1 rounded-circle">2</div>
+					<div class="fs-6 fw-bold text-break">確認結帳</div>
+				</div>
+			</div>
+			<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
 
-	<div class="order mt-3 row mb-3">
-		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
-			<div class="step active col-2 text-center fw-bold ">
-				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
-				<div class="fs-6 fw-bold text-break">選擇付款明細</div>
-			</div>
-			<div class="step inactive col-2 text-center fw-bold ">
-				<div class="circle  d-inline-block mb-1 rounded-circle">2</div>
-				<div class="fs-6 fw-bold text-break">確認結帳</div>
-			</div>
-		</div>
-		<div class="order-form row bg-white rounded-2 col-9 mx-auto py-4 px-5">
-			<form method="post">
+				@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
+				{
+					<input type="hidden" id="storeId" value="@paymentInfo[0]?.StoreId">
+				}
+
+
+
 				<div class="order-store-info my-3">
 					@if (paymentInfo != null && paymentInfo.Count > 0 && paymentInfo[0].StoreName != null)
 					{
@@ -67,7 +74,7 @@
 										<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, @item.ShoppingCartId, @item.ProductUnitsInStock)">
 											<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
 										</button>
-										<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="@item.ShoppingCartQuantity"
+										<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="@item.ShoppingCartQuantity"
 											   id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
 										<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, @item.ShoppingCartId, @item.ProductUnitsInStock)">
 											<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
@@ -82,31 +89,6 @@
 						}
 					</div>
 
-
-
-					@* <div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2">
-					<div class="product-info col-6">
-					<div class="product-name fw-bold">
-					<div class="fs-5">春橙翡翠</div>
-					<div class="text-muted">$70 / 1份</div>
-					</div>
-					</div>
-					<div class="col-6 d-flex justify-content-around align-items-center">
-					<div class="input-group w-50">
-					<button class="btn border-0" type="button" onclick="adjustValue(this, -1)">
-					<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
-					</button>
-					<input type="text" class="form-control fs-5 fw-bold text-center" value="1"
-					id="number">
-					<button class="btn border-0" type="button" onclick="adjustValue(this, 1)">
-					<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
-					</button>
-					</div>
-					<div class="fs-5 fw-bold">$70</div>
-					<div class="delate text-success fs-5"><i class="fa-solid fa-trash"></i></div>
-					</div>
-
-					</div> *@
 					<div class="order-total-price fs-5 fw-bold text-end pe-4">應付金額：<span class="totalOrderPriceNum"></span></div>
 
 				</div>
@@ -134,10 +116,14 @@
 								</label>
 							</div>
 						}
-						
+
 					}
 
 				</div>
+
+
+
+
 
 				<div class="order-pick-up mb-2">
 					<div class="d-flex justify-content-between">
@@ -152,34 +138,33 @@
 
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPickUp" id="flexRadioPickUp1"
-							   value="0">
+						<input class="form-check-input pick-up" type="radio" name="flexRadioPickUp" id="flexRadioPickUp1"
+							   value="0" checked required>
 						<label class="form-check-label" for="flexRadioPickUp1">
 							自取 (約 15 分鐘)
 						</label>
 					</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPickUp" id="flexRadioPickUp2"
+						<input class="form-check-input pick-up" type="radio" name="flexRadioPickUp" id="flexRadioPickUp2"
 							   data-bs-toggle="modal" data-bs-target="#addressModal" value="1">
 						<label class="form-check-label" for="flexRadioPickUp2" data-bs-toggle="modal"
-							   data-bs-target="#addressModal">
+							   data-bs-toggle="modal" data-bs-target="#addressModal">
 							外送 (約 30 分鐘)
 						</label>
 					</div>
 
 					<input type="text" class="form-control" placeholder="請輸入地址" id="addressInput"
-						   readonly="readonly" data-bs-toggle="modal" data-bs-target="#addressModal"
+						   name="address" value="" readonly="readonly" data-bs-toggle="modal" data-bs-target="#addressModal"
 						   onclick="focusRadio('flexRadioPickUp2')">
 
 				</div>
 
 				<div class="order-time mb-2">
 					<div class="fs-5 fw-bold">預計取餐時間</div>
-					<input id="timeInput" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly"
-						   data-bs-toggle="modal" data-bs-target="#timeModal">
-
+					<input id="timeInput" name="orderTime" value="" type="text" class="form-control" placeholder="請選擇取餐時間" readonly="readonly">
 				</div>
+
 
 				<div class="order-invoice mb-2">
 					<div class="fs-5 fw-bold">開立發票方式</div>
@@ -188,7 +173,7 @@
 					{
 						<div class="form-check ms-3">
 							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt0"
-							value="0" checked required>
+								   value="0" checked required>
 							<label class="form-check-label" for="flexRadioReceipt0">不開立發票</label>
 						</div>
 					}
@@ -196,7 +181,7 @@
 					{
 						<div class="form-check ms-3">
 							<input class="form-check-input" type="radio" name="flexRadioReceipt" id="flexRadioReceipt1"
-								   value="1" onclick="handleReceiptTypeChange('paper')" checked required>
+								   value="1" onclick="handleReceiptTypeChange('paper')" checked>
 							<label class="form-check-label" for="flexRadioReceipt1">紙本發票</label>
 						</div>
 
@@ -205,7 +190,7 @@
 								   onclick="focusInput('inputCarrier')" value="2">
 							<label class="form-check-label" for="flexRadioReceipt2" onclick="handleReceiptTypeChange('paper')"
 								   data-bs-focus="inputCarrier">手機載具</label>
-							<input id="inputCarrier" class="form-control" type="text" placeholder="首位為 / ，英文字母為大寫"
+							<input id="inputCarrier" class="form-control" type="text" value="" name="carrier" placeholder="首位為 / ，英文字母為大寫"
 								   aria-label="default input carrier" onfocus="focusRadio('flexRadioReceipt2')"
 								   autocomplete="off" oninput="validateCarrier()">
 							<div id="carrierFeedback" class="invalid-feedback">請輸入有效的手機載具，首位應為 / ，英文字母需為大寫</div>
@@ -217,51 +202,54 @@
 					<div class="fs-5 fw-bold">聯絡電話</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioCellphone"
-							   onclick="focusInput('inputCellphone')">
+						<input class="form-check-input" type="radio" name="flexRadioPhone" value="0" id="flexRadioCellphone"
+							   onclick="handlePhoneTypeChange('0')">
 						<label class="form-check-label" for="flexRadioCellphone"
-							   onclick="focusInput('inputCellphone')">手機號碼</label>
-						<input id="inputCellphone" class="form-control" type="text" placeholder="請輸入手機號碼"
+							   onclick="handlePhoneTypeChange('0')">手機號碼</label>
+						<input id="inputCellphone" class="form-control" name="cellPhoneNumber" value="" type="text" placeholder="請輸入手機號碼"
 							   aria-label="default input cellphone" onfocus="focusRadio('flexRadioCellphone')"
-							   autocomplete="off">
+							   oninput="validatePhone('0')" autocomplete="off">
+						<div id="cellphoneFeedback" class="invalid-feedback">請輸入有效的手機號碼式</div>
 					</div>
 
 					<div class="form-check ms-3">
-						<input class="form-check-input" type="radio" name="flexRadioPhone" id="flexRadioPhone"
-							   onclick="focusInput('inputPhone')">
+						<input class="form-check-input" type="radio" name="flexRadioPhone" value="1" id="flexRadioPhone"
+							   onclick="handlePhoneTypeChange('1')">
 						<label class="form-check-label" for="flexRadioPhone"
-							   onclick="focusInput('inputPhone')">市話</label>
-						<input id="inputPhone" class="form-control" type="text" placeholder="請輸入市話"
+							   onclick="handlePhoneTypeChange('1')">市話</label>
+						<input id="inputPhone" class="form-control" name="phoneNumber" value="" type="text" placeholder="請輸入市話"
 							   aria-label="default input phone" onfocus="focusRadio('flexRadioPhone')"
-							   autocomplete="off">
+							   oninput="validatePhone('1')" autocomplete="off">
+						<div id="phoneFeedback" class="invalid-feedback">請輸入有效的市話</div>
 					</div>
 
 
 				</div>
 
 				<div class="order-textarea">
-					<div class="fs-5 fw-bold">給店家留言</div>
-					<textarea class="form-control mb-4" id="orderFormControlTextarea1" rows="10"></textarea>
+					<div class="fs-5 fw-bold">給店家留言 <span class="fs-6 fw-light text-muted">(最大長度250個字)</div>
+					<textarea class="form-control mb-4" id="orderFormControlTextarea1" name="orderNote" value="" rows="10"></textarea>
 				</div>
 
-			</form>
 
+
+			</div>
 		</div>
-	</div>
 
 
-	<div class="row mb-3 mx-auto w-75">
-		<div class="btn-group" role="group" aria-label="Basic example">
-			<button class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
-				<a href="javascript:void(0)"
-				   class="text-decoration-none text-black">繼續加購</a>
-			</button>
-			<button class="btn-next btn btn-dark fs-5 fw-bold" type="button">
-				<a href="javascript:void(0)"
-				   class="text-decoration-none text-white">下一步</a>
-			</button>
+		<div class="row mb-3 mx-auto w-75">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button id="continueShoppingBtn" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-black">繼續加購</a>
+				</button>
+				<button id="submitOrderBtn" class="btn-next btn btn-dark fs-5 fw-bold" type="submit">
+					<a href="javascript:void(0)"
+					   class="text-decoration-none text-white">下一步</a>
+				</button>
+			</div>
 		</div>
-	</div>
+	</form>
 </section>
 
 
@@ -276,7 +264,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<div class="address-form needs-validation">
+				<form class="address-form needs-validation" novalidate>
 					<div class="fs-6 fw-bold mb-2">填寫地址</div>
 
 					<div class="city-selector-set d-flex mb-2 justify-content-between address-style-selector"
@@ -291,19 +279,13 @@
 						<input type="text" class="form-control addressName" id="addressNameInput"
 							   aria-describedby="addressName" placeholder="請輸入正確格式，範例如上" autocomplete="off" required>
 						<div id="addressName" class="form-text">範例格式：新安路一段5號</div>
+						<div class="invalid-feedback">請填寫正確的地址。</div>
 					</div>
 
-					<!-- <div class="mb-2">
-						<label for="addressNameRemarkInput" class="form-label fw-bold">地址備註</label>
-						<input type="text" class="form-control addressName" id="addressNameRemarkInput"
-							aria-describedby="addressNameRemark" placeholder="公司/樓層" autocomplete="off">
-					</div> -->
-
-				</div>
+				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" class="address-button btn btn-dark col-6 mx-auto"
-						data-bs-dismiss="modal">
+				<button type="submit" class="address-button btn btn-dark col-6 mx-auto" onclick="validateAddressForm()">
 					確定
 				</button>
 			</div>
@@ -312,6 +294,7 @@
 </div>
 
 <!-- 地址填寫結束 -->
+<!-- 取餐時間開始 -->
 <!-- 取餐時間開始 -->
 <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -351,7 +334,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="submit" class="date-time-button btn btn-dark col-6 mx-auto "
-						data-bs-dismiss="modal">
+						onclick="validateTimeForm()">
 					確定
 				</button>
 			</div>
@@ -360,9 +343,13 @@
 </div>
 
 <!-- 取餐結束開始 -->
+<!-- 取餐結束開始 -->
 @section Scripts {
+
+
+
 	<script src="~/js/tw-city-selector.js"></script>
-	<script src="~/js/data-time.js"></script>
+
 	<script>
 
 		$(document).ready(function () {
@@ -397,29 +384,29 @@
 
 			orderProductItems.forEach(function (item) {
 				var orderProductItemsHtml = `
-											<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
-												<div class="product-info col-6">
-													<div class="product-name fw-bold">
-														<div class="fs-5">${item.productName}</div>
-														<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
-													</div>
-												</div>
-												<div class="col-6 d-flex justify-content-around align-items-center">
-													<div class="input-group w-50">
-														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
-															<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
-														</button>
-														<input type="text" class="form-control fs-5 fw-bold text-center product-quantity-input" value="${item.quantity}"
-																id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-														<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
-															<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
-														</button>
-													</div>
-													<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
-													<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
-												</div>
-											</div>
-														`;
+																			<div class="order-product-item rounded-2 p-4 mx-2 d-flex align-items-center flex-wrap mb-2" data-id="${item.shoppingCartId}" data-productid="${item.productId}" data-stock="${item.productUnitsInStock}" data-storeid="${item.storeID}">
+																				<div class="product-info col-6">
+																					<div class="product-name fw-bold">
+																						<div class="fs-5">${item.productName}</div>
+																						<div class="text-muted product-price" data-price="${item.price}">$ ${item.price} / 1 份</div>
+																					</div>
+																				</div>
+																				<div class="col-6 d-flex justify-content-around align-items-center">
+																					<div class="input-group w-50">
+																						<button class="btn border-0" type="button" onclick="orderAdjustValue(this, -1, ${item.shoppingCartId}, ${item.productUnitsInStock})">
+																							<i class="fa-solid fa-minus fs-5 fw-bold text-black"></i>
+																						</button>
+																						<input type="text" class="form-control fs-5 fw-bold text-center px-0 product-quantity-input" value="${item.quantity}"
+																								id="number" autocomplete="off" min="1" max="99" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+																						<button class="btn border-0" type="button" onclick="orderAdjustValue(this, 1, ${item.shoppingCartId},${item.productUnitsInStock})">
+																							<i class="fa-solid fa-plus fs-5 fw-bold text-black"></i>
+																						</button>
+																					</div>
+																					<div class="product-item-price product-item-total-price fs-5 fw-bold"></div>
+																					<div class="product-delete text-success fs-5" onclick="orderDeleteCartItem(${item.shoppingCartId})"><i class="fa-solid fa-trash"></i></div>
+																				</div>
+																			</div>
+																						`;
 				orderProductList.append(orderProductItemsHtml);
 			});
 
@@ -633,7 +620,9 @@
 			const input = document.getElementById('inputCarrier');
 			const feedback = document.getElementById('carrierFeedback');
 			const pattern = /^\/[0-9A-Z.+-]{7}$/; // 請輸入有效的手機載具，首位應為 / ，英文字母需為大寫
-			if (pattern.test(input.value)) {
+
+			const isValid = pattern.test(input.value);
+			if (isValid) {
 				input.classList.remove('is-invalid');
 				input.classList.add('is-valid');
 				feedback.style.display = 'none';
@@ -642,40 +631,105 @@
 				input.classList.add('is-invalid');
 				feedback.style.display = 'block';
 			}
+
+			return isValid;
 		}
 
 		//如果原先手機載具輸入框有值，則切換到紙本發票後清空手機載具輸入框的值
 		function handleReceiptTypeChange(type) {
 			const input = document.getElementById('inputCarrier');
+			const carrierFeedback = document.getElementById('carrierFeedback');
 			if (type === 'paper') {
 				input.value = '';
-				input.classList.remove('is-valid', 'is-invalid');				
-			} else if (type === 'carrier') {				
+				input.classList.remove('is-valid', 'is-invalid');
+				carrierFeedback.style.display = 'none';
+			} else if (type === 'carrier') {
 				focusInput('inputCarrier');
 			}
 		}
 
+		//電話格式驗證
+		function validatePhone(type) {
+			const inputCellphone = document.getElementById('inputCellphone');
+			const inputPhone = document.getElementById('inputPhone');
+			const cellphoneFeedback = document.getElementById('cellphoneFeedback');
+			const phoneFeedback = document.getElementById('phoneFeedback');
 
+			if (type === '0') {
+				const pattern = /^09\d{8}$/; // 正則表達式，驗證手機號碼格式
+				const isValid = pattern.test(inputCellphone.value);
+				if (isValid) {
+					inputCellphone.classList.remove('is-invalid');
+					inputCellphone.classList.add('is-valid');
+					cellphoneFeedback.style.display = 'none';
+				} else {
+					inputCellphone.classList.remove('is-valid');
+					inputCellphone.classList.add('is-invalid');
+					cellphoneFeedback.style.display = 'block';
+				}
 
+				return isValid;
+			} else if (type === '1') {
+				const pattern = /^0\d{1,2}\d{6,8}$/; // 正則表達式，驗證市話格式
+				const isValid = pattern.test(inputPhone.value);
+				if (isValid) {
+					inputPhone.classList.remove('is-invalid');
+					inputPhone.classList.add('is-valid');
+					phoneFeedback.style.display = 'none';
+				} else {
+					inputPhone.classList.remove('is-valid');
+					inputPhone.classList.add('is-invalid');
+					phoneFeedback.style.display = 'block';
+				}
+				return isValid;
+			}
+		}
 
+		function handlePhoneTypeChange(type) {
+			const inputCellphone = document.getElementById('inputCellphone');
+			const inputPhone = document.getElementById('inputPhone');
 
+			if (type === '0') {
+				inputPhone.value = '';
+				inputPhone.classList.remove('is-valid', 'is-invalid');
+				phoneFeedback.style.display = 'none';
+				focusInput('inputCellphone');
+			} else if (type === '1') {
+				inputCellphone.value = '';
+				inputCellphone.classList.remove('is-valid', 'is-invalid');
+				cellphoneFeedback.style.display = 'none';
+				focusInput('inputPhone');
+			}
+		}
 
+		//給店家留言
+		// 獲取文字區域元素
+		const textarea = document.getElementById('orderFormControlTextarea1');
 
+		// 設置最大文字長度限制,例如500個字符
+		const maxLength = 500;
 
+		// 監聽 input 事件
+		textarea.addEventListener('input', () => {
+			// 如果文字長度超過上限,截斷多餘部分
+			if (textarea.value.length > maxLength) {
+				textarea.value = textarea.value.slice(0, maxLength);
+			}
+		});
 
+		// 監聽 input 事件
+		textarea.addEventListener('input', () => {
+			// 使用正則表達式過濾掉危險字符
+			const sanitizedValue = textarea.value.replace(/[<>\/]/g, '');
 
-
-
-
-
-
-
-
-
-
-
+			// 如果有不安全的字符被移除,更新文字區域的值
+			if (sanitizedValue !== textarea.value) {
+				textarea.value = sanitizedValue;
+			}
+		});
 
 		// 地址填寫開始
+
 		new TwCitySelector({
 			el: '.city-selector-set',
 			elCounty: '.county',
@@ -683,71 +737,541 @@
 			bootstrapStyle: true
 		});
 
-		var countySelect = document.getElementById("county");
-		var districtSelect = document.getElementById("district");
-		let selectedCountyValue;
-		let selectedDistrictValue;
-		let combinedValue;
+		let selectedCountyValue = '';
+		let selectedDistrictValue = '';
+		let combinedValue = '';
+		let addressNameValue = '';
 
-		countySelect.addEventListener("change", function () {
+		document.getElementById("county").addEventListener("change", function () {
+			selectedCountyValue = this.value;
+		});
 
-			let selectedCountyIndex = countySelect.selectedIndex;
-			selectedCountyValue = document.getElementsByTagName("option")[selectedCountyIndex].value
-			// console.log(selectedCountyValue);
-		}, false);
-
-		// 此方法不行，原因未知
-		// districtSelect.addEventListener("change", function () {
-		//     let selectedDistrictIndex = districtSelect.selectedIndex;
-		//     console.log(selectedDistrictIndex);
-		//     console.log(document.getElementsByTagName("option")[selectedDistrictIndex].text);
-		// }, false);
-
-		districtSelect.addEventListener("change", function () {
-			let selectedZipcode = districtSelect.options[districtSelect.selectedIndex].dataset.zipcode;
-
-			// 遍歷所有option,匹配data-zipcode找到對應value值
-			for (let i = 0; i < districtSelect.options.length; i++) {
-				if (districtSelect.options[i].dataset.zipcode === selectedZipcode) {
-					selectedDistrictValue = districtSelect.options[i].value;
-					break;
-				}
-			}
-
+		document.getElementById("district").addEventListener("change", function () {
+			selectedDistrictValue = this.value;
 			combinedValue = selectedCountyValue + selectedDistrictValue;
-		}, false);
+		});
 
-		let addressName = document.getElementById("addressNameInput");
-		let addressNameValue = "";
+		document.getElementById("addressNameInput").addEventListener("blur", function () {
+			addressNameValue = this.value;
+		});
 
-		addressName.addEventListener("blur", function () {
-			addressNameValue = addressName.value;
-			// console.log(addressNameValue);
-
-		}, false);
-
-		// let addressNameRemark = document.getElementById("addressNameRemarkInput");
-		// let addressNameRemarkValue = "";
-
-		// addressNameRemark.addEventListener("blur", function () {
-		//     addressNameRemarkValue = addressNameRemark.value;
-		//     // console.log(addressNameRemarkValue);
-		// }, false);
-
-		var confirmAddressButton = document.querySelector('.address-button');
-		confirmAddressButton.addEventListener("click", function () {
-
-			let addressInput = document.getElementById("addressInput");
-			// addressInput.value = combinedValue + " " + addressNameValue + " " + addressNameRemarkValue;
-			addressInput.value = combinedValue + " " + addressNameValue;
-
-		}, false);
-
+		// 地址驗證
+		function validateAddressForm() {
+			const form = document.querySelector('.address-form');
+			if (form.checkValidity()) {
+				form.classList.remove('was-validated');
+				const addressInput = document.getElementById("addressInput");
+				addressInput.value = combinedValue + " " + addressNameValue;
+				var myModalEl = document.getElementById('addressModal');
+				var modal = bootstrap.Modal.getInstance(myModalEl);
+				modal.hide();
+			} else {
+				form.classList.add('was-validated');
+			}
+		}
 
 		// 地址填寫結束
 
 
+		// 獲取店家營業時間
+		// 判斷是否有營業
 
+		document.addEventListener('DOMContentLoaded', function () {
+			var timeModalElement = document.getElementById('timeModal');
+			var timeModalInstance = bootstrap.Modal.getOrCreateInstance(timeModalElement);
+
+			$('#timeInput').click(function (event) {
+				event.preventDefault();
+				var storeId = $('#storeId').val();
+
+				if (!storeId) {
+					console.error('Store ID is missing.');
+					return;
+				}
+
+
+
+
+				$.ajax({
+					url: '/CheckedPayment/GetStoreOpenTime',
+					type: 'POST',
+					data: { storeId: storeId },
+					success: function (data) {
+						if (data.success) {
+
+							const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+
+							// 獲取當前時間
+							let currentTime = new Date();
+							let currentHour = currentTime.getHours();
+							let currentMinute = currentTime.getMinutes();
+
+							// console.log(currentTime);
+
+
+							// 商家營業時間
+							const storeOpenTimeDate = new Date();
+							const storeCloseTimeDate = new Date();
+							storeOpenTimeDate.setHours(data.data.storeOpeningTime.split(':')[0]);
+							storeOpenTimeDate.setMinutes(data.data.storeOpeningTime.split(':')[1]);
+							storeCloseTimeDate.setHours(data.data.storeClosingTime.split(':')[0]);
+							storeCloseTimeDate.setMinutes(data.data.storeClosingTime.split(':')[1]);
+
+							// console.log(storeOpenTimeDate);
+							// console.log(storeCloseTimeDate);
+
+							// 處理付款時間
+							let deliveryTime = new Date();
+							const pickUp = payWay; /* 自取或外送的選擇,假設為自取 */
+
+							// console.log(deliveryTime)
+
+							if (pickUp == '0') {
+								deliveryTime.setMinutes(deliveryTime.getMinutes() + 15);
+							} else if (pickUp == '1') {
+								deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
+							}
+
+							if (!data.data.storeOpenOrNot) {
+								$('#timeInput').val('店家今日未營業');
+								timeModalInstance.hide();
+								return;
+							}
+
+							if (currentTime > storeCloseTimeDate) {
+								$('#timeInput').val('店家今日已結束營業');
+								timeModalInstance.hide();
+								return;
+							}
+
+
+							// 顯示取餐時間模態框
+							timeModalInstance.show();
+
+							// const payWay = $('.pick-up[name="flexRadioPickUp"]:checked').val();
+							// console.log(payWay);
+							calculateDeliveryTime(payWay, data.data.storeOpeningTime, data.data.storeClosingTime)
+							// console.log(data);
+						} else {
+							console.error('Error: ' + data.message);
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error('Error fetching open time:', error);
+					}
+				});
+			});
+		});
+
+		// 根據當前時間、商家營業時間和取餐方式，計算生成取餐時間
+		function calculateDeliveryTime(payWay, storeOpenTime, storeCloseTime) {
+
+
+			// console.log(payWay);
+			// console.log(storeOpenTime);
+			// console.log(storeCloseTime);
+
+
+			// 取餐時間日期
+			const today = new Date();
+			const year = today.getFullYear();
+			const month = String(today.getMonth() + 1).padStart(2, '0');
+			const day = String(today.getDate()).padStart(2, '0');
+			const formattedDate = `${year}/${month}/${day}`;
+
+			const datepickerInput = document.getElementById('datepicker');
+			datepickerInput.value = formattedDate;
+
+			// 獲取當前時間
+			let currentTime = new Date();
+			let currentOpenHour = currentTime.getHours();
+			let currentCloseHour = currentTime.getHours();
+			let currentMinute = currentTime.getMinutes();
+
+			// console.log(currentTime);
+
+
+			// 商家營業時間
+			const storeOpenTimeDate = new Date();
+			const storeCloseTimeDate = new Date();
+
+			storeOpenTimeDate.setHours(storeOpenTime.split(':')[0]);
+			storeOpenTimeDate.setMinutes(storeOpenTime.split(':')[1]);
+			storeCloseTimeDate.setHours(storeCloseTime.split(':')[0]);
+			storeCloseTimeDate.setMinutes(storeCloseTime.split(':')[1]);
+
+
+			let storeOpenTimeHours = storeOpenTimeDate.getHours();
+			let storeOpenTimeMinutes = storeOpenTimeDate.getMinutes();
+			let storeCloseTimeHours = storeCloseTimeDate.getHours();
+			let storeCloseTimeMinutes = storeCloseTimeDate.getMinutes();
+
+
+
+
+			// console.log(storeOpenTimeDate);
+			// console.log(storeCloseTimeDate);
+
+
+			
+
+			// console.log(storeOpenTimeDate);
+			// console.log(storeCloseTimeDate);
+
+			// 處理付款時間
+			let deliveryTime = new Date();
+			const pickUp = payWay; /* 自取或外送的選擇,假設為自取 */
+
+			// console.log(deliveryTime)
+
+			if (pickUp == '0') {
+				deliveryTime.setMinutes(deliveryTime.getMinutes() + 15);
+			} else if (pickUp == '1') {
+				deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
+			}
+
+			// console.log(deliveryTime);
+
+			// 動態生成小時選項
+			// 根據當前時間生成可選取的小時項目，並和商家營業時間做比較，顯示可選取的時間
+			if (currentOpenHour < storeOpenTimeDate.getHours()) {
+				currentOpenHour = storeOpenTimeDate.getHours();
+			} else if (currentOpenHour === storeOpenTimeDate.getHours()) {
+				currentOpenHour = currentMinute > 55 ? storeOpenTimeDate.getHours() + 1 : storeOpenTimeDate.getHours();
+			}else {
+				currentOpenHour = currentOpenHour
+			}
+
+			var hoursList = document.getElementById('hours');
+			for (var i = currentOpenHour; i <= storeCloseTimeDate.getHours(); i++) {
+				var hourItem = document.createElement('li');
+				hourItem.classList.add('list-group-item');
+				if (i === currentOpenHour) {
+					hourItem.classList.add('active');
+				}
+				hourItem.textContent = i < 10 ? '0' + i : i;
+				hourItem.onclick = function () {
+					var selectedHour = this.textContent;
+					var selectedMinute = document.querySelector('.minutes .active').textContent;
+					document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+				};
+				hoursList.appendChild(hourItem);
+			}
+
+			// 動態生成分鐘選項
+			// 根據當前時間生成可選取的分鐘項目，並和商家營業時間做比較，顯示可選取的時間
+			var minutesList = document.getElementById('minutes');
+			for (var i = Math.ceil(currentMinute / 5) * 5; i <= 55; i += 5) {
+				var minuteItem = document.createElement('li');
+				minuteItem.classList.add('list-group-item');
+				if (i === (Math.ceil(currentMinute / 5) * 5)) {
+					minuteItem.classList.add('active');
+				}
+				minuteItem.textContent = i < 10 ? '0' + i : i;
+				minuteItem.onclick = function () {
+					var selectedHour = document.querySelector('.hours .active').textContent;
+					var selectedMinute = this.textContent;
+					document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+				};
+				minutesList.appendChild(minuteItem);
+			}
+
+			// 監聽小時選擇的變化
+			var hours = document.querySelectorAll('.hours li');
+			hours.forEach(function (hourItem) {
+				hourItem.addEventListener('click', function () {
+
+					hours.forEach(function (item) {
+						item.classList.remove('active');
+					});
+					hourItem.classList.add('active');
+
+					// 重新生成分鐘選項
+					generateMinutes();
+				});
+			});
+
+
+
+			// 生成分鐘選項的函數
+			function generateMinutes() {
+				var selectedHour = parseInt(document.querySelector('.hours .active').textContent);
+				var minutesList = document.getElementById('minutes');
+
+				// 清空原有的分鐘選項
+				minutesList.innerHTML = '';
+
+				// 根據用戶選擇的小時確定分鐘範圍
+				var startMinute, endMinute;
+				if (selectedHour === storeOpenTimeHours) {
+					startMinute = currentMinute > storeOpenTimeMinutes ? Math.ceil(currentMinute / 5) * 5 : storeOpenTimeMinutes - (storeOpenTimeMinutes % 5);
+					endMinute = 55;
+
+				} else if (selectedHour === storeCloseTimeHours) {
+					startMinute = 0;
+					endMinute = storeCloseTimeMinutes;
+
+				} else if (selectedHour === currentOpenHour) {
+					startMinute = Math.ceil(currentMinute / 5) * 5;
+					endMinute = 55;
+				} else {
+					startMinute = 0;
+					endMinute = 55;
+				}
+
+				// 動態生成分鐘選項
+				for (var i = startMinute; i <= endMinute; i += 5) {
+					var minuteItem = document.createElement('li');
+					minuteItem.classList.add('list-group-item');
+					if (i === (Math.ceil(currentMinute / 5) * 5)) {
+						minuteItem.classList.add('active');
+					}
+					minuteItem.textContent = i < 10 ? '0' + i : i;
+					minuteItem.onclick = function () {
+						var selectedHour = document.querySelector('.hours .active').textContent;
+						var selectedMinute = this.textContent;
+						document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
+					};
+					minutesList.appendChild(minuteItem);
+				}
+			}
+
+
+
+
+			var hoursList = document.getElementById('hours');
+			var minutesList = document.getElementById('minutes');
+			var timePickerInput = document.getElementById('timepicker');
+
+			// 將小時和分鐘選項的點擊事件綁定到各自的父元素上
+			hoursList.addEventListener('click', function (event) {
+				var target = event.target;
+				if (target.tagName === 'LI') {
+					// 取消上一個 active
+					var prevActiveHour = document.querySelector('.hours .active');
+					if (prevActiveHour) {
+						prevActiveHour.classList.remove('active');
+					}
+					// 設定當前選項為 active
+					target.classList.add('active');
+					// 更新時間選擇器的值
+					updateTimePickerValue();
+				}
+			});
+
+			minutesList.addEventListener('click', function (event) {
+				var target = event.target;
+				if (target.tagName === 'LI') {
+					// 取消上一個 active
+					var prevActiveMinute = document.querySelector('.minutes .active');
+					if (prevActiveMinute) {
+						prevActiveMinute.classList.remove('active');
+					}
+					// 設定當前選項為 active
+					target.classList.add('active');
+					// 更新時間選擇器的值
+					updateTimePickerValue();
+				}
+			});
+
+			// 監聽“確定”按鈕的點擊事件
+			var confirmButton = document.querySelector('.date-time-button');
+			confirmButton.addEventListener('click', function () {
+				var selectedDate = document.getElementById('datepicker').value;
+				var selectedTime = document.getElementById('timepicker').value;
+
+				// 將值顯示到<input>元素中
+				var timeInput = document.getElementById('timeInput');
+				timeInput.value = selectedDate + ' ' + selectedTime;
+
+			});
+
+			// 更新時間選擇器的值
+			function updateTimePickerValue() {
+				var selectedHour = document.querySelector('.hours .active').textContent;
+				var selectedMinute = document.querySelector('.minutes .active').textContent;
+				timePickerInput.value = selectedHour + ':' + selectedMinute;
+			}
+
+			generateMinutes();
+		}
+
+
+
+		function validateTimeForm() {
+			var datepicker = document.getElementById("datepicker").value;
+			var timepicker = document.getElementById("timepicker").value;
+
+			if (!datepicker || !timepicker) {
+				alert("請填寫取餐時間！");
+				return false;
+			}
+			$('#timeModal').modal('hide');
+
+			return true;
+		}
+
+		//自動帶入會員資料
+		$(document).ready(function () {
+			$('#flexCheckmemberProfile').change(function () {
+				if (this.checked) {
+
+					$.ajax({
+						url: '/CheckedPayment/GetMemberProfile',
+						type: 'GET',
+						dataType: 'json',
+						success: function (response) {
+							if (response.success) {
+								var data = response.data;
+								// 填入會員資料
+								$('#addressInput').val(data.address);
+								$('#inputCarrier').val(data.carrier);
+
+								if (!storeId) {
+									console.error('Store ID is missing.');
+									return;
+								}
+
+
+								// 自動選擇外送選項框
+								$('#flexRadioPickUp2').prop('checked', true);
+
+								// 自動選擇手機載具選項框
+								if (data.carrier) {
+									$('#flexRadioReceipt2').prop('checked', true);
+								}
+
+								// 根據返回的電話類型選擇相應的選項框
+
+								if (data.cellphone) {
+									$('#flexRadioCellphone').prop('checked', true);
+									$('#inputCellphone').val(data.cellphone);
+								} else if (data.phone) {
+									$('#flexRadioPhone').prop('checked', true);
+									$('#inputPhone').val(data.phone);
+								}
+
+							} else {
+								console.error('Error: ' + response.message);
+							}
+						},
+						error: function (xhr, status, error) {
+							console.error('Error fetching member profile:', error);
+						}
+					});
+				} else {
+					// 清空输入框
+					$('#addressInput').val('');
+					$('#inputCarrier').val('');
+					$('#inputCellphone').val('');
+					$('#inputPhone').val('');
+				}
+			});
+		});
+
+
+		// 點擊繼續加購功能
+		$('#continueShoppingBtn').click(function () {
+			// 重新導向至首頁
+			continueShopping()
+		});
+
+		function continueShopping() {
+
+			$.ajax({
+				url: '/CheckedPayment/GetShopping',
+				type: 'GET',
+				success: function (data) {
+					// console.log(data);
+
+					if (data.success) {
+
+						if (data.data.length === 0) {
+							// 重新導向至首頁
+							window.location.href = '/';
+						} else {
+							// 重新導向至商店
+							window.location.href = '/Store/Index/' + data.data[0].storeId;
+						}
+
+						// 重新導向至首頁
+						// window.location.href = '/';
+					} else {
+						console.error('Error: ' + data.message);
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error clearing cart:', error);
+				}
+			});
+		}
+
+
+		// 點擊送出訂單按鈕
+		$(document).ready(function () {
+
+			$('#paymentOrderDetail').on('submit', function (event) {
+
+				// 	驗證手機載具
+				const receiptType = $('input[name="flexRadioReceipt"]:checked').val();
+
+				if (receiptType === '2' && !validateCarrier()) {
+					alert("請填寫手機載具！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				}
+
+
+				// 驗證電話
+				const phoneType = $('input[name="flexRadioPhone"]:checked').val();
+
+				if (phoneType === '0' && !validatePhone(phoneType)) {
+					alert("請填寫手機號碼！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				} else if (phoneType === '1' && !validatePhone(phoneType)) {
+					alert("請填寫市話！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				}
+
+				// 驗證取餐方式，如果外送要填地址
+				const pickUpType = $('input[name="flexRadioPickUp"]:checked').val();
+				let address = $('#addressInput').val();
+
+
+				if (pickUpType === '1' && address.trim() === '') {
+					alert("請填寫地址！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				}
+
+				// 確認是否有選擇商品
+				if ($('.order-product-item').length === 0) {
+					alert("請選擇商品！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				}
+
+				// 確認是否有選擇取餐時間
+				const orderTime = $('input[name="orderTime"]').val();
+
+				if (orderTime === '') {
+					alert("請選擇取餐時間！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				} else if (orderTime === '店家今日未營業') {
+					alert("店家今日未營業！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				} else if (orderTime === '店家今日已結束營業') {
+					alert("店家今日已結束營業！");
+					event.preventDefault(); // 阻止表單提交
+					return false;
+				}
+			});
+
+		});
 
 
 

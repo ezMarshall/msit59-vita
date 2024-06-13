@@ -8,11 +8,11 @@ public partial class Customer
 {
     public int CustomerId { get; set; }
 
-    public string CustomerName { get; set; } = null!;
+    public string? CustomerName { get; set; } = null!;
 
     public string? CustomerNickName { get; set; }
 
-    public string CustomerEmail { get; set; } = null!;
+    public string? CustomerEmail { get; set; } = null!;
 
     public string? CustomerCellPhone { get; set; }
   
@@ -28,7 +28,7 @@ public partial class Customer
 
     public string? CustomerEinvoiceNumber { get; set; }
 
-    public string CustomerPassword { get; set; } = null!;
+    public string? CustomerPassword { get; set; }
 
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
