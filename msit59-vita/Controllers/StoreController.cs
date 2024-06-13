@@ -40,7 +40,7 @@ namespace msit59_vita.Controllers
 			var productCategoryCounts = (from product in _context.Products
 										 join category in _context.ProductCategories
 										 on product.CategoryId equals category.CategoryId
-										 where product.StoreId == id
+										 where product.StoreId == id && category.CategoryOnDelete == false
 										 group product by new { category.CategoryId, category.CategoryName } into g
 										 select new
 										 {

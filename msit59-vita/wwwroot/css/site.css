@@ -11931,16 +11931,16 @@ body {
     color: #FF6700;
 }
 
-#searchInput {
+#HomeSearchInput {
     cursor: text;
 }
 
-#startSearch {
+#HomeSearchBtn {
     background: none;
     right: 10px;
 }
 
-    #startSearch:hover {
+    #HomeSearchBtn:hover {
         color: #FF6700;
     }
 

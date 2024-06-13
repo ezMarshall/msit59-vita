@@ -52,7 +52,8 @@ namespace msit59_vita.Controllers
             var query = from o in _context.Favorites
                         join s in _context.Stores on o.StoreId equals s.StoreId
                         where o.CustomerId == _customerId
-                        select new
+						orderby o.FavoriteId descending
+						select new
                         {
                             o.FavoriteId,
                             s.StoreId,
@@ -66,7 +67,8 @@ namespace msit59_vita.Controllers
                                     join s in _context.Stores on o.StoreId equals s.StoreId
                                     join so in _context.StoreOpeningHours on o.StoreId equals so.StoreId
                                     where o.CustomerId == _customerId
-                                    select new
+									orderby o.FavoriteId descending
+									select new
                                     {                                        
                                         so.Store.StoreId,
                                         so.MyWeekDay,
@@ -80,7 +82,7 @@ namespace msit59_vita.Controllers
                                 join r in _context.Reviews on o.OrderId equals r.OrderId
                                 where f.CustomerId == _customerId
                                 group r by r.Order.StoreId into g
-                                select new
+								select new
                                 {
                                     StoreId = g.Key,
                                     avgOfRating = g.Average(re => re.ReviewRating),

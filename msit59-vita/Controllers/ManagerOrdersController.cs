@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using msit59_vita.Models;
+using System.Globalization;
 using static msit59_vita.Models.ManagerOrders;
 
 
@@ -45,9 +46,9 @@ namespace msit59_vita.Controllers
                                   StoreId = o.StoreId,
                                   OrderId = o.OrderId,
                                   OrderTime = o.OrderTime,
-                                  OrderPayment=o.OrderPayment,
-                                  OrderDeliveryVia=o.OrderDeliveryVia,
-                                  CustomerOrderStatus=o.CustomerOrderStatus,
+                                  OrderPayment = o.OrderPayment,
+                                  OrderDeliveryVia = o.OrderDeliveryVia,
+                                  CustomerOrderStatus = o.CustomerOrderStatus,
                                   CustomerId = o.CustomerId,
                               };
             var orders = queryOrders.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
@@ -98,13 +99,13 @@ namespace msit59_vita.Controllers
                                   OrderDeliveryVia = o.OrderDeliveryVia,
                                   CustomerOrderStatus = o.CustomerOrderStatus,
                                   OrderFinishedTime= o.OrderFinishedTime,
-                              }
-                              ;
+                              };
+                              
 
             // 根據搜尋字串過濾
             if (!string.IsNullOrEmpty(searchString))
             {
-                queryOrders = queryOrders.Where(o => o.OrderId.ToString().Contains(searchString) );
+                queryOrders = queryOrders.Where(o => o.OrderId.ToString().Contains(searchString));
             }
 
             // 根據訂單狀態過濾
@@ -194,7 +195,7 @@ namespace msit59_vita.Controllers
             {
                 OrderId = orderId,
                 MessageInformedTime = DateTime.Now,
-                MessageStatus = false, 
+                MessageStatus = false,
                 MessageContent = order.CustomerOrderStatus
             };
             _context.OrderMessages.Add(newMessage);
@@ -258,6 +259,50 @@ namespace msit59_vita.Controllers
             {
                 return Redirect("/ManagerLogin");
             }
+        }
+      
+        
+        [HttpPost]
+        public PartialViewResult FilterCustomerOrderStatus(string orderStatus, string todayDate, int currentPage = 1)
+        {
+            var TodayDate = DateTime.ParseExact(todayDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            var queryOrders = from o in _context.Orders
+                              orderby o.CustomerOrderStatus, o.OrderTime descending
+                              where o.CustomerOrderStatus == byte.Parse(orderStatus) && o.OrderTime.Date == TodayDate.Date && o.StoreId == 1
+                              select new OrderViewModel
+                              {
+                                  StoreId = o.StoreId,
+                                  OrderId = o.OrderId,
+                                  OrderTime = o.OrderTime,
+                                  OrderPayment = o.OrderPayment,
+                                  OrderDeliveryVia = o.OrderDeliveryVia,
+                                  CustomerOrderStatus = o.CustomerOrderStatus,
+                                  OrderFinishedTime = o.OrderFinishedTime,
+                              };
+
+            var totalCount = queryOrders.Count(); // 總記錄數
+            int maxRows = 10; // 每頁行數
+
+            var reviewsList = queryOrders
+            .Skip((currentPage - 1) * maxRows)
+            .Take(maxRows)
+            .ToList();
+
+            var viewModel = new ManagerOrders
+            {
+                Orders = reviewsList.Cast<OrderViewModel>().ToList(),
+                CurrentPageIndex = currentPage,
+                PageCount = (int)Math.Ceiling((double)totalCount / maxRows),
+                MaxRows = maxRows,
+                TotalCount = totalCount // 新增：返回總記錄數
+            };
+            Console.WriteLine("----------------------------------------------------------------------------------------------------------");
+            Console.WriteLine(viewModel.PageCount);
+            Console.WriteLine(viewModel.TotalCount);
+            Console.WriteLine("----------------------------------------------------------------------------------------------------------");
+
+            return PartialView("_OrdersTable", viewModel);
         }
 
     }
