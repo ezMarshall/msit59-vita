@@ -18,5 +18,11 @@ namespace SignalRChat.Hubs
         {
             await Clients.All.SendAsync("NewOrders");
         }
+
+        public async Task SendStoreStatusNotification(int StoreId)
+        {
+            await Clients.All.SendAsync("ReceiveStoreStatusNotification", StoreId);
+        }
+
     }
 }
