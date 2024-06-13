@@ -391,6 +391,7 @@ namespace msit59_vita.Controllers
 			var totalAmount = (int)paymentInfo.Sum(x => x.ProductUnitPrice * x.ShoppingCartQuantity);
 
 
+			ViewBag.PaymentInfo = paymentInfo;
 			ViewBag.TotalAmount = totalAmount;
 			ViewBag.TransactionId = transactionId;
 			ViewBag.OrderId = orderId;

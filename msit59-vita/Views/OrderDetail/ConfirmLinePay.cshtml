@@ -1,8 +1,6 @@
 ﻿@{
 	ViewData["Title"] = "LinePay付款";
-	// ViewData["Title"] = "會員資料";
-	// var paymentInfo = ViewBag.PaymentInfo;
-	// ViewData["Title"] = "LinePay付款";
+	var paymentInfo = ViewBag.PaymentInfo;
 }
 
 
@@ -45,12 +43,8 @@
 				<a id="paymentStatus">交易狀態 : 交易已授權，等待確認<a>
 			</div>
 		</center>
-
-		<!-- 最上方的 bar -->
 	</body>
-
-	@* 	<form action="/OrderDetail/ConfirmOrder" method="post"> *@
-	@* <div class="order mt-3 row mb-3">
+	<div class="order mt-3 row mb-3">
 		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
 			<div class="step active col-2 text-center fw-bold ">
 				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
@@ -147,8 +141,6 @@
 				</button>
 			</div>
 		</div>
-		@*
-		</form> *@
 
 </section>
  
