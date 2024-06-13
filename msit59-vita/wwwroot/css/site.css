@@ -11826,6 +11826,9 @@ body {
     opacity: 0.7;
 }
 
+.notify-content{
+    width:90%;
+}
 
 .home-fixed {
     position: fixed;
@@ -11833,7 +11836,7 @@ body {
     bottom: 10px;
     opacity: 0;
     transition: all 0.3s;
-    z-index:3;
+    z-index: 3;
 }
 
     .home-fixed a {
@@ -12502,3 +12505,4 @@ body {
 .text-shadow {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
