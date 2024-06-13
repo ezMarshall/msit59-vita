@@ -2,6 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
+    var categoryNames = new List<string>();
 }
 
 @section MyStyle {
@@ -26,7 +27,7 @@
         }
 
         #TableAreas {
-            padding-top: 45px;
+            padding-top: 10px;
         }
 
         @@media (max-width: 992px) {
@@ -58,10 +59,10 @@
                 @{
                     foreach (var category in Model.Categories)
                     {
-
-                            <li class="pb-1 text-center col-lg-12 col-3 category-font">
-                                @category.CategoryName
-                            </li>
+                        categoryNames.Add(category.CategoryName);
+                        <li class="pb-1 text-center col-lg-12 col-3 category-font">
+                            @category.CategoryName
+                        </li>
                     }
                 }
 
@@ -72,6 +73,7 @@
 
 
         <div id="TableAreas" class="col-lg-10 col-sm-12 row pb-4 min-vh-100">
+            <div><a href="/ManagerProducts/ProductCreate" class="btn btn-warning me-5 float-end" style="width: 100px;">新增商品</a></div>
             <form action="/ManagerProducts" method="post">
                 <table id="TableProducts" class="table border-bottom border-dark col text-center">
                     <thead>
@@ -94,27 +96,36 @@
                             foreach (var product in Model.Products)
                             {
                                 productNumber++;
-                                    <tr>
-                                        <th class="align-middle" scope="row">@productNumber</th>
-                                        <td class="align-middle">
-                                            <img src="~/@product.ProductImage" class="object-fit-cover @(string.IsNullOrEmpty(product.ProductImage) ? "invisible": "")" style="width: 50px; height: 50px;" alt="">
-                                        </td>
-                                        <td class="align-middle">@product.ProductName</td>
-                                        <td class="align-middle">$@Convert.ToInt32(product.ProductUnitPrice)</td>
-                                        <td class="align-middle">@product.ProductUnitsInStock</td>
-                                        <td class="align-middle">
-                                            <div class="form-check form-switch d-flex justify-content-center">
-                                                <input class="form-check-input " type="checkbox" id="Switch_@product.ProductId"
-                                                @((product.ProductOnSell == true) ? "checked" : "") />
-                                            </div>
-                                        </td>
-                                        <td class="align-middle product-category-name">@product.CategoryName</td>
-                                        <td class="align-middle">
-                                            <a href="/ManagerProducts/ProductCopy/@product.ProductId" class="btn btn-outline-info btn-sm mr-1 mb-1">複製</a>
-                                            <a href="/ManagerProducts/ProductEdit/@product.ProductId"
-                                               class="btn btn-outline-success btn-sm mr-1 mb-1">編輯</a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <th class="align-middle" scope="row">@productNumber</th>
+                                    <td class="align-middle">
+                                        @{
+                                            if (string.IsNullOrEmpty(product.ProductImage))
+                                            {
+                                                <img src="~/image/Common/300x300_default.png" class="object-fit-cover" style="width: 50px; height: 50px;" alt="">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/@product.ProductImage" class="object-fit-cover" style="width: 50px; height: 50px;" alt="">
+                                            }
+                                        }
+                                    </td>
+                                    <td class="align-middle">@product.ProductName</td>
+                                    <td class="align-middle">$@Convert.ToInt32(product.ProductUnitPrice)</td>
+                                    <td class="align-middle">@product.ProductUnitsInStock</td>
+                                    <td class="align-middle">
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input class="form-check-input " type="checkbox" id="Switch_@product.ProductId"
+                                            @((product.ProductOnSell == true) ? "checked" : "") />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle product-category-name">@product.CategoryName</td>
+                                    <td class="align-middle">
+                                        <a href="/ManagerProducts/ProductCopy/@product.ProductId" class="btn btn-outline-info btn-sm mr-1 mb-1">複製</a>
+                                        <a href="/ManagerProducts/ProductEdit/@product.ProductId"
+                                           class="btn btn-outline-success btn-sm mr-1 mb-1">編輯</a>
+                                    </td>
+                                </tr>
                             }
                         }
 
@@ -133,21 +144,21 @@
                         @{
                             if (Model.PageCount <= 3)
                             {
-                                    <li id="pageBox1" class="page-item @(Model.CurrentPageIndex == 1 ? "active" : "")">
-                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
-                                            1
-                                        </a>
-                                    </li>
-                                    <li id="pageBox2" class="page-item @(Model.CurrentPageIndex == 2 ? "active" : "") @(Model.PageCount < 2 ? "disabled" : "")">
-                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
-                                            2
-                                        </a>
-                                    </li>
-                                    <li id="pageBox3" class="page-item @(Model.CurrentPageIndex == 3 ? "active" : "") @(Model.PageCount < 3 ? "disabled" : "")">
-                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
-                                            3
-                                        </a>
-                                    </li>
+                                <li id="pageBox1" class="page-item @(Model.CurrentPageIndex == 1 ? "active" : "")">
+                                    <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                        1
+                                    </a>
+                                </li>
+                                <li id="pageBox2" class="page-item @(Model.CurrentPageIndex == 2 ? "active" : "") @(Model.PageCount < 2 ? "disabled" : "")">
+                                    <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                        2
+                                    </a>
+                                </li>
+                                <li id="pageBox3" class="page-item @(Model.CurrentPageIndex == 3 ? "active" : "") @(Model.PageCount < 3 ? "disabled" : "")">
+                                    <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(3)">
+                                        3
+                                    </a>
+                                </li>
                             }
                             else
                             {
@@ -155,82 +166,82 @@
                                 // pageBox1
                                 if (Model.CurrentPageIndex == 1)
                                 {
-                                        <li id="pageBox1" class="page-item active">
-                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
-                                                1
-                                            </a>
-                                        </li>
+                                    <li id="pageBox1" class="page-item active">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(1)">
+                                            1
+                                        </a>
+                                    </li>
                                 }
                                 else if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                        <li id="pageBox1" class="page-item">
-                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
-                                                @(Model.CurrentPageIndex - 2)
-                                            </a>
-                                        </li>
+                                    <li id="pageBox1" class="page-item">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -2))">
+                                            @(Model.CurrentPageIndex - 2)
+                                        </a>
+                                    </li>
 
                                 }
                                 else
                                 {
-                                        <li id="pageBox1" class="page-item">
-                                            <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
-                                                @(Model.CurrentPageIndex - 1)
-                                            </a>
-                                        </li>
+                                    <li id="pageBox1" class="page-item">
+                                        <a id="pageBox1-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex -1))">
+                                            @(Model.CurrentPageIndex - 1)
+                                        </a>
+                                    </li>
                                 }
 
                                 // pageBox2
                                 if (Model.CurrentPageIndex == 1)
                                 {
-                                        <li id="pageBox2" class="page-item">
-                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
-                                                2
-                                            </a>
-                                        </li>
+                                    <li id="pageBox2" class="page-item">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(2)">
+                                            2
+                                        </a>
+                                    </li>
 
                                 }
                                 else if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                        <li id="pageBox2" class="page-item">
-                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
-                                                @(Model.PageCount - 1)
-                                            </a>
-                                        </li>
+                                    <li id="pageBox2" class="page-item">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@(Model.CurrentPageIndex - 1))">
+                                            @(Model.PageCount - 1)
+                                        </a>
+                                    </li>
                                 }
                                 else
                                 {
 
-                                        <li id="pageBox2" class="page-item active">
-                                            <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
-                                                @Model.CurrentPageIndex
-                                            </a>
-                                        </li>
+                                    <li id="pageBox2" class="page-item active">
+                                        <a id="pageBox2-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex)">
+                                            @Model.CurrentPageIndex
+                                        </a>
+                                    </li>
                                 }
 
                                 // pageBox3
                                 if (Model.CurrentPageIndex == Model.PageCount)
                                 {
-                                        <li id="pageBox3" class="page-item active">
-                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
-                                                @Model.PageCount
-                                            </a>
-                                        </li>
+                                    <li id="pageBox3" class="page-item active">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.PageCount)">
+                                            @Model.PageCount
+                                        </a>
+                                    </li>
                                 }
                                 else if (Model.CurrentPageIndex == 1)
                                 {
-                                        <li id="pageBox3" class="page-item">
-                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
-                                                @(Model.CurrentPageIndex + 2)
-                                            </a>
-                                        </li>
+                                    <li id="pageBox3" class="page-item">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 2)">
+                                            @(Model.CurrentPageIndex + 2)
+                                        </a>
+                                    </li>
                                 }
                                 else
                                 {
-                                        <li id="pageBox3" class="page-item">
-                                            <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
-                                                @(Model.CurrentPageIndex + 1)
-                                            </a>
-                                        </li>
+                                    <li id="pageBox3" class="page-item">
+                                        <a id="pageBox3-link" class="page-link text-dark" href="javascript:PagerClick(@Model.CurrentPageIndex + 1)">
+                                            @(Model.CurrentPageIndex + 1)
+                                        </a>
+                                    </li>
                                 }
 
                             }
@@ -249,73 +260,7 @@
         </div>
     </div>
 
-    <!-- #region Modal: EditProductCategories -->
-
-    <div class="modal fade" id="EditProductCategoriesModal" aria-hidden="true"
-         aria-labelledby="EditProductCategoriesModalLabel" tabindex="-1">
-        <div class="modal-dialog  modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fs-2" id="EditProductCategoriesModalLabel">編輯商品分類</h5>
-                    @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <a href="" id="btnProductCategoryCreate" class="btn btn-outline-dark me-2 mb-1"
-                       data-bs-target="#CreateProductCategoryModal" data-bs-toggle="modal"
-                       data-bs-dismiss="modal">新增分類</a>
-                    <a href="" class="btn btn-outline-danger me-2 mb-1">關閉視窗</a>
-                    <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
-                        data-bs-dismiss="modal">Open second modal</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- #endregion -->
-    <!-- #region Modal: CreateProductCategories -->
-
-    <div class="modal fade" id="CreateProductCategoryModal" aria-hidden="true"
-         aria-labelledby="CreateProductCategoryModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fs-2" id="CreateProductCategoryModal">新增商品分類</h5>
-                    @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
-                </div>
-                <div class="modal-body">
-                    <div id="alertPlaceholderCategoryCreate" class="d-none">
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <span>
-                                <strong>警告: </strong><p class="d-inline"></p>
-                                <button type="button" id="btnAlertClose" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
-                                    &times;
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    <form action="/ManagerProducts/CategoryCreate" method="post">
-                        <label class="form-label" for="CreateCategoryName">商品分類名稱</label>
-                        <input class="form-control" id="CreateCategoryName" name="CreateCategoryName" type="text" />
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
-                        data-bs-dismiss="modal">Back to first</button> -->
-                    <a href="" class="btn btn-success me-2 mb-1" id="ProductCategoryCreateEnsure"
-                       data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
-                       data-bs-dismiss="modal">新增分類</a>
-                    <a href="" class="btn btn-danger me-2 mb-1" id="ProductCategoryCreateCancel"
-                       data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
-                       data-bs-dismiss="modal">取消設定</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- #endregion -->
+   
     <!-- #region Modal: Warning -->
 
     <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
@@ -335,13 +280,79 @@
     </div>
 
     <!-- #endregion -->
+    <!-- #region Modal: EditProductCategories -->
+
+    <div class="modal fade" id="EditProductCategoriesModal" aria-hidden="true"
+         aria-labelledby="EditProductCategoriesModalLabel" tabindex="-1">
+        <div class="modal-dialog  modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-2" id="EditProductCategoriesModalLabel">編輯商品分類</h5>
+                    @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:void(0)" id="btnProductCategoryCreate" class="btn btn-outline-dark me-2 mb-1"
+                       data-bs-target="#CreateProductCategoryModal" data-bs-toggle="modal"
+                       data-bs-dismiss="modal">新增分類</a>
+                    <a href="" class="btn btn-outline-danger me-2 mb-1">關閉視窗</a>
+                    <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+                        data-bs-dismiss="modal">Open second modal</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion -->
+    <!-- #region Modal: CreateProductCategories -->
+
+    <div class="modal fade" id="CreateProductCategoryModal" aria-hidden="true"
+         aria-labelledby="CreateProductCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-2" id="CreateProductCategoryModal">新增商品分類</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="alertPlaceholderCategoryCreate" class="d-none">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <span>
+                                <strong>警告: </strong><p class="d-inline"></p>
+                                <button type="button" id="btnAlertCloseCategoryCreate" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
+                                    &times;
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <form action="/ManagerProducts/CategoryCreate" method="post">
+                        <label class="form-label" for="CreateCategoryName">商品分類名稱</label>
+                        <input class="form-control" id="CreateCategoryName" name="CreateCategoryName" type="text" />
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                        data-bs-dismiss="modal">Back to first</button> -->
+                    <a href="" class="btn btn-success me-2 mb-1" id="ProductCategoryCreateEnsure"
+                       data-bs-target="#EditProductCategoriesModal">新增分類</a>
+                    <a href="" class="btn btn-danger me-2 mb-1" id="ProductCategoryCreateCancel"
+                       data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
+                       data-bs-dismiss="modal">取消設定</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion -->
+
 }
 
 
 
 
 
-@section Scripts{
+@section Scripts {
     <script>
         // console.log("頁數"+ @Model.PageCount)
         // console.log("現在的頁面" + @Model.CurrentPageIndex)
@@ -351,6 +362,9 @@
             $("#hfCurrentPageIndex").val(CurrentPageIndex);
             document.forms[0].submit();
         }
+
+
+        // 商品分類新增
 
         $(function () {
 
@@ -364,29 +378,43 @@
         });
 
 
-        $('#ProductCategoryCreateEnsure').on('click', function () {
-            var CategoryName = $('#CreateCategoryName').val();
-            if (CategoryName.trim() !== "") {
+        var categoryNameList = @Html.Raw(Json.Serialize(categoryNames));
+        $('#ProductCategoryCreateEnsure').on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var CategoryName = $('#CreateCategoryName').val().trim();
+           
+            if (CategoryName.trim() == "") {
+                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
+                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+            } else if (categoryNameList.includes(CategoryName)) {
+                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱已存在，請重新輸入");
+                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+            } else {
                 $.ajax({
                     url: '/ManagerProducts/CategoryCreate',
                     method: 'POST',
                     data: { CategoryName: CategoryName },
                     success: function (response) {
-                        // 在成功刪除後，重新加載最新的產品類別資料
+                        categoryNameList.push(CategoryName);
                         $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                            $("#CreateProductCategoryModal").modal("hide");
                             $("#EditProductCategoriesModal").modal("show");
+
                         });
                     }
-
-
-                })
-            } else {
-                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
-                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+                });
             }
+        });
 
+        $('#btnAlertCloseCategoryCreate').on("click", function () {
+            $('#alertPlaceholderCategoryCreate .alert-warning p').empty();
+            $('#alertPlaceholderCategoryCreate').addClass("d-none");
         })
 
+
+        // 上架狀態調整
         $(".form-check-input").on("change", function () {
             var ProductId = $(this).prop("id").split('_')[1];
             var ProductOnSell = $(this).prop("checked");
@@ -400,32 +428,33 @@
                 $('#WarningModal').modal('show');
                 $('#WarningModal .modal-body').text("此類別已被刪除，如仍要上架商品請去「編輯」頁面修改類別");
                 return;
-                
-            }else{
 
-            $.ajax({
-                url: '/ManagerProducts/ProductOnSellSwitch',
-                method: 'POST',
-                data: {
-                    ProductId: ProductId,
-                    ProductOnSell: ProductOnSell
-                },
-                success: function (response) {
-                    if (!response.success) {
-                        $(this).prop("checked",false);
-                        $('#WarningModal').modal('show');
-                        $('#WarningModal .modal-body').text(response.message);
-                    }else{
+            } else {
+
+                $.ajax({
+                    url: '/ManagerProducts/ProductOnSellSwitch',
+                    method: 'POST',
+                    data: {
+                        ProductId: ProductId,
+                        ProductOnSell: ProductOnSell
+                    },
+                    success: function (response) {
+                        if (!response.success) {
+                            $(this).prop("checked", false);
+                            $('#WarningModal').modal('show');
+                            $('#WarningModal .modal-body').text(response.message);
+                        } else {
                             location.reload();
+                        }
+
                     }
-                    
-                }
-            });
+                });
 
 
             }
 
         });
+
 
 
     </script>
