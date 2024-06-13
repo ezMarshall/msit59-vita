@@ -171,24 +171,47 @@ namespace msit59_vita.Controllers
                 return NotFound();
             }
 
-            switch (action)
+            if (action == "接單")
             {
-                case "接單":
-                    order.CustomerOrderStatus = 1; // 製作中
-                    break;
-                case "出餐":
-                    order.CustomerOrderStatus = 2; // 配送中或等待自取
-                    break;
-                case "退單":
-                    order.CustomerOrderStatus = 4; // 已退單
-                    order.OrderFinishedTime = DateTime.Now;
-                    break;
-                case "完成訂單":
-                    order.CustomerOrderStatus = 3; // 已完成
-                    order.OrderFinishedTime = DateTime.Now;
-                    break;
-                default:
-                    return BadRequest("無效的操作");
+                // 查詢訂單詳情
+                var orderDetails = _context.OrderDetails
+                    .Where(od => od.OrderId == orderId)
+                    .ToList();
+
+                foreach (var detail in orderDetails)
+                {
+                    var product = _context.Products.Find(detail.ProductId);
+                    // 檢查庫存量是否足夠
+                    if (product.ProductUnitsInStock < detail.Quantity)
+                    {
+                        // 處理庫存不足的情況
+                        return BadRequest("庫存不足");
+                    }
+
+                    // 減庫存量
+                    product.ProductUnitsInStock -= detail.Quantity;
+                }
+
+                // 更新訂單狀態
+                order.CustomerOrderStatus = 1; // 製作中
+            }
+            else if (action == "出餐")
+            {
+                order.CustomerOrderStatus = 2; // 配送中或等待自取
+            }
+            else if (action == "退單")
+            {
+                order.CustomerOrderStatus = 4; // 已退單
+                order.OrderFinishedTime = DateTime.Now;
+            }
+            else if (action == "完成訂單")
+            {
+                order.CustomerOrderStatus = 3; // 已完成
+                order.OrderFinishedTime = DateTime.Now;
+            }
+            else
+            {
+                return BadRequest("無效的操作");
             }
 
             var newMessage = new OrderMessage
@@ -213,7 +236,6 @@ namespace msit59_vita.Controllers
                 return StatusCode(500, new { success = false, message = "更新訂單狀態時發生錯誤" });
             }
         }
-
         // Order Details
         public IActionResult OrderDetails(int id)
         {

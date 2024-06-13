@@ -350,7 +350,9 @@
             });
             // signalR 新進訂單時reload
             connection.on("NewOrders", function () {
+
                 location.reload();
+
             })
 
             function reloadOrdersTable() {
@@ -368,7 +370,7 @@
             }
         });
 
-        // update order status start end
+        // update order status end
 
 
         // 篩選 start
