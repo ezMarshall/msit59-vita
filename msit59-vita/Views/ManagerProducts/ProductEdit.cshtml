@@ -2,6 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
+    var categoryNames = new List<string>();
 }
 
 
@@ -61,7 +62,7 @@
                 @{
                     foreach (var category in Model.Categories)
                     {
-
+                        categoryNames.Add(category.CategoryName);
                                                     <li class="pb-1 text-center col-lg-12 col-3 category-font">
                                                         @category.CategoryName
                                                     </li>
@@ -79,22 +80,26 @@
                 @{
                     foreach (var product in Model.Products)
                     {
-                                                    <form action="/ManagerProducts/ProductEdit" method="post" >
+                    <form action="/ManagerProducts/ProductEdit" method="post" id="ProductEditForm"
+                          class="needs-validation" novalidate>
 
                                                             <input type="hidden" id="ProductId" name="ProductId" value="@product.ProductId" />
                                                             <div class="form-group">
                                                                 <label class="form-label mb-0 mt-2" for="ProductName">商家名稱</label>
                                                                 <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="商品名稱" value="@product.ProductName" />
-                                                            </div>
+                            <div class="invalid-feedback"></div>
+                                                                </div>
                                                             <div class="form-group">
                                                                 <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
                                                                 <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="價格" value="@Convert.ToInt32(product.ProductUnitPrice)" />
-                                                            </div>
+                            <div class="invalid-feedback"></div>
+                                                                </div>
                                                             <div class="form-group">
                                                                 <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
                                                                 <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
                                                                        placeholder="庫存數" value="@product.ProductUnitsInStock" />
-                                                            </div>
+                            <div class="invalid-feedback"></div>
+                                                                       </div>
                                                             <div class="form-group">
                                                                 <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">商品分類</label>
                                                                 <select class="form-select" id="CategoryList" name="CategoryId">
@@ -104,6 +109,7 @@
                     }
 
                                                                 </select>
+                            <div class="invalid-feedback"></div>
                                                             </div>
 
                                                             <div class="form-group">
@@ -135,7 +141,6 @@
                 }          
 
         </div>
-
 
         <!-- #region Modal: EditProductCategories -->
 
@@ -170,14 +175,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title fs-2" id="CreateProductCategoryModal">新增商品分類</h5>
-                        @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
                     </div>
                     <div class="modal-body">
                         <div id="alertPlaceholderCategoryCreate" class="d-none">
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                 <span>
                                     <strong>警告: </strong><p class="d-inline"></p>
-                                    <button type="button" id="btnAlertClose" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
+                                    <button type="button" id="btnAlertCloseCategoryCreate" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
                                         &times;
                                     </button>
                                 </span>
@@ -193,8 +197,7 @@
                         <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
                             data-bs-dismiss="modal">Back to first</button> -->
                         <a href="" class="btn btn-success me-2 mb-1" id="ProductCategoryCreateEnsure"
-                           data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
-                           data-bs-dismiss="modal">新增分類</a>
+                           data-bs-target="#EditProductCategoriesModal">新增分類</a>
                         <a href="" class="btn btn-danger me-2 mb-1" id="ProductCategoryCreateCancel"
                            data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
                            data-bs-dismiss="modal">取消設定</a>
@@ -223,13 +226,11 @@
         </div>
 
         <!-- #endregion -->
-
-
 }
 
 @section Scripts {
     <script>
-
+        // 商品分類新增
         $(function () {
 
             $("#btnEditProductCategoriesModal").on('click', function () {
@@ -240,31 +241,43 @@
 
             });
         });
+            var categoryNameList = @Html.Raw(Json.Serialize(categoryNames));
+            $('#ProductCategoryCreateEnsure').on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                var CategoryName = $('#CreateCategoryName').val().trim();
+                if (CategoryName.trim() == "") {
+                    $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
+                    $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+                } else if (categoryNameList.includes(CategoryName)) {
+                    $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱已存在，請重新輸入");
+                    $("#alertPlaceholderCategoryCreate").removeClass("d-none");
+                } else {
+                    $.ajax({
+                        url: '/ManagerProducts/CategoryCreate',
+                        method: 'POST',
+                        data: { CategoryName: CategoryName },
+                        success: function (response) {
+                            categoryNameList.push(CategoryName);
+                            $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
+                                $("#CreateProductCategoryModal").modal("hide");
+                                $("#EditProductCategoriesModal").modal("show");
+
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('#btnAlertCloseCategoryCreate').on("click", function () {
+                $('#alertPlaceholderCategoryCreate .alert-warning p').empty();
+                $('#alertPlaceholderCategoryCreate').addClass("d-none");
+            })
 
 
 
-        $('#ProductCategoryCreateEnsure').on('click', function () {
-            var CategoryName = $('#CreateCategoryName').val();
-            if (CategoryName.trim() !== "") {
-                $.ajax({
-                    url: '/ManagerProducts/CategoryCreate',
-                    method: 'POST',
-                    data: { CategoryName: CategoryName },
-                    success: function (response) {
-                        // 在成功刪除後，重新加載最新的產品類別資料
-                        $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
-                            $("#EditProductCategoriesModal").modal("show");
-                        });
-                    }
-
-
-                })
-            } else {
-                $('#alertPlaceholderCategoryCreate .alert-warning p').text("類別名稱不可為空");
-                $("#alertPlaceholderCategoryCreate").removeClass("d-none");
-            }
-
-        })
+        //ProductEdit獨有
 
         $('#btnUploadPicture').on("click", function () {
             event.preventDefault();
@@ -331,6 +344,81 @@
 
         })
         
-        
+        //ProductEdit 表單驗證
+        @{
+            var ProductNameList = ViewBag.ProductNameList;
+        }
+
+                // 获取所有带有 'needs-validation' 类的表单
+                $('#ProductEditForm').on('submit', function (event) {
+
+
+                    var allValidated = true;
+                    var productName = document.getElementById('ProductName').value;
+                    var productUnitPrice = parseFloat(document.getElementById('ProductUnitPrice').value);
+                    var productUnitsInStock = parseFloat(document.getElementById('ProductUnitsInStock').value);
+  
+
+                    // 檢查 productName 條件
+                    var productNameList = @Html.Raw(Json.Serialize(ProductNameList));
+                    if (productName === '') {
+                        $('#ProductName').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductName').next('.invalid-feedback');
+                        errorFeedback.text('商品名稱不可為空').show();
+                        allValidated = true;
+
+                    } else if (productNameList && productNameList.includes(productName)) {
+                        $('#ProductName').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductName').next('.invalid-feedback');
+                        errorFeedback.text('商品名稱不能和既有商品重複').show();
+                        allValidated = false;
+                    }
+                    else {
+                        $('#ProductName').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductName').next('.invalid-feedback').hide();
+                    }
+
+
+                    // 檢查 productUnitPrice 條件
+                    if (productUnitPrice <= 0 || isNaN(productUnitPrice)) {
+                        $('#ProductUnitPrice').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductUnitPrice').next('.invalid-feedback');
+                        errorFeedback.text('商品價格必須大於0元').show();
+                        allValidated = false;
+
+                    } else {
+                        $('#ProductUnitPrice').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductUnitPrice').next('.invalid-feedback').hide();
+
+                    }
+
+                    // 檢查 productUnitsInStock 條件
+                    if (productUnitsInStock <= 0 || isNaN(productUnitsInStock)) {
+                        $('#ProductUnitsInStock').removeClass('is-valid').addClass('is-invalid');
+                        var errorFeedback = $('#ProductUnitsInStock').next('.invalid-feedback');
+                        errorFeedback.text('商品庫存必須大於0單位').show();
+                        allValidated = false;
+
+                    } else {
+                        $('#ProductUnitsInStock').removeClass('is-invalid').addClass('is-valid');
+                        $('#ProductUnitsInStock').next('.invalid-feedback').hide();
+
+                    }
+
+
+
+                    if (allValidated) {
+                        $('#ProductCreateForm').addClass('was-validated');
+                        $('#ProductCreateForm').submit();
+
+                    } else {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                });
+
+
+
     </script>
     }

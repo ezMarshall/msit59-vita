@@ -1,5 +1,7 @@
-﻿@model List<msit59_vita.Models.ProductCategory>
-
+﻿@model  List<msit59_vita.Models.ProductCategory>
+@{
+    var categoryNames = new List<string>();
+}
 
 <div id="alertPlaceholderCategoryDetails" class="d-none">
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -24,6 +26,7 @@
 
         @foreach (ProductCategory productCategory in Model)
         {
+            categoryNames.Add(productCategory.CategoryName);
             <tr id="Category_@productCategory.CategoryId">
 
                 <td>
@@ -81,31 +84,48 @@
         $(this).closest('tr').find('[id*=CategoryName]').prop('type', 'text');
         $(this).closest('tr').find('[id*=CategoryName]').prop('value', ProdCateName);
 
+        console.log(categoryNameList)
 
 
     })
 
-
+    var categoryNameList = @Html.Raw(Json.Serialize(categoryNames));
     $('.product-category-save').on("click", function () {
-        var CategoryID = $(this).closest('tr').attr("id").split('_')[1];
-        var CategoryName = $(this).closest('tr').find('[id*=CategoryName]').val();
+        var OldCategoryName = $(this).closest('tr').find('span').text();        
+        // 使用 filter() 方法来排除 OldCategoryName
+        var filteredCategoryNameList = categoryNameList.filter(function (categoryName) {
+            return categoryName !== OldCategoryName;
+        });
 
-        if (CategoryName.trim() !== "") {
+
+        var CategoryID = $(this).closest('tr').attr("id").split('_')[1];      
+        var CategoryName = $(this).closest('tr').find('[id*=CategoryName]').val().trim();
+
+
+        if (CategoryName == "") {
+            $('#alertPlaceholderCategoryDetails .alert-warning p').text("類別名稱不可為空");
+            $("#alertPlaceholderCategoryDetails").removeClass("d-none");
+        } else if (filteredCategoryNameList.includes(CategoryName)) {
+            $('#alertPlaceholderCategoryDetails .alert-warning p').text("類別名稱已存在，請重新輸入");
+            $("#alertPlaceholderCategoryDetails").removeClass("d-none");
+        }else {
             $.ajax({
                 url: '/ManagerProducts/CategoryEdit',
                 method: 'POST',
                 data: { CategoryId: CategoryID, CategoryName: CategoryName },
                 success: function (response) {
+                    $(this).closest('tr').find('span').text(CategoryName);
+                    // filteredCategoryNameList.push(CategoryName);
+                    // categoryNameList = filteredCategoryNameList;  //因為會重新load，所以陣列會自動更改
+
                     // 在成功刪除後，重新加載最新的產品類別資料
                     $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
                         $("#EditProductCategoriesModal").modal("show");
                     });
+                    
                 }
             })
-        } else {
-            $('#alertPlaceholderCategoryDetails .alert-warning p').text("類別名稱不可為空");
-            $("#alertPlaceholderCategoryDetails").removeClass("d-none");
-        }
+        } 
 
     })
 
@@ -139,7 +159,6 @@
 
                 } else {
                     $("#alertPlaceholderCategoryDetails").addClass("d-none");
-                    console.log(response.message);
                     // 在成功刪除後，重新加載最新的產品類別資料
                     $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
                         $("#EditProductCategoriesModal").modal("show");
@@ -155,4 +174,3 @@
 
 
 </script>
-

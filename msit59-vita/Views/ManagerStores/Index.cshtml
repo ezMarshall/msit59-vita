@@ -23,6 +23,7 @@
             height: 200px;
             background-image: url("../@Model.StoreImage");
             background-attachment: fixed;
+            background-repeat: no-repeat;
             line-height: 200px;
             text-align: center;
             color: black;
@@ -221,7 +222,7 @@
 
     <div class="modal fade" id="EditStoreInfoModal" tabindex="-1" aria-labelledby="EditStoreInfoModalLabel"
          aria-hidden="true">
-        <form method="post" action="/ManagerStores/StoreInfoEdit" enctype="multipart/form-data">
+        <form method="post" action="/ManagerStores/StoreInfoEdit" enctype="multipart/form-data" class="needs-validation" id="StoreInfoEditForm" novalidate>
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">

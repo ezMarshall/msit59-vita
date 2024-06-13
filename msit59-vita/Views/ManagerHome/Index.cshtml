@@ -5,19 +5,19 @@
 }
 
 @section MyStyle {
-
     <style>
 
-        .info-area{
+        .info-area {
             padding: 50px 0px 0px 0px;
             width: 90%
         }
-        #order-info ul{
-            min-width: 300px;
+
+        #order-info ul {
+            min-width: 300px !important;
         }
 
-        
-        #order-info, #review-info {
+        #order-info,
+        #review-info {
             font-size: larger;
         }
 
@@ -25,17 +25,101 @@
             #order-info ul {
                 min-width: auto;
             }
+
             #review-info {
                 padding-top: 35px;
-
             }
         }
 
         @@media (max-width: 576px) {
-            #order-info, #review-info {
+
+            #order-info,
+            #review-info {
                 font-size: large;
             }
-            
+        }
+
+
+
+        /* 今日訂單資訊 */
+        .wide-text-box {
+            width: 200px;
+            height: 200px;
+        }
+
+        #orderChartCanvas {
+            width: 450px;
+        }
+
+
+        /* 評論管理 */
+        #reviewMosaicPlot {
+            width: 100%;
+            height: 500px;
+        }
+
+        /* 本月營收分析 */
+        .c-dashboardInfo {
+            margin-bottom: 15px;
+        }
+
+            .c-dashboardInfo .wrap {
+                background: #ffffff;
+                box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.1);
+                border-radius: 7px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                padding: 40px 25px 20px;
+                height: 100%;
+            }
+
+        .c-dashboardInfo__subInfo {
+            color: #323c43;
+            font-size: 1em;
+        }
+
+        .c-dashboardInfo__title {
+            font-size: 1.3em;
+            font-weight: bolder;
+            color: black;
+        }
+
+
+        .c-dashboardInfo span {
+            display: block;
+        }
+
+        .c-dashboardInfo__count {
+            font-weight: 600;
+            font-size: 2.5em;
+            line-height: 64px;
+            color: #323c43;
+        }
+
+        .c-dashboardInfo .wrap:after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            content: "";
+        }
+
+        .c-dashboardInfo:nth-child(1) .wrap:after {
+            background: linear-gradient(82.59deg, #00c48c 0%, #00a173 100%);
+        }
+
+        .c-dashboardInfo:nth-child(2) .wrap:after {
+            background: linear-gradient(81.67deg, #ffa652 0%, #ff7b00 100%);
+        }
+
+        #ProductsBarChartCanvas,
+        #CustomerDoughnutPlotCanvas,
+        #DailyOrderChartCanvas {
+            height: 360px;
+            width: 360px
         }
 
     </style>
@@ -43,107 +127,474 @@
 
 
 @section Content {
-
-    <div class="info-area">
-    <div class="row">
-        <div id="order-info" class="col-lg-9 col-12">
+    <div class=" row justify-content-center ms-5" style="width:90%">
+        <div class="info-area">
+            <div id="order-info">
                 <h3 class="p-0 fw-bolder">今日訂單資訊</h3>
-            <div class="row p-0 float-lg-start">
-                   
-                <ul class="col-lg-6 col-6 list-unstyled">
-                        <li class="fw-bold">訂單狀態概覽 </li>
-                        <li>待接單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_0()" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
-                        <li>製作中：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_1()" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
-                        <li>配送中/等待自取：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_2()" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
-                        <li>已完成：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_3()" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
-                        <li>退單/已取消：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_4to5()" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
+                <div class="d-flex justify-content-around align-items-center">
+                    <div class="wide-text-box">
+                        <ul class="list-unstyled">
+                            <li class="fw-bold">訂單狀態概覽 </li>
+                            <li>待接單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_0()" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
+                            <li>製作中：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_1()" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
+                            <li>配送中/等待自取：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_2()" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
+                            <li>已完成：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_3()" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
+                            <li>退單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_4()" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
+                            <li>已取消：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_5()" class="text-success fw-bolder">@ViewBag.OrderStatus[5]</a></li>
 
-                </ul>
-                <ul class="col-lg-6 col-6 list-unstyled ">
-                        <li class="fw-bold">已完成訂單統計 </li>
-						<li>營業額： <span class="fw-bolder" style="color:blue">@ViewBag.TodayRevenue</span> </li>
-                        <li>便當總數量：<span class="fw-bolder" style="color:blue">@ViewBag.TodayQuantity </span></li>
-                </ul>
+
+                        </ul>
+                    </div>
+                    <div>
+                        <canvas id="orderChartCanvas" class="ps-0 pe-5"></canvas>
+                    </div>
+                    <div class="wide-text-box ">
+                        <ul class="list-unstyled ">
+                            <li class="fw-bold fs-5">已完成訂單統計 </li>
+                            <li>營業額： <span class="fw-bolder" style="color:blue">@ViewBag.TodayRevenue</span> </li>
+                            <li>便當總數量：<span class="fw-bolder" style="color:blue">@ViewBag.TodayQuantity </span></li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
+
+                <div id="review-info" class="pl-0">
+                    <h3 class="fw-bolder">評論管理</h3>
+                    <ul class="list-unstyled ">
+                        <li> 本週新進評論： <a href="/ManagerComments/ManagerComments" onclick="redirectToManagerComments()" class="text-success fw-bolder">@ViewBag.NumComment</a> </li>
+                    </ul>
+                    <div id="reviewMosaicPlot"></div>
+                </div>
             </div>
 
+            <div id="sales-stats" class="pt-4 pl-0">
+                <h3 class="fw-bolder">前月營運分析</h3>
+
+                <div id="total-stats" class="row align-items-stretch pt-3 pb-3">
+                    <div class="c-dashboardInfo col-lg-3 col-md-6">
+                        <div class="wrap">
+                            <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                總營收
+                            </h4><span class="hind-font caption-12 c-dashboardInfo__count">$@ViewBag.MonthlyRevenue</span><span class="hind-font caption-12 c-dashboardInfo__subInfo">MoM: +11%</span>
+                        </div>
+                    </div>
+                    <div class="c-dashboardInfo col-lg-3 col-md-6">
+                        <div class="wrap">
+                            <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                總銷售量
+                            </h4><span class="hind-font caption-12 c-dashboardInfo__count">@ViewBag.MonthlyQuantity</span></span><span class="hind-font caption-12 c-dashboardInfo__subInfo">限便當單點</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="hist-stats" class="row">
+                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                    <canvas id="ProductsBarChartCanvas">
+                    </canvas>
+                </div>
+                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                    <canvas id="DailyOrderChartCanvas"></canvas>
+
+                </div>
+                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                    <canvas id="CustomerDoughnutPlotCanvas"></canvas>
+                </div>
+            </div>
+            @*     <div id="line-chart-stats" class="row ">
+        <div class="col-lg-6 col-sm-12  pt-3 pb-3">
+        <img src="https://placehold.co/600x400" class="w-100" alt="">
         </div>
-        <div id="review-info" class="col-lg-3 col-12 pl-0">
-            <h3 class="fw-bolder">評論管理</h3>
-            <ul class="row list-unstyled ">
-                    <li> 本週新進評論： <a href="/ManagerComments/ManagerComments" onclick="redirectToManagerComments()" class="text-success fw-bolder">@ViewBag.NumComment</a> </li>
-
-
-            </ul>
-
+        <div class="col-lg-6 col-sm-12  pt-3 pb-3">
+        <img src="https://placehold.co/600x400" class="w-100" alt="">
+        </div>
+        </div> *@
         </div>
 
-
-    </div>
-
-    <div id="sales-stats" class="pt-4 pl-0">
-        <h3 class="fw-bolder">報表統計</h3>
-
-
-        <div id="total-stats" class="row pt-3 pb-3">
-            <div class="col-lg-3 col-sm-5">
-                <img src="https://placehold.co/200x100" class="w-100" alt="">
-            </div>
-            <div class="col-lg-3 col-sm-5">
-                <img src="https://placehold.co/200x100" class="w-100" alt="">
-            </div>
-        </div>
-        <div id="hist-stats" class="row">
-            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
-                <img src="https://placehold.co/400x400" class="w-100" alt="">
-            </div>
-            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
-                <img src="https://placehold.co/400x400" class="w-100" alt="">
-            </div>
-            <div class="col-lg-4 col-sm-12  pt-3 pb-3">
-                <img src="https://placehold.co/400x400" class="w-100" alt="">
-            </div>
-        </div>
-        <div id="line-chart-stats" class="row ">
-            <div class="col-lg-6 col-sm-12  pt-3 pb-3">
-                <img src="https://placehold.co/600x400" class="w-100" alt="">
-            </div>
-            <div class="col-lg-6 col-sm-12  pt-3 pb-3">
-                <img src="https://placehold.co/600x400" class="w-100" alt="">
-            </div>
-        </div>
-    </div>
-    </div>
-    
 
 }
 
 @section Scripts {
-    <script>
-        function redirectToManagerComments() {
-            sessionStorage.setItem('startDate', '@ViewBag.Last7DaysDate');
-            sessionStorage.setItem('endDate', '@ViewBag.TodayDate');          
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"> </script>
+        <!-- for mosaic plot -->
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-mekko.min.js"></script>
+        <script src="/js/custimized theme for mosaic plot.js"></script>
+
+        <!-- for bar chart datalabel -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+        <script>
+            function redirectToManagerComments() {
+                sessionStorage.setItem('startDate', '@ViewBag.Last7DaysDate');
+                sessionStorage.setItem('endDate', '@ViewBag.TodayDate');
+            }
+            function CustomserStatusSelect_0() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 0)
+            }
+            function CustomserStatusSelect_1() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 1)
+               
+            }
+            function CustomserStatusSelect_2() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 2)
+            }
+            function CustomserStatusSelect_3() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 3)
+            }
+            function CustomserStatusSelect_4() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 4)
+
+            }
+            function CustomserStatusSelect_5() {
+                sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
+                sessionStorage.setItem('CustomerOrderStatus', 5)
+
+            }
+            //mosaic plot
+        @{
+            var WeeklyReviewByProductAndRating = ViewBag.WeeklyReviewByProductAndRating;
         }
-        function CustomserStatusSelect_0(){
-            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
-            sessionStorage.setItem('CustomerOrderStatus',1)
+
+                $(document).ready(function () {
+                    var mosaicData = {
+                        header: ['評分', 'R5', 'R4', 'R3', 'R2', 'R1'],
+
+                        rows: [
+        @foreach (var item in WeeklyReviewByProductAndRating)
+        {
+            <text>[@Html.Raw("\"" + @item[0] + "\""), @item[1], @item[2], @item[3], @item[4], @item[5]], </text>
         }
-        function CustomserStatusSelect_1(){
-            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
-            sessionStorage.setItem('CustomerOrderStatus',1)
+                            ],
+
+                    };
+
+                    // create a mosaic chart
+                    var chart = anychart.mosaic();
+
+                    // set color theme
+                    anychart.theme("customized");
+
+
+                    // set points padding
+                    chart.pointsPadding(1);
+
+                    // set chart data
+                    chart.data(mosaicData);
+
+                    // set the chart labels settings
+                    chart.labels();
+
+                    // set background-color
+                    chart.background().fill("#F2F2E7");
+
+                    // enable HTML in tooltips and format
+                    chart
+                        .tooltip()
+                        .useHtml(true)
+                        .titleFormat("<b><span style='font-size:15px;'>{%x}</b>")
+                        .format('<h5 style=\'font-size:14px; margin: 0.5rem 0;\'>{%name}</h5>評分級數：{%SeriesName}<br>銷售總額: {%value}{scale:(1000)(1000)|( K)}<br>');
+
+                    // set container id for the chart
+                    chart.container('reviewMosaicPlot');
+
+                    // set the chart title
+                    chart
+                        .title()
+                        .enabled(true)
+                        .useHtml(true)
+                        .text('<span style=\'font-size:14px; font-weight:bolder\';>商品銷售總額（評分級距 vs. 單點便當商品）</span>');
+
+                    // initiate chart drawing
+                    chart.draw();
+                })
+
+        @{
+            // 取得 ViewBag 中的資料
+            var productNameList = ViewBag.MonthlyProductNames as string[];
+            var productSalesList = ViewBag.MonthlyProductSales as int[];
         }
-        function CustomserStatusSelect_2(){
-            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
-            sessionStorage.setItem('CustomerOrderStatus', 1)
+                //bar chart
+                $(document).ready(function () {
+                    var ctx3 = document.getElementById("ProductsBarChartCanvas");
+                    Chart.register(ChartDataLabels);
+                    var populationChart = new Chart(ctx3, {
+                        type: "bar",
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(productNameList)),
+                            // X 軸項目清單
+                            datasets: [
+                                {
+
+                                    data: @Html.Raw(Json.Serialize(productSalesList)),
+                                    color: '#0bb4ff',
+                                    hoverBackgroundColor: 'rgba(52, 143, 226, .8)',
+                                    hoverBorderColor: 'rgba(52, 143, 226, 1)',
+                                    borderWidth: 1
+
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: '各單點便當總營收'
+                                },
+                                datalabels: {
+                                    align: 'end',
+                                    anchor: 'center',
+                                    font: { weight: 'bold' },
+                                    formatter: function (value) {
+                                        const percentage = (value * 100 / @ViewBag.SumMonthlyProductSales).toFixed(0); // 將數字四捨五入到小數點第二位
+                                        return percentage + '%';
+                                    }
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: { beginAtZero: true, }
+                            }
+
+                        }
+                    })
+
+
+
+
+                })
+
+            //stacked bar chart
+        @{
+            var productCategoryList = ViewBag.ProductCategoryList as string[];
+            var orderTotalAmountByCategory = ViewBag.OrderTotalAmountByCategory as int[,];
+            string[] DutchField = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
         }
-        function CustomserStatusSelect_3(){
-            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
-            sessionStorage.setItem('CustomerOrderStatus', 0)
+
+
+                $(document).ready(function () {
+                    var ProductCategoryList = @Html.Raw(Json.Serialize(productCategoryList));
+                    var OrderStatusList = ["待接單", "製作中", "配送中/等待自取", "已完成", "退單/已取消"];
+                    var OrderStatusData = {
+        @for (int i = 0; i < orderTotalAmountByCategory.GetLength(0); i++)
+        {
+            <text>"@Html.Raw(productCategoryList[i])": [@string.Join(", ", Enumerable.Range(0, orderTotalAmountByCategory.GetLength(1)).Select(j => orderTotalAmountByCategory[i, j]))], </text>
         }
-        function CustomserStatusSelect_4to5(){
-            sessionStorage.setItem('todayDate', '@ViewBag.TodayDate');
-            sessionStorage.setItem('CustomerOrderStatus', 2)
+                                };
+
+            // Lab 練習的程式寫在這裡
+            var ctx = document.getElementById("orderChartCanvas");
+            var populationChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: OrderStatusList,  // X 軸項目清單
+                    datasets: [ //堆疊類別清單
+        @for (int i = 0; i < orderTotalAmountByCategory.GetLength(0); i++)
+        {
+            <text>
+                            {
+                                label: "@Html.Raw(productCategoryList[i])",
+                                data: OrderStatusData["@Html.Raw(productCategoryList[i])"],
+                                backgroundColor: "@DutchField[i]",
+                            },
+            </text>
+        }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        datalabels: false,
+                        title: {
+                            display: true,
+                            text: '今日營收長條圖 依據訂單狀態和產品分類'
+                        },
+                        legend: {
+                            display: false
+                        },
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true
+                        }
+                    },
+
+                }
+            });
+
+                    })
+
+            //doughnut chart
+
+        @{
+            // 取得 ViewBag 中的資料
+            var customerNameList = ViewBag.MonthlyCustomerNames as string[];
+            var customerTotalAmountList = ViewBag.MonthlyCustomerSales as int[];
         }
-        
-        
-    </script>
+
+                $(document).ready(function () {
+                    const pieGenerateLabelsLegendHandler = Chart.controllers.doughnut.overrides.plugins.legend.labels.generateLabels;
+                    const pieLegendClickHandler = Chart.controllers.doughnut.overrides.plugins.legend.onClick;
+                    let others = [];
+
+                    var ctx3 = document.getElementById("CustomerDoughnutPlotCanvas");
+                    var pieChart = new Chart(ctx3, {
+                        type: "doughnut",
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(customerNameList)),
+                            datasets: [
+                                {
+                                    data: @Html.Raw(Json.Serialize(customerTotalAmountList)),
+                                    // backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"]
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                datalabels: {
+                                    align: 'center',
+                                    anchor: 'center',
+                                    font: { weight: 'bold' },
+                                    formatter: function (value) {
+                                        const percentage = (value * 100 / @ViewBag.SumMonthlyCustomerSales).toFixed(0); // 將數字四捨五入到小數點第二位
+                                        if (percentage > 5) {
+                                            return percentage + '%';
+                                        } else {
+                                            return "";
+                                        }
+
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: '客戶消費金額佔比'
+                                },
+                                legend: {
+                                    labels: {
+                                        generateLabels(chart) {
+                                            const labels = pieGenerateLabelsLegendHandler(chart);
+                                            const sorted = labels.sort((a, b) => chart.data.datasets[0].data[a.index] <= chart.data.datasets[0].data[b.index]);
+                                            const top5 = sorted.filter((el, index) => index <= 4);
+                                            others = sorted.filter((el, index) => index > 4);
+                                            top5.push({ text: 'Others', hidden: others[0].hidden });
+                                            return top5;
+                                        }
+                                    },
+                                    onClick(e, legendItem, legend) {
+                                        if (legendItem.text === 'Others') {
+                                            const ci = legend.chart;
+                                            others.forEach(function (item) {
+                                                ci.toggleDataVisibility(item.index);
+                                            });
+                                            ci.update();
+                                            return;
+                                        }
+                                        pieLegendClickHandler(e, legendItem, legend);
+                                    }
+                                }
+
+                            },
+                        }
+                    })
+
+
+
+
+
+                })
+
+            //line chart
+        @{
+            // 取得 ViewBag 中的資料
+
+            var MonthlyOrderDatesList = ViewBag.MonthlyOrderDates as string[];
+            var MonthlyOrderIdPerDayList = ViewBag.MonthlyOrderIdPerDay as int[];
+            var MonthlyTotalAmountPerDayList = ViewBag.MonthlyTotalAmountPerDay as int[];
+        }
+                $(document).ready(function () {
+
+                    var ctx = document.getElementById("DailyOrderChartCanvas");
+                    var labChart = new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(MonthlyOrderDatesList)),
+                            datasets: [
+                                {
+                                    label: "日營收",
+                                    data: @Html.Raw(Json.Serialize(MonthlyTotalAmountPerDayList)),
+                                    fill: false,
+                                    // 著色:
+                                    backgroundColor: "rgba(14,72,100,0.2)",
+                                    borderColor: "rgba(14,72,100,1.0)",
+                                    borderWidth: 1,
+                                    yAxisID: 'y1'
+
+
+                                },
+                                {
+                                    label: "日訂單量",
+                                    data: @Html.Raw(Json.Serialize(MonthlyOrderIdPerDayList)),
+                                    fill: false,
+                                    // 著色:
+                                    backgroundColor: "rgba(255,99,132,0.2)",
+                                    borderColor: "rgba(255,99,132,1.0)",
+                                    borderWidth: 1,
+                                    borderDash: [5, 5], //虛線,
+                                    yAxisID: 'y2'
+
+                                }
+                            ]
+                        }, options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            plugins: {
+                                datalabels: false,
+                                title: {
+                                    display: true,
+                                    text: '每日營收、來客數折線圖'
+                                }
+                            },
+                            scales: {
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                },
+                                y2: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                }
+                            }
+                        }
+                    })
+
+
+
+
+
+                })
+
+
+
+        </script>
 }
