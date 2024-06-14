@@ -30,6 +30,8 @@ public partial class Customer
 
     public string? CustomerPassword { get; set; }
 
+    public bool IsGoogleLogin { get; set; }
+
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
