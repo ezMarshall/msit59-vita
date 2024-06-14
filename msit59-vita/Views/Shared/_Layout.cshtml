@@ -1,5 +1,7 @@
 ﻿@using msit59_vita.Models.ViewModels
-@model List<NotifyViewModel>
+@{
+	var notifyList = ViewBag.NotifyList as List<NotifyViewModel> ?? new List<NotifyViewModel>();
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -157,7 +159,7 @@
 		</div>
 		<div class="offcanvas-body overflow-auto px-4">
 			<ul class="list-unstyled notify-list">
-				@await Html.PartialAsync("_NotifyPartial", Model)
+				@await Html.PartialAsync("_NotifyPartial", notifyList)
 			</ul>
 		</div>
 	</div>
@@ -171,7 +173,7 @@
 		</div>
 		<div class="offcanvas-body overflow-auto px-4">
 			<ul class="list-unstyled notify-list">
-				@await Html.PartialAsync("_NotifyPartial", Model)
+				@await Html.PartialAsync("_NotifyPartial", notifyList)
 			</ul>
 		</div>
 	</div>
