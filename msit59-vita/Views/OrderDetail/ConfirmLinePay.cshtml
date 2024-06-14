@@ -62,15 +62,11 @@
 </section>
  
 @section Scripts {
-	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script>
 		let baseLoginPayUrl = '/api/LinePay/';
 		let transactionId = "2024060602134460110";
 		let orderId = "1717601209796";
 
-		var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-		connection.start(console.log("連線成功"))
-			.catch(err => console.error(err.toString()));
 		function initOrder() {
 
 			$.ajax({
