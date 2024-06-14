@@ -12221,7 +12221,10 @@ body {
     object-fit:cover;
     height:250px;
 }
-
+.line-pay-image {
+    object-fit: contain;
+    height: 250px;
+}
 .product-store .store-comment .fa-star {
     color: #ffd700;
 }

@@ -6,141 +6,58 @@
 
 <section class="container-lg">
 
-	<body>
-
-		<div class="topnav">
-			<a href="https://7838-114-37-157-213.jp.ngrok.io/login.html">Line Login</a>
-			<a href="https://7838-114-37-157-213.jp.ngrok.io/profile.html">User Profile</a>
-			<a href="https://7838-114-37-157-213.jp.ngrok.io/products.html">Line Pay</a>
-		</div>
-		<center>
-			<table>
-				<thead>
-					<tr>
-						<th colspan="2"> 測試商品 </th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td colspan="2"><img src="https://static.accupass.com/org/2011051025162614811630.jpg"></td>
-					</tr>
-					<tr>
-						<td colspan="2"> 價格 : 1999 </td>
-					</tr>
-					<tr>
-						<td colspan="2"> 購買數量 : 2 </td>
-					</tr>
-					<tr>
-						<td colspan="2" style="text-align: right;"> 總金額 : 3998 </td>
-					</tr>
-					<tr>
-						<td align="center" colspan="2"><button onclick="confirmPayment('@(ViewBag.transactionId)','@(ViewBag.orderId)')"> 確認付款</button></td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="Container">
-				<a id="paymentStatus">交易狀態 : 交易已授權，等待確認<a>
-			</div>
-		</center>
-	</body>
+	
 	<div class="order mt-3 row mb-3">
+
 		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+
 			<div class="step active col-2 text-center fw-bold ">
 				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
-				<div class="fs-6 fw-bold text-break">選擇付款明細</div>
+				<div class="fs-6 fw-bold text-break">LINE PAY 登入授權</div>
 			</div>
 			<div class="step active col-2 text-center fw-bold ">
 				<div class="circle d-inline-block mb-1 rounded-circle">2</div>
-				<div class="fs-6 fw-bold text-break">確認結帳</div>
+				<div class="fs-6 fw-bold text-break">LINE PAY 確認付款</div>
 			</div>
 		</div>
 		<div class="order-form row bg-white rounded-2 col-9 mx-auto pt-4 px-5 mb-3">
-
 			<div class="row d-flex justify-content-center py-4">
 				<div class="col-md-8">
 					<div class="fs-5">
 						<dl class="row">
-							<dt class="col-sm-4 fw-bold">訂購門市</dt>
-							<dd class="col-sm-8" id="store-name">@paymentInfo[0].StoreName</dd>
+							<dt class="col-sm-4 fw-bold fs-3 text-end">訂購門市:</dt>
+							<dd class="col-sm-8  fs-3 text-center" id="store-name">@paymentInfo[0].StoreName</dd>
 							<hr>
-							<dt class="col-sm-4 fw-bold">取餐人</dt>
-							<dd class="col-sm-8">@paymentInfo[0].CustomerName</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">聯絡電話</dt>
-							<dd class="col-sm-8">@ViewBag.phoneNum</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">取貨方式</dt>
-							<dd class="col-sm-8">@ViewBag.PickupMethod</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">取餐時間</dt>
-							<dd class="col-sm-8">@ViewBag.OrderTime</dd>
-							<hr>
-							@if (ViewBag.PickupMethod == "外送")
+							@foreach (var item in paymentInfo)
 							{
-								<dt class="col-sm-4 fw-bold">取貨地址</dt>
-								<dd class="col-sm-8">@ViewBag.Address</dd>
+
+								<div class="col-sm-12"><img class="card-img-top line-pay-image" src="~/@(String.IsNullOrEmpty(item.ProductImage) ? "image/Common/300x300_default.png" : item.ProductImage)" alt="@(item.ProductName)_picture" /></div>
+								<dt class="col-sm-4 fw-bold">商品名稱</dt>
+								<dd class="col-sm-8">@item.ProductName</dd>
+								<dt class="col-sm-4 fw-bold">商品單價</dt>
+								<dd class="col-sm-8">$@((int)item.ProductUnitPrice)</dd>
+								<dt class="col-sm-4 fw-bold">購買數量</dt>
+								<dd class="col-sm-8">@item.ShoppingCartQuantity</dd>
+								<dt class="col-sm-4 fw-bold">小計</dt>
+								<dd class="col-sm-8">$@((int)item.ProductUnitPrice * item.ShoppingCartQuantity)</dd>
 								<hr>
 							}
-							<dt class="col-sm-4 fw-bold">付款方式</dt>
-							<dd class="col-sm-8" id="PayMethod">@ViewBag.PayMethod</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">開立發票方式</dt>
-							<dd class="col-sm-8">
-								@ViewBag.InvoiceMethod @if (ViewBag.Carrier != null)
-								{
-									@ViewBag.Carrier
-								}
-							</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">訂購商品明細</dt>
-							<dd class="col-sm-8">
-								<table class="table">
-									<thead>
-										<tr>
-											<th class="py-0 ">商品名稱</th>
-											<th class="py-0">數量</th>
-											<th class="py-0">總價</th>
-										</tr>
-									</thead>
-									<tbody id="product-detail">
-										@foreach (var item in paymentInfo)
-										{
-											<tr>
-												<td class="product-name">@item.ProductName</td>
-												<td>@item.ShoppingCartQuantity</td>
-												<td>$@((int)item.ProductUnitPrice * item.ShoppingCartQuantity)</td>
-											</tr>
-										}
-									</tbody>
-								</table>
-							</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">應付金額</dt>
-							<dd class="col-sm-8">$@ViewBag.TotalAmount</dd>
-							<hr>
-							<dt class="col-sm-4 fw-bold">備註</dt>
-							<dd class="col-sm-8">@ViewBag.OrderNote</dd>
-							<hr>
+								<dt class="col-sm-4 fw-bold fs-3 text-end">應付金額:</dt>
+								<dd class="col-sm-8 fs-3 text-start">$@ViewBag.TotalAmount</dd>
+								<dt class="col-sm-4 fw-bold fs-3 text-end">交易狀態:</dt>
+								<dd class="col-sm-8 fs-3 text-start" id="paymentStatus"> 交易已授權，等待確認</dd>
 						</dl>
 					</div>
-
 				</div>
 			</div>
 		</div>
 
-
-		<div class="row mb-3 mx-auto w-75">
-			<div class="btn-group" role="group" aria-label="Basic example">
-				<button id="btn-prev" class="btn-cart btn btn-outline-light fs-5 fw-bold" type="button">
-					<a href="javascript:void(0)" class="text-decoration-none text-black">上一步</a>
-				</button>
-				<button id="confirm-order" class="btn-next btn btn-dark fs-5 fw-bold" type="button">
-					<a href="javascript:void(0)"
-					   class="text-decoration-none text-white">送出訂單</a>
-				</button>
-			</div>
+		<div class="row mb-3 mx-auto ">
+			<button id="confirm-order" class="btn-next btn btn-dark fs-5 fw-bold" onclick="confirmPayment('@(ViewBag.transactionId)','@(ViewBag.orderId)')" type="button">
+				<p class="text-decoration-none text-white my-auto">確認付款</p>
+			</button>
 		</div>
+	</div>
 
 </section>
  
@@ -196,11 +113,11 @@
 				success: (res) => {
 					console.log(res);
 					if (res.returnCode !== "0000") {
-						$("#paymentStatus").text("交易狀態 : 失敗");
+						$("#paymentStatus").text("失敗");
 						return
 					}
 					initOrder();
-					$("#paymentStatus").text("交易狀態 : 成功");
+					$("#paymentStatus").text("成功");
 					//todo將資料存到db
 
 

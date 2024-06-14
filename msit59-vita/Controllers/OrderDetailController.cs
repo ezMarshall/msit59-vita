@@ -384,6 +384,7 @@ namespace msit59_vita.Controllers
 						   ProductName = p.ProductName,
 						   ProductUnitPrice = p.ProductUnitPrice,
 						   ProductUnitsInStock = p.ProductUnitsInStock,
+						   p.ProductImage
 					   };
 
 			var paymentInfo = cart.ToList();
