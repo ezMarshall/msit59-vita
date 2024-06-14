@@ -58,7 +58,7 @@ namespace msit59_vita.Controllers
                                  CustomerOrderStatus = (int)o.CustomerOrderStatus,
                                  
                              };
-
+            //todo 沒辦法依照訂單原始順序進行排序db結構需要調整
             var queryProducts = from o in _context.Orders
                                 join od in _context.OrderDetails on o.OrderId equals od.OrderId
                                 where o.CustomerOrderStatus >= 0 && o.CustomerId == _customerId

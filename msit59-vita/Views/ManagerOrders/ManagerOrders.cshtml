@@ -417,13 +417,14 @@
                     // 從服務器響應中提取總頁數和當前頁碼
                     var pageCount = $(result).find('#hfPageCount').val();
                     var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
+                    $("#hfPageCount").val(pageCount);
+                    $("#hfCurrentPageIndex").val(currentPageIndex);
 
                     // 重置分頁按鈕狀態
                     $('.page-item').removeClass('active disabled');
 
-                    $("#hfPageCount").val(pageCount);
-                    $("#hfCurrentPageIndex").val(currentPageIndex);
 
+                    // 沒有資料或資料<=一頁 將頁碼移除
                     if (isNaN(pageCount) || pageCount <= 1) {
                         $('.pagination').addClass("d-none");
                     } else {
