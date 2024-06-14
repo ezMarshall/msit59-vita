@@ -54,7 +54,8 @@ namespace msit59_vita.Controllers
                         CustomerNickName = model.CustomerNickName,
                         CustomerEmail = model.CustomerEmail,
                         CustomerCellPhone = model.CustomerCellPhone,
-                        CustomerPassword = user.PasswordHash!
+                        CustomerPassword = user.PasswordHash!,
+                        IsGoogleLogin = false
                     };
                     _context.Customers.Add(customer);
                     _context.SaveChanges();
@@ -209,7 +210,8 @@ namespace msit59_vita.Controllers
 					{
 						CustomerName = cName,
 						CustomerEmail = cEmail,
-					};
+                        IsGoogleLogin = true
+                    };
 					_context.Customers.Add(customer);
 					_context.SaveChanges();
 
