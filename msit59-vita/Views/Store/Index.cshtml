@@ -223,18 +223,11 @@
 
 <partial name="_StoreCommentPartial" model="store" />
 <script src="~/js/cartjs.js"></script>
-<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 
 
 @section Scripts {
 
 	<script>
-		var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-		connection.start().then(function () {
-			console.log("start connection");
-		}).catch(function (err) {
-			return console.error(err.toString());
-		});
 
 		connection.on("ReceiveStoreStatusNotification", function (storeId) {
 			if (storeId == @store.StoreId) {

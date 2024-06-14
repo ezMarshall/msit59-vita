@@ -111,16 +111,12 @@
 </section>
 
 @section Scripts {
-	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script>
 		$(document).ready(function () {
 			$('#btn-prev').click(function () {
 				window.location.href = '/CheckedPayment/Payment';
 			});
 		});
-		var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-		connection.start(console.log("連線成功"))
-			.catch(err => console.error(err.toString()));
 		function requestPayment(packages) {
 			let baseLoginPayUrl = '/api/LinePay/';
 			const payment = {
