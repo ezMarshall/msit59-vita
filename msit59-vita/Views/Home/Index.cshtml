@@ -30,11 +30,12 @@
         <div class="col-12 col-sm-4">
             <button type="button" class="btn btn-light border-1 border-dark w-100 rounded-pill fw-bold" id="recommendBtn">精選推薦</button>
         </div>
-        <div class="col-12 col-sm-8 position-relative">
-            <input type="text" class="btn btn-light border-1 border-dark w-100 rounded-pill fs-6 text-start px-3" id="HomeSearchInput" placeholder="餐廳或料理">
-            <button type="button" class="position-absolute top-50 translate-middle-y border-0 h-100 px-3" id="HomeSearchBtn">
-                <i class="fa-solid fa-magnifying-glass fs-4"></i>
-            </button>
+        <div class="col-12 col-sm-8">
+            <div class="input-group">
+                <input type="text" class="btn btn-light fs-6 text-start px-3" id="HomeSearchInput" placeholder="餐廳或料理">
+                <button type="button" class="input-group-text" id="HomeSearchBtn">搜尋</button>
+                <i class="fa-solid fa-xmark text-dark position-absolute fs-4 d-none" id="HomeDeleteSearch"></i>
+            </div>
         </div>
     </div>
 </section>
@@ -106,15 +107,43 @@
             // 搜尋
             $('#HomeSearchBtn').on('click', function (e) {
                 e.preventDefault();
+                let search = $('#HomeSearchInput').val();
                 let data = {
-                    search: $('#HomeSearchInput').val()
+                    search: search
                 };
-                console.log(data);
                 $.ajax({
                     type: 'POST',
                     url: '/Home/MealSearch',
                     data: data,
                     success: function (response) {
+                        $("#StoreListContainer").html(response);
+                        $('#SearchWhat').text(`「${search}」`);
+                    },
+                    error: function () {
+                        alert("出現未預期錯誤，請稍後重試");
+                    }
+                })
+            })
+
+            // 顯示刪除搜尋按鈕
+            $('#HomeSearchInput').on('blur',function(){
+                if( $(this).val() ){
+                    $('#HomeDeleteSearch').removeClass('d-none');
+                    $('#HomeDeleteSearch').addClass('d-block');
+                } else {
+                    $('#HomeDeleteSearch').removeClass('d-block');
+                    $('#HomeDeleteSearch').addClass('d-none');
+                }
+            })
+
+            // 刪除搜尋
+            $('#HomeDeleteSearch').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/DeleteSearch',
+                    success: function (response) {
+                        $('#HomeSearchInput').val('');
                         $("#StoreListContainer").html(response);
                     },
                     error: function () {
@@ -129,6 +158,10 @@
             $('#HomeStoreSearchLabel').click(function (e) {
                 e.preventDefault();
                 $('#HomeStoreSearch').val('公益路51號');
+            })
+            $('#HomeSearchInput').dblclick(function (e) {
+                e.preventDefault();
+                $('#HomeSearchInput').val('蔬食');
             })
         })
 

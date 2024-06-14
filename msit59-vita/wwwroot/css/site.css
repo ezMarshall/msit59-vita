@@ -11936,11 +11936,28 @@ body {
 
 #HomeSearchInput {
     cursor: text;
+    flex: 1;
+    border-radius: 50rem 0 0 50rem;
+    border: 1px solid #262a10;
+    border-right: 0;
+    background: #F2F2E7;
+}
+
+#HomeDeleteSearch {
+    top: 50%;
+    right: 90px;
+    transform: translateY(-50%);
+    z-index: 5;
+    cursor: pointer;
 }
 
 #HomeSearchBtn {
-    background: none;
-    right: 10px;
+    padding: 0 25px;
+    color: #F2F2E7;
+    font-weight: bold;
+    border-radius: 0 50rem 50rem 0;
+    border: 1px solid #262a10;
+    background-color: #262a10;
 }
 
     #HomeSearchBtn:hover {
