@@ -32,7 +32,7 @@
         </div>
         <div class="col-12 col-sm-8">
             <div class="input-group">
-                <input type="text" class="btn btn-light fs-6 text-start px-3" id="HomeSearchInput" placeholder="餐廳或料理">
+                <input type="text" class="btn btn-light fs-6 text-start px-3" id="HomeSearchInput" placeholder="店家名稱、地址或料理">
                 <button type="button" class="input-group-text" id="HomeSearchBtn">搜尋</button>
                 <i class="fa-solid fa-xmark text-dark position-absolute fs-4 d-none" id="HomeDeleteSearch"></i>
             </div>
@@ -97,6 +97,7 @@
                     url: '/Home/SortRating',
                     success: function (response) {
                         $("#StoreListContainer").html(response);
+                        bindEvents();
                     },
                     error: function () {
                         alert("出現未預期錯誤，請稍後重試");
@@ -117,6 +118,7 @@
                     data: data,
                     success: function (response) {
                         $("#StoreListContainer").html(response);
+                        bindEvents();
                         $('#SearchWhat').text(`「${search}」`);
                     },
                     error: function () {
@@ -145,6 +147,7 @@
                     success: function (response) {
                         $('#HomeSearchInput').val('');
                         $("#StoreListContainer").html(response);
+                        bindEvents();
                     },
                     error: function () {
                         alert("出現未預期錯誤，請稍後重試");
