@@ -27,8 +27,8 @@
         <input class="form-control" id="StoreName" type="text" placeholder="@Model.StoreName" disabled />
     </div>
     <div class="col-4">
-        <label class="form-label" for="StorePhoneNumber">連絡電話</label>
-        <input class="form-control" id="StorePhoneNumber" name="StorePhoneNumber" value="@Model.StorePhoneNumber"
+        <label class="form-label" for="StorePhoneNumber" id="StorePhoneLabel">連絡電話</label>
+        <input class="form-control" id="StorePhoneNumber" name="StorePhoneNumber" value="@Model.StorePhoneNumber.Trim()"
                type="text" placeholder="連絡電話" required />
         <div class="invalid-feedback"></div>
     </div>
@@ -330,5 +330,13 @@
         }
 
     });
+
+
+    // DEMO
+    $('#StorePhoneLabel').click(function (e) {
+        e.preventDefault();
+        $('#StorePhoneNumber').val('0958405948');
+    })
+
 </script>
 

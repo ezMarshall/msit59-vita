@@ -26,22 +26,22 @@
                     <a href="#" id="searchLink">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3" type="text" id="searchString" placeholder="請輸入訂單編號">
+                    <input class="order-input border-2 rounded-3 py-1 pe-2 me-3 ps-3 bg-light" type="text" id="searchString" placeholder="請輸入訂單編號">
                 </div>
                 <div class="d-flex">
-                    <input class="order-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
+                    <input class="order-input border-2 rounded-3 py-1 px-2 bg-light" type="date" name="" id="startDate">
                     <span class="fw-bold">~</span>
-                    <input class="order-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
+                    <input class="order-input border-2 rounded-3 py-1 px-2 me-3 bg-light" type="date" name="" id="endDate">
                 </div>
                 <div>
-                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="deliveryVia">
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select bg-light" id="deliveryVia">
                         <option value="">訂單種類</option>
                         <option value="1">外送</option>
                         <option value="0">自取</option>
                     </select>
                 </div>
                 <div>
-                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select" id="orderStatus">
+                    <select class="border-2 border-dark rounded-3 py-1 px-2 me-3 order-select bg-light" id="orderStatus">
                         <option value="">訂單狀態</option>
                         <option value="0">已完成</option>
                         <option value="1">未完成</option>
@@ -504,7 +504,7 @@
         //DEMO
         $(document).ready(function () {
             $('#searchString').dblclick(function () {
-                $('#searchString').val('3');
+                $('#searchString').val('10000419');
             });
 
             $('#startDate').dblclick(function () {

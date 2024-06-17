@@ -31,7 +31,7 @@ namespace msit59_vita.Controllers
 								   join o in _context.Orders on m.OrderId equals o.OrderId
 								   join c in _context.Customers on o.CustomerId equals c.CustomerId
 								   where c.CustomerId == NowCustomerId
-								   orderby m.MessageInformedTime descending
+								   orderby m.MessageId descending
 								   select new NotifyViewModel
 								   {
 									   OrderId = m.OrderId,
