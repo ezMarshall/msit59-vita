@@ -27,17 +27,6 @@ namespace msit59_vita.Controllers
         {
             if (!string.IsNullOrEmpty(state))
             {
-                state = System.Web.HttpUtility.UrlDecode(state);
-
-                // 將解碼後的 state 字符串反序列化為對象
-                var searchState = JsonConvert.DeserializeObject<SearchStateViewModel>(state);
-
-                // 獲取搜索數據和滾動位置
-                var data = (JObject)searchState.Data;
-                double lat = (double)data["lat"];
-                double lng = (double)data["lng"];
-                GetStorList(lat, lng);
-                StoreList.NowStoreList = _nowStoreList;
                 ViewBag.isSearched = true;
                 return View(_nowStoreList);
             }
@@ -54,7 +43,7 @@ namespace msit59_vita.Controllers
                 }
 
                 // 是否有存常用地址
-                if (Customer.CustomerAddressMemo != null)
+                if (Customer != null && Customer.CustomerAddressMemo != null)
                 {
                     // 有的話根據常用地址搜尋
                     string[] Memo = Customer.CustomerAddressMemo.Split(',');
@@ -122,6 +111,7 @@ namespace msit59_vita.Controllers
         public IActionResult SortRating()
         {
             _nowStoreList.Sort((x, y) => y.averageRating.CompareTo(x.averageRating));
+            StoreList.NowStoreList = _nowStoreList;
             ViewBag.isSearched = true;
             return PartialView("_StoreListPartial", _nowStoreList);
         }
@@ -132,7 +122,9 @@ namespace msit59_vita.Controllers
         public IActionResult MealSearch(string search)
         {
             var productNamesWithSearch = _context.Products
-                .Where(p => p.ProductName.Contains(search) || _context.Stores.Any(s => s.StoreId == p.StoreId && s.StoreName.Contains(search)))
+                .Where(p => p.ProductName.Contains(search) 
+                || _context.Stores.Any(s => s.StoreId == p.StoreId 
+                && (s.StoreName.Contains(search) || s.StoreAddressDistrict.Contains(search) || s.StoreAddressDetails.Contains(search) )))
                 .Select(p => p.StoreId)
                 .Distinct()
                 .ToList();
@@ -141,6 +133,15 @@ namespace msit59_vita.Controllers
             .Where(store => productNamesWithSearch.Contains(store.StoreId))
             .ToList();
 
+            ViewBag.isSearched = true;
+            return PartialView("_StoreListPartial", _nowStoreList);
+        }
+        #endregion
+
+        #region 刪除搜尋
+        [HttpPost]
+        public IActionResult DeleteSearch()
+        {
             ViewBag.isSearched = true;
             return PartialView("_StoreListPartial", _nowStoreList);
         }
@@ -221,6 +222,7 @@ namespace msit59_vita.Controllers
                     totalReviews = totalReviews,
                     isFavorite = isFavorite,
                     ProductImageList = ProductImageList,
+                    Dis = Dis
                 };
                 _nowStoreList.Add(store);
             }

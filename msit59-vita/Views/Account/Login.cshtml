@@ -52,6 +52,7 @@
                 let emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 let CustomerEmail = $('#ForgetPwdEmail').val();
                 if (!emailPattern.test(CustomerEmail)) {
+                    $('#ForgetPwdEmailValid').text('請輸入有效的電子信箱');
                     $('#ForgetPwdEmail').addClass('is-invalid');
                 } else {
                     var formData = forgetPwdForm.serialize();
@@ -70,7 +71,8 @@
                                 if (response.message) {
                                     alert(response.message);
                                 } else {
-                                    $('#ResultNotFound').removeClass('d-none');
+                                    $('#ForgetPwdEmailValid').text('用戶 Email 不存在');
+                                    $('#ForgetPwdEmail').addClass('is-invalid');
                                 }
                                 $('#modalForgetPwd').modal('show');
                             }
@@ -85,12 +87,13 @@
 
             let LoginForm = $('#LoginForm');
             LoginForm.on('submit', function (e) {
-                if (!form[0].checkValidity()) {
+                console.log(LoginForm);
+                if (!LoginForm[0].checkValidity()) {
                     e.preventDefault();
                     e.stopPropagation();
                 }
 
-                form.addClass('was-validated');
+                LoginForm.addClass('was-validated');
             })
 
             // DEMO

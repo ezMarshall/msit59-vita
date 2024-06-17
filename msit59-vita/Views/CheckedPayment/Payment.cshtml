@@ -1,6 +1,6 @@
 ﻿@{
 	var paymentInfo = ViewBag.PaymentInfo;
-
+	ViewData["Title"] = "結帳頁面";
 }
 
 
@@ -943,6 +943,8 @@
 			}
 
 			var hoursList = document.getElementById('hours');
+			hoursList.innerHTML = '';
+
 			for (var i = currentOpenHour; i <= storeCloseTimeDate.getHours(); i++) {
 				var hourItem = document.createElement('li');
 				hourItem.classList.add('list-group-item');
@@ -956,6 +958,7 @@
 					document.getElementById('timepicker').value = selectedHour + ':' + selectedMinute;
 				};
 				hoursList.appendChild(hourItem);
+				
 			}
 
 			// 動態生成分鐘選項
@@ -991,7 +994,7 @@
 				});
 			});
 
-
+			
 
 			// 生成分鐘選項的函數
 			function generateMinutes() {

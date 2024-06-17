@@ -1,6 +1,8 @@
 ﻿@{
 	var paymentInfo = ViewBag.PaymentInfo;
 
+	ViewData["Title"] = "結帳頁面";
+
 }
 
 
@@ -104,22 +106,19 @@
 					</button>
 				</div>
 			</div>
-@* 
+		</div>
+	@*
 	</form> *@
 
 </section>
 
 @section Scripts {
-	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script>
 		$(document).ready(function () {
 			$('#btn-prev').click(function () {
 				window.location.href = '/CheckedPayment/Payment';
 			});
 		});
-		var connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-		connection.start(console.log("連線成功"))
-			.catch(err => console.error(err.toString()));
 		function requestPayment(packages) {
 			let baseLoginPayUrl = '/api/LinePay/';
 			const payment = {
@@ -128,7 +127,7 @@
 				orderId: Date.now().toString(), //使用 Timestamp 當作 orderId
 				packages,
 				RedirectUrls: {
-					ConfirmUrl: "http://localhost:5010/CurrentOrder",
+					ConfirmUrl: "http://localhost:5010/OrderDetail/ConfirmLinePay",
 					CancelUrl: "http://localhost:5010/Mydata/chat",
 				},
 				options:{
@@ -149,7 +148,8 @@
 					console.log(res);
 					//todo 後續linepay流程
 					if (res.returnCode === "0000") {
-						initOrder();
+						// initOrder();
+						//todo 存入regKey
 						setTimeout(x => window.location = res.info.paymentUrl.web, 500);
 ;						
 					}
@@ -217,7 +217,7 @@
 					console.log("總金額");
 					console.log(@ViewBag.TotalAmount);
 					@{int i = 0;}
-						console.log("商品名稱稱稱");
+					console.log("商品名稱稱稱");
 					console.log($("#product-detail .product-name"));
 
 					for (let i = 0; i < @paymentInfo.Count; i++) {
@@ -232,13 +232,12 @@
 						const quantity = parseInt($($("#product-detail>tr")[i]).find("td")[1].innerText);
 						const price = parseInt($($("#product-detail>tr")[i]).find("td")[2].innerText.replace("$", "")) / quantity;
 						console.log(name, quantity, price)
-								//todo變數i有問題
+						//todo變數i有問題
 						console.log(parseInt("@i"));
 						//todo 中文亂碼
 						console.log(parseInt("@(paymentInfo[i].ProductUnitPrice)"));
 						const product = {
 							name ,
-							imageUrl: "@(paymentInfo[i].ProductImage)",
 							quantity,
 							price
 						}
