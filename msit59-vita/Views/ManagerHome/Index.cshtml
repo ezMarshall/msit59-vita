@@ -460,6 +460,14 @@
                                 intersect: false,
                             },
                             plugins: {
+                                legend: {
+                                    labels: {
+                                        // This more specific font property overrides the global property
+                                        font: {
+                                            size: 20
+                                        }
+                                    }
+                                },
                                 datalabels: {
                                     display: false,
 
@@ -549,6 +557,7 @@
                             responsive: true,
                             maintainAspectRatio: true,
                             plugins: {
+                               
                                 datalabels: {
                                     align: 'center',
                                     anchor: 'center',
@@ -591,7 +600,7 @@
                                             others = sorted.filter((el, index) => index > 4);
                                             top5.push({ text: 'Others', hidden: others[0].hidden });
                                             return top5;
-                                        }
+                                    }
                                     },
                                     onClick(e, legendItem, legend) {
                                         if (legendItem.text === 'Others') {

@@ -25,14 +25,14 @@
     <h2 class="text-center h4 mb-3 text-dark">VITA註冊店家後台管理系統</h2>
     <form class="w-50 mx-auto p-3 needs-validation" novalidate action="/ManagerLogin/Index" method="post">
         <div class="mb-3">
-            <label for="StoreAccountNumber" class="form-label is-required ps-3 mb-1">帳號</label>
+            <label for="StoreAccountNumber" class="form-label is-required ps-3 mb-1" id="ManagerLoginAccount">帳號</label>
             <input type="text" class="form-control text-dark rounded-pill" id="StoreAccountNumber" name="StoreAccountNumber" required>
             <div class="invalid-feedback ps-3">
                 請輸入帳號
             </div>
         </div>
         <div class="mb-3">
-            <label for="StorePassword" class="form-label is-required ps-3 mb-1">密碼</label>
+            <label for="StorePassword" class="form-label is-required ps-3 mb-1" id="ManagerLoginPassword">密碼</label>
             <input type="password" class="form-control text-dark rounded-pill" id="StorePassword" name="StorePassword" required>
             <div class="invalid-feedback ps-3">
                 請輸入密碼
@@ -66,6 +66,16 @@
 
                 form.addClass('was-validated');
             })
+        })
+
+        // DEMO
+        $('#ManagerLoginAccount').click(function (e) {
+            e.preventDefault();
+            $('#StoreAccountNumber').val('Vita0042');
+        })
+        $('#ManagerLoginPassword').click(function (e) {
+            e.preventDefault();
+            $('#StorePassword').val('V3WV1rfk0y');
         })
     </script>
 </body>
