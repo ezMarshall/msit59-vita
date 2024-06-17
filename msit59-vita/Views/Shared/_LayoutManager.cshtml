@@ -1,252 +1,326 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="~/css/Manager/layout.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 
-    <style>
-        .nav-area {
-            height: 80px;
-            z-index: 1000;
-        }
+	<style>
+		.nav-area {
+			height: 80px;
+			z-index: 1000;
+		}
 
-            .nav-area .nav {
-                height: 80px;
-            }
+			.nav-area .nav {
+				height: 80px;
+			}
 
-                .nav-area .nav .logout-link:hover {
-                    color: #FF6700;
-                }
+				.nav-area .nav .logout-link:hover {
+					color: #FF6700;
+				}
 
-                .nav-area .nav .header-logo {
-                    height: 70px;
-                }
+				.nav-area .nav .header-logo {
+					height: 70px;
+				}
 
-        .content-area{
-            background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
-            min-height: calc(100vh - 80px);
-        }
+		.content-area {
+			background: linear-gradient(to right, #F1F0CC 0 50%, #F2F2E7 50% 100%);
+			min-height: calc(100vh - 80px);
+		}
 
-        .sidebar-wrapper{
-            display: flex;
-            justify-content: center;
-        }
+		.sidebar-wrapper {
+			display: flex;
+			justify-content: center;
+		}
 
-        .sidebar {
-            padding: 120px 0px 70px 0px;
-            position: fixed;
-            top: 0;            
-        }
-        
-        .sidebar ul{
-            display: flex;
-            flex-direction:column;
-            align-items: center;
-            line-height:3;
-        }
+		.sidebar {
+			padding: 120px 0px 70px 0px;
+			position: fixed;
+			top: 0;
+		}
 
-            .sidebar ul li a{
-                font-size: x-large;
-            }
+			.sidebar ul {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				line-height: 3;
+			}
 
-                .sidemenu-link:hover {
-                    color: #FF6700;
-                }
+				.sidebar ul li a {
+					font-size: x-large;
+				}
 
-            .sidebar ul li .btn-xlarge {
-                padding: 10px 15px;
-                font-size: x-large;
-                line-height: normal;
-                -webkit-border-radius: 8px;
-                -moz-border-radius: 8px;
-                border-radius: 8px;
-            }
+		.sidemenu-link:hover {
+			color: #FF6700;
+		}
 
-        .suspend-order {
-            margin-top: auto;
-        }
+		.sidebar ul li .btn-xlarge {
+			padding: 10px 15px;
+			font-size: x-large;
+			line-height: normal;
+			-webkit-border-radius: 8px;
+			-moz-border-radius: 8px;
+			border-radius: 8px;
+		}
 
-        @@media (max-width: 576px){
-            .sidebar-wrapper {
-                display: block;
-                position: sticky;
-                top: 0;
-                z-index: 1000;
-            }
-                
-            .sidebar {
-                position: static;
-                top:auto;
+		.suspend-order {
+			margin-top: auto;
+		}
 
-                padding: 0px;
-                background-color: #F1F0CC !important;
-                max-height: 80px;
-                width:100%; 
-            }
+		@@media (max-width: 576px) {
+			.sidebar-wrapper {
+				display: block;
+				position: sticky;
+				top: 0;
+				z-index: 1000;
+			}
 
-                .sidebar ul {
-                   display: flex;
-                   flex-direction:row;
-                   justify-content:space-around;
-                   align-items: center;
+			.sidebar {
+				position: static;
+				top: auto;
+				padding: 0px;
+				background-color: #F1F0CC !important;
+				max-height: 80px;
+				width: 100%;
+			}
 
-                }
-                    .sidebar ul li a{
-                        font-size: larger;
-                    }
+				.sidebar ul {
+					display: flex;
+					flex-direction: row;
+					justify-content: space-around;
+					align-items: center;
+				}
 
-                    .sidebar ul li img {
-                            display: none;
-                    }
+					.sidebar ul li a {
+						font-size: larger;
+					}
 
-                    .sidebar ul li .btn-xlarge {
-                        padding:  0;
-                        font-size: large;
-                        border-radius: 0px;
-                        background-color: transparent;
-                        color: black;
-                        font-weight: bolder;
-                        border: 0;
-                    }
+					.sidebar ul li img {
+						display: none;
+					}
 
-                    .suspend-order {
-                        margin: 0;
-                overflow: visible;
-                    }
+					.sidebar ul li .btn-xlarge {
+						padding: 0;
+						font-size: large;
+						border-radius: 0px;
+						background-color: transparent;
+						color: black;
+						font-weight: bolder;
+						border: 0;
+					}
 
-                    .suspend-order a{
-                    position: relative;
-                }
+			.suspend-order {
+				margin: 0;
+				overflow: visible;
+			}
 
-                    .suspend-order a:hover {
-                        transform: scale(1.4);
-                        color: red !important;
-                    }
+				.suspend-order a {
+					position: relative;
+				}
 
-            .sidebar ul li:last-child a:before {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left:0;
-                        width: 100%;
-                        height: 100%;
-                        background: #399E5A;
-                        opacity: 0.6;
-                        transition: 0.5s;
-                        transform-origin: right;
-                        transform: scaleX(0);
-                        z-index: -1;
-                    }
+					.suspend-order a:hover {
+						transform: scale(1.4);
+						color: red !important;
+					}
 
-            .sidebar ul li:last-child a:hover:before {
-                        transition: transform 0.5s;
-                        transform-origin: left;
-                        transform: scaleX(1);
-                    }
+			.sidebar ul li:last-child a:before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: #399E5A;
+				opacity: 0.6;
+				transition: 0.5s;
+				transform-origin: right;
+				transform: scaleX(0);
+				z-index: -1;
+			}
 
-
-                    
-
-        }
-    </style>
-    @RenderSection("MyStyle", required: false)
+			.sidebar ul li:last-child a:hover:before {
+				transition: transform 0.5s;
+				transform-origin: left;
+				transform: scaleX(1);
+			}
+		}
+	</style>
+	@RenderSection("MyStyle", required: false)
 
 
 </head>
 <body>
 
-       <header class="nav-area bg-dark sticky-sm-top">
-            <ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
-                <li class="nav-item">
-                    <a href="/ManagerHome/Index">
-                        <img class="header-logo" src="~/image/logo/logo_300x150.png" alt="">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="javascript:void(0)" onclick="logout()"
-                       class="logout-link fs-5 fw-bolder link-light text-decoration-none">
-                        會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                </li>
-            </ul>
+	<header class="nav-area bg-dark sticky-sm-top">
+		<ul class="container-fluid nav d-flex justify-content-between align-items-center fs-2">
+			<li class="nav-item">
+				<a href="/ManagerHome/Index">
+					<img class="header-logo" src="~/image/logo/logo_300x150.png" alt="">
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:void(0)" onclick="logout()"
+				   class="logout-link fs-5 fw-bolder link-light text-decoration-none">
+					會員登出&nbsp;<i class="fa-solid fa-right-from-bracket"></i>
+				</a>
+			</li>
+		</ul>
 
-        </header>
-        <div class="row content-area m-0 bg-primary">
-            <div class="sidebar-wrapper col-lg-2 col-sm-3 bg-primary" >
-                <div class="sidebar sidebar-dark vh-100 bg-primary">
-                    <ul class="h-100 list-unstyled">
-                        <li>
-                        <a href="/ManagerOrders/ManagerOrders" class="text-decoration-none text-dark fw-bolder">
-                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
-                                <span class="sidemenu-link">訂單管理</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ManagerProducts/Index" class="text-decoration-none text-dark fw-bolder">
-                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
-                                <span class="sidemenu-link">菜單管理</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ManagerStores/Index" class="text-decoration-none text-dark fw-bolder">
-                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
-                                <span class="sidemenu-link">店家資訊</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ManagerComments/ManagerComments" class="text-decoration-none text-dark fw-bolder">
-                                <img src="~/image/logo/logo_30x30_dark.png" alt="">
-                                <span class="sidemenu-link">評論管理</span>
-                            </a>
-                        </li>
-                        <li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger">暫停接單</a></li>
+	</header>
+	<div class="row content-area m-0 bg-primary">
+		<div class="sidebar-wrapper col-lg-2 col-sm-3 bg-primary">
+			<div class="sidebar sidebar-dark vh-100 bg-primary">
+				<ul class="h-100 list-unstyled">
+					<li>
+						<a href="/ManagerOrders/ManagerOrders" class="text-decoration-none text-dark fw-bolder">
+							<img src="~/image/logo/logo_30x30_dark.png" alt="">
+							<span class="sidemenu-link">訂單管理</span>
+						</a>
+					</li>
+					<li>
+						<a href="/ManagerProducts/Index" class="text-decoration-none text-dark fw-bolder">
+							<img src="~/image/logo/logo_30x30_dark.png" alt="">
+							<span class="sidemenu-link">菜單管理</span>
+						</a>
+					</li>
+					<li>
+						<a href="/ManagerStores/Index" class="text-decoration-none text-dark fw-bolder">
+							<img src="~/image/logo/logo_30x30_dark.png" alt="">
+							<span class="sidemenu-link">店家資訊</span>
+						</a>
+					</li>
+					<li>
+						<a href="/ManagerComments/ManagerComments" class="text-decoration-none text-dark fw-bolder">
+							<img src="~/image/logo/logo_30x30_dark.png" alt="">
+							<span class="sidemenu-link">評論管理</span>
+						</a>
+					</li>
+
+					<li class="suspend-order"> <a href="#" class="btn btn-xlarge btn-danger order-status"></a></li>
 
 
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-10 col-sm-9 bg-light">
-                <div id="content-wrapper" class="d-block h-100">
-                    @if (IsSectionDefined("BreadCrumb"))
-                    {
-                        <ol class="breadcrumb pt-3">
-                            @RenderSection("BreadCrumb", true)
-                        </ol>
-                    }
-                    @if (IsSectionDefined("Content"))
-                    {
-                        <div class=" row justify-content-center ">
-                            @RenderSection("Content", required: true)
-                        </div>
-                    }
 
-                </div>
-            </div>
-        </div>
-                <script src="~/lib/jquery/dist/jquery.min.js"></script>
-                <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-                <script src="~/js/site.js" asp-append-version="true"></script>
-                <script>
-                    function logout() {
-                        $.ajax({
-                            type: "post",
-                            url: "@Url.Action("Logout", "ManagerLogin")",
-                            success: function (data) {
-                                if (data == "ok") {
-                                    window.location.href = "@Url.Action("Index", "ManagerLogin")";
-                                } else {
-                                    alert(data);
-                                }
-                            },
-                            error: function () {
-                                alert("發生未預期的錯誤,請稍後再試。");
-                            }
-                        })
-                    }
-                </script>
-                @await RenderSectionAsync("Scripts", required: false)
+				</ul>
+			</div>
+		</div>
+		<div class="col-lg-10 col-sm-9 bg-light">
+			<div id="content-wrapper" class="d-block h-100">
+				@if (IsSectionDefined("BreadCrumb"))
+				{
+					<ol class="breadcrumb pt-3">
+						@RenderSection("BreadCrumb", true)
+					</ol>
+				}
+				@if (IsSectionDefined("Content"))
+				{
+					<div class=" row justify-content-center ">
+						@RenderSection("Content", required: true)
+					</div>
+				}
+
+			</div>
+		</div>
+	</div>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+	<script>
+		var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+		connection.start().then(function () {
+			console.log("start connection");
+		}).catch(function (err) {
+			return console.error(err.toString());
+		});
+
+
+		function logout() {
+			$.ajax({
+				type: "post",
+				url: "@Url.Action("Logout", "ManagerLogin")",
+				success: function (data) {
+					if (data == "ok") {
+						window.location.href = "@Url.Action("Index", "ManagerLogin")";
+					} else {
+						alert(data);
+					}
+				},
+				error: function () {
+					alert("發生未預期的錯誤,請稍後再試。");
+				}
+			})
+		}
+
+		$(document).ready(function () {
+			var suspendOrderStatus;
+			$.ajax({
+				type: "get",
+				url: "/ManagerOrders/GetSuspendOrderStatus",
+				success: function (data) {
+					if (data.message == "接單") {
+						suspendOrderStatus = true;
+
+					} else {
+						suspendOrderStatus = false;
+					}
+					renderOrderStatusLink(suspendOrderStatus);
+
+				},
+				error: function () {
+					alert("發生未預期的錯誤,請稍後再試。");
+				}
+
+			});
+
+		});
+
+		function renderOrderStatusLink(suspendOrderStatus) {
+			var $orderStatusLink = $(".order-status");
+			if (suspendOrderStatus) {
+				$orderStatusLink.text("暫停接單");
+				$orderStatusLink.removeClass("btn-success").addClass("btn-danger");
+
+			} else {
+				$orderStatusLink.text("開放接單");
+				$orderStatusLink.removeClass("btn-danger").addClass("btn-success text-white");
+
+
+			}
+		}
+
+		$(".order-status").click(function () {
+
+			var $this = $(this);
+			var currentStatus = $this.text().trim();
+
+			$.ajax({
+				type: "get",
+				url: "/ManagerOrders/SuspendOrder",
+				success: function (data) {
+
+					if (data.success) {
+						if (data.message === "接單") {
+							$this.text("暫停接單");
+							$this.removeClass("btn-success").addClass("btn-danger");
+						} else {
+							$this.text("開放接單");
+							$this.removeClass("btn-danger").addClass("btn-success text-white");
+						}
+						// console.log(data.storeId)
+						connection.invoke("SendStoreStatusNotification", data.storeId).catch(function (err) {
+							return console.error(err.toString());
+						});
+						// alert(data.message);
+					}
+				},
+				error: function () {
+					alert("發生未預期的錯誤,請稍後再試。");
+				}
+			})
+		});
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

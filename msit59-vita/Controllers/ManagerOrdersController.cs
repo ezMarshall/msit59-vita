@@ -327,6 +327,45 @@ namespace msit59_vita.Controllers
             return PartialView("_OrdersTable", viewModel);
         }
 
+
+        public IActionResult GetSuspendOrderStatus()
+        {
+			var store = _context.Stores.FirstOrDefault(s => s.StoreAccountNumber == User.Identity.Name);
+
+			if (store == null)
+			{
+				return Json(new { success = false, message = "找不到商家信息" });
+			}
+			string message = store.StoreOrderStatus == 1
+				? "接單"
+				: "不接單";
+
+			return Json(new { success = true, message });
+		}
+
+        //暫停接單
+        public IActionResult SuspendOrder()
+        {
+
+			var store = _context.Stores.FirstOrDefault(s => s.StoreAccountNumber == User.Identity.Name);
+
+			if (store == null)
+			{
+				return Json(new { success = false, message = "找不到商家信息" });
+			}
+
+			store.StoreOrderStatus = (byte)(store.StoreOrderStatus == 1 ? 0: 1);
+            var storeId = store.StoreId;
+
+			_context.SaveChanges();
+
+			string message = store.StoreOrderStatus == 1
+				? "接單"
+				: "不接單";
+
+			return Json(new { success = true, message, storeId });
+		}
+
     }
 
 

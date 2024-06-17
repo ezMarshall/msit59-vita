@@ -81,14 +81,14 @@
                             <div class="d-flex flex-row justify-content-between align-self-center ">
                                 <h5 class=" my-auto fa-solid ">@store.StoreName</h5>
                                 <a href="/FavoriteStores/Cancel/?id=@store.FavoriteId" class=" d-block align-self-center text-decoration-none " onClick="return popBtn('@store.StoreName')">
-                                    <i class="fa-solid fa-heart fs-2 text-info d-block"></i>
+                                    <i class="fa-solid fa-heart fs-2 text-danger d-block"></i>
                                 </a>
                             </div>
                             <div class="d-flex flex-row">
 
                                 <div class="col-4 home-store-star my-0"
                                      style="background: linear-gradient(to right ,  #ffd700 0% @(starRange.ToString()+"%"), #F1F0CC @(starRange.ToString()+"%") 100%)"></div>
-                                <p class="fs-6 pt-1">@avgOfRating<a class="bg-primary text-dark fs-6 link-info ms-1" href="">(@(countOfRating + "評論"))</a></p>
+                                <p class="fs-6 pt-1">@avgOfRating<span class="bg-primary text-dark fs-6 link-info ms-1" >(@(countOfRating + "評論"))</span></p>
                                 <p class="fs-6 pt-1"></p>
 
                             </div>
@@ -139,7 +139,8 @@
                 </div>
             </div>
         }
-        
+
+    </div>
 </div>
 
 @section Scripts{

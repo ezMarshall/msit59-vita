@@ -153,7 +153,7 @@
                                     {
                                         if (ViewBag.reviews[i].OrderId == order.OrderId)
                                         {
-                                        <button type="button" class="btn mx-auto text-info" onclick="redirectComment('review-@(ViewBag.reviews[i].ReviewId)')" id="review-@(ViewBag.reviews[i].ReviewId)">
+                                        <button type="button" class="btn mx-auto text-info fs-4" onclick="redirectComment('review-@(ViewBag.reviews[i].ReviewId)')" id="review-@(ViewBag.reviews[i].ReviewId)">
                                             <i class="fa-regular fa-message fa-flip-horizontal text-dark"></i>
                                             <p class="d-inline-block pt-2 text-dark">已評論</p>
                                         </button>
@@ -162,7 +162,7 @@
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn mx-auto text-info" data-bs-toggle="modal"
+                                    <button type="button" class="btn mx-auto text-info fs-4" data-bs-toggle="modal"
                                             data-bs-target="#comment-modal" id="@($"comment-{order.OrderId}")" onclick="comment(@order.OrderId)">
                                         <i class="fa-regular fa-message fa-flip-horizontal"></i>
                                         <p class="d-inline-block pt-2 ">評論</p>
@@ -173,8 +173,8 @@
                             </div>
 
 
-                            <div class=" d-flex align-items-end   h-25">
-                                <p class=" mx-auto ">訂單狀態: <span class="text-success">@orderStatus</span></p>
+                            <div class=" d-flex align-items-end  h-25">
+                            <p class=" mx-auto  fs-5 ">訂單狀態: <span class="text-info  fs-4">@orderStatus</span></p>
                             </div>
                         </div>
                     </div>
@@ -236,16 +236,16 @@
                         <input type="radio" name="ReviewRating" value="1" id="1"><label class="fs-1" for="1">☆</label>
                     </div>
                     <small class="align-self-center">您評價餐廳為5顆星<span class="text-info">(必填)</span></small>
-                    <textarea rows="10" name="ReviewContent" placeholder="可輸入兩百字評論(非必填)"
+                    <textarea rows="10" name="ReviewContent" maxlength="200" placeholder="可輸入兩百字評論(非必填)"
                         class="align-self-center form-control mt-2 w-75"></textarea>
 
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer d-flex justify-content-evenly border-0">
-                    <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill"
+                    <button type="button" class="btn btn-primary btn-outline-dark px-4 py-2 rounded-pill"
                         data-bs-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-outline-success px-4 py-2 rounded-pill">確認</button>
+                    <button type="submit" class="btn btn btn-primary btn-outline-dark px-4 py-2 rounded-pill">確認</button>
                 </div>
 
             </form>

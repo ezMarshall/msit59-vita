@@ -197,16 +197,7 @@
 
 @section Scripts {
 
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
-
-        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-        connection.start().then(function () {
-            console.log("start connection");
-        }).catch(function (err) {
-            return console.error(err.toString());
-        });
-
         // pagenation start
         // 在文件就緒時調用 updatePaginationButtons 函數
         $(document).ready(function () {
