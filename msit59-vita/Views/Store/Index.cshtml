@@ -1,4 +1,6 @@
 ﻿@{
+	
+
 	var store = ViewData["Store"] as Store;
 	var products = ViewData["Products"] as List<Product>;
 	byte orderStatus = store.StoreOrderStatus;
@@ -9,6 +11,8 @@
 	var isOpen = ViewBag.storeOpeningTimeQuery?.storeOpenOrNot ?? false;
 
 	string heartIconClass = ViewBag.isFavorite ? "fas" : "far";
+
+	ViewData["Title"] = store.StoreName;
 }
 
 <section class="container-lg">
