@@ -151,7 +151,7 @@ namespace msit59_vita.Controllers
                 //前週評論數量
                 var comment =await ( from r in _context.Reviews
                               join o in _context.Orders on r.OrderId equals o.OrderId
-                              where r.ReviewTime.Date > _todayDate.AddDays(-7) && o.StoreId == StoreId
+                              where r.ReviewTime.Date > _todayDate.AddDays(-7) && r.ReviewTime.Date <= _todayDate  && o.StoreId == StoreId
                               select new
                               {
                                   ReviewId = r.ReviewId

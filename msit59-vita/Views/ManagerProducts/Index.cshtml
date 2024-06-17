@@ -328,7 +328,7 @@
                         </div>
                     </div>
                     <form action="/ManagerProducts/CategoryCreate" method="post">
-                        <label class="form-label" for="CreateCategoryName">商品分類名稱</label>
+                        <label class="form-label" for="CreateCategoryName" id="labelCreateCategoryName">商品分類名稱</label>
                         <input class="form-control" id="CreateCategoryName" name="CreateCategoryName" type="text" />
 
                     </form>
@@ -480,6 +480,12 @@
                     $('.toggle-sort i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
             }
         });
+
+        // DEMO
+        $('#labelCreateCategoryName').click(function (e) {
+            e.preventDefault();
+            $('#CreateCategoryName').val('超健康便當');
+        })
 
 
     </script>
