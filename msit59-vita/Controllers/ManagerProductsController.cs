@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -24,12 +25,12 @@ namespace msit59_vita.Controllers
         }
 
         // 首頁
-        public IActionResult Index()
+        public IActionResult Index(string sortString)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 TempData["currentPageIndex"] = 1;
-                return View(GetProducts(1));
+                return View(GetProducts(1, sortString));
             }
             else
             {
@@ -39,11 +40,11 @@ namespace msit59_vita.Controllers
 
 
         [HttpPost]
-        public IActionResult Index(int currentPageIndex)
+        public IActionResult Index(int currentPageIndex, string sortString)
         {
             TempData["currentPageIndex"] = currentPageIndex;
 
-            return View(GetProducts(currentPageIndex));
+            return View(GetProducts(currentPageIndex, sortString));
 
         }
 
@@ -209,7 +210,7 @@ namespace msit59_vita.Controllers
 
             int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
 
-            return View("Index", GetProducts(currentPageIndex));
+            return View("Index", GetProducts(currentPageIndex, "id_asc"));
 
 
         }
@@ -266,7 +267,7 @@ namespace msit59_vita.Controllers
                 _context.SaveChanges();
             }
 
-            return View("Index", GetProducts(1));
+            return View("Index", GetProducts(1, "id_asc"));
 
 
         }
@@ -318,7 +319,7 @@ namespace msit59_vita.Controllers
             int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
 
             //return Redirect("/ManagerProducts/Index"); 
-            return View("Index", GetProducts(currentPageIndex));
+            return View("Index", GetProducts(currentPageIndex, "id_asc"));
         }
 
         [HttpPost]
@@ -392,7 +393,7 @@ namespace msit59_vita.Controllers
 
         }
 
-        private ManagerProducts GetProducts(int currentPage)
+        private ManagerProducts GetProducts(int currentPage, string sortString)
         {
 
             int maxRows = 10; //每頁幾列'
@@ -412,6 +413,32 @@ namespace msit59_vita.Controllers
                                     CategoryId = c.CategoryId,
                                     CategoryName = c.CategoryName
                                 };
+
+            switch (sortString)
+            {
+                case "id_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductId);
+                    break;
+                case "id_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductId);
+                    break;
+                case "Category_id_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductName);
+                    break;
+                case "Category_id_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductName);
+                    break;
+                case "price_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductUnitPrice);
+                    break;
+                case "price_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductUnitPrice);
+                    break;
+                default:
+
+                    queryProducts = queryProducts.OrderBy(p => p.ProductId);
+                    break;
+            }
 
 
             var products = queryProducts.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();

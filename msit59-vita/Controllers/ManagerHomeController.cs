@@ -61,7 +61,7 @@ namespace msit59_vita.Controllers
                                              CategoryId = c.CategoryId,
                                              CategoryName = c.CategoryName
                                          }).Distinct();
-                Console.WriteLine("----------------------------------------------------------------------------------------------------------");
+
 
 
                 IEnumerable<string> sortedCategoryNames = productCategories.Select(x => x.CategoryName);
@@ -69,11 +69,11 @@ namespace msit59_vita.Controllers
 
                 ViewBag.ProductCategoryList = ProductCategoryList;
 
+                Console.WriteLine("----------------------------------------------------------------------------------------------------------");
                 for (int i = 0; i < ProductCategoryList.Length; i++)
                 {
                     Console.Write(ProductCategoryList[i] + " ");
                 }
-
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
 
 
@@ -101,60 +101,49 @@ namespace msit59_vita.Controllers
                                         join os in _context.OrderDetails on o.OrderId equals os.OrderId
                                         join p in _context.Products on os.ProductId equals p.ProductId
                                         join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
-                                        where o.OrderTime.Date == _todayDate && o.StoreId == StoreId
+                                        where o.OrderTime.Date == _todayDate && o.StoreId == StoreId && o.CustomerOrderStatus == 3
                                         orderby c.CategoryId
                                         select new
                                         {
                                             CategoryId = c.CategoryId,
                                             CategoryName = c.CategoryName,
-                                            CustomerOrderStatus = o.CustomerOrderStatus,
                                             TotalAmount = os.Quantity * os.UnitPrice
                                         }
                                         into orderWithTotalAmount
                                         group orderWithTotalAmount by new
                                         {
-                                            orderWithTotalAmount.CustomerOrderStatus,
                                             orderWithTotalAmount.CategoryId,
+                                            orderWithTotalAmount.CategoryName
 
                                         } into g
                                         select new
                                         {
-                                            OrderStatus = g.Key.CustomerOrderStatus,
                                             CategoryId = g.Key.CategoryId,
+                                            CategoryName = g.Key.CategoryName,
                                             TotalAmount = g.Sum(x => x.TotalAmount)
                                         };
 
 
-                int[,] OrderTotalAmountByCategory = new int[ProductCategoryList.Length, 5];
+                int[] OrderTotalAmountByCategory = orderStatusPerDay.Select(order => Convert.ToInt32(order.TotalAmount)).ToArray();
+                string[] OrderTotalAmountCategoryNames = orderStatusPerDay.Select(order => order.CategoryName).ToArray();
+                int SumOrderTodaySales = orderStatusPerDay.Sum(order => Convert.ToInt32(order.TotalAmount));
 
-                for (int i = 0; i < ProductCategoryList.Length; i++)
-                {
-                    var categoryId = orderStatusPerDay.Select(x => x.CategoryId).Distinct().ElementAt(i);
-                    var category = orderStatusPerDay.Where(x => x.CategoryId == categoryId);
-
-                    for (int j = 0; j < 4; j++)
-                    {
-                        OrderTotalAmountByCategory[i, j] = Convert.ToInt32(category.FirstOrDefault(item => item.OrderStatus == j)?.TotalAmount ?? 0);
-                    }
-                    OrderTotalAmountByCategory[i, 4] = Convert.ToInt32(category.Where(item => item.OrderStatus == 4 || item.OrderStatus == 5)?.Sum(item => item.TotalAmount) ?? 0);
-
-                }
 
                 ViewBag.OrderTotalAmountByCategory = OrderTotalAmountByCategory;
+                ViewBag.OrderTotalAmountCategoryNames = OrderTotalAmountCategoryNames;
+                ViewBag.SumOrderTodaySales = SumOrderTodaySales;
 
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
-                int rows = OrderTotalAmountByCategory.GetLength(0);
-                int columns = OrderTotalAmountByCategory.GetLength(1);
 
                 //遍历数组并输出每个元素
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < OrderTotalAmountByCategory.Length; i++)
                 {
-                    for (int j = 0; j < columns; j++)
-                    {
-                        Console.Write(OrderTotalAmountByCategory[i, j] + " ");
-                    }
-                    Console.WriteLine(); // 在每行结束时换行
+                    Console.Write(OrderTotalAmountByCategory[i] + " ");
+                    Console.Write(OrderTotalAmountCategoryNames[i] + " ");
+
                 }
+
+                Console.WriteLine(SumOrderTodaySales);
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
 
 
@@ -172,30 +161,30 @@ namespace msit59_vita.Controllers
 
 
                 //前週評論馬賽克圖
-                var weeklycommentbyproduct = from o in _context.Orders
-                                             join r in _context.Reviews on o.OrderId equals r.OrderId
-                                             join od in _context.OrderDetails on o.OrderId equals od.OrderId
-                                             join p in _context.Products on od.ProductId equals p.ProductId
-                                             join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
-                                             where r.ReviewTime.Date > _todayDate.AddDays(-7) && o.StoreId == StoreId && c.CategoryId == MainCategoryId
-                                             select new
-                                             {
-                                                 ReviewTime = r.ReviewTime.ToString("yyyy-MM-dd"),
-                                                 ProductName = p.ProductName,
-                                                 ReviewRating = r.ReviewRating,
-                                                 TotalAmount = od.Quantity * od.UnitPrice
-                                             } into weeklycomment
-                                             group weeklycomment by new
-                                             {
-                                                 weeklycomment.ProductName
-                                             } into g
-                                             orderby g.Sum(x => x.TotalAmount) descending
-                                             select new
-                                             {
-                                                 ProductName = g.Key.ProductName,
-                                                 ReviewRating = g.OrderByDescending(x => x.ReviewRating).Select(x => x.ReviewRating),
-                                                 TotalAmount = g.Sum(x => x.TotalAmount)
-                                             };
+                var weeklycommentbyproduct = (from o in _context.Orders
+                                              join r in _context.Reviews on o.OrderId equals r.OrderId
+                                              join od in _context.OrderDetails on o.OrderId equals od.OrderId
+                                              join p in _context.Products on od.ProductId equals p.ProductId
+                                              join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
+                                              where r.ReviewTime.Date > _todayDate.AddDays(-7) && o.StoreId == StoreId && c.CategoryId == MainCategoryId
+                                              select new
+                                              {
+                                                  ReviewTime = r.ReviewTime.ToString("yyyy-MM-dd"),
+                                                  ProductName = p.ProductName,
+                                                  ReviewRating = r.ReviewRating,
+                                                  TotalAmount = od.Quantity * od.UnitPrice
+                                              } into weeklycomment
+                                              group weeklycomment by new
+                                              {
+                                                  weeklycomment.ProductName
+                                              } into g
+                                              orderby g.Sum(x => x.TotalAmount) descending
+                                              select new
+                                              {
+                                                  ProductName = g.Key.ProductName,
+                                                  ReviewRating = g.OrderByDescending(x => x.ReviewRating).Select(x => x.ReviewRating),
+                                                  TotalAmount = g.Sum(x => x.TotalAmount)
+                                              }).Take(10);
 
 
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
@@ -283,17 +272,17 @@ namespace msit59_vita.Controllers
 
                 //月交易金額統計
                 var monthOrder = from o in _context.Orders
-                                 join os in _context.OrderDetails on o.OrderId equals os.OrderId
-                                 join p in _context.Products on os.ProductId equals p.ProductId
-                                 join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
-                                 where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
-                                 select new
-                                 {
-                                     TotalAmount = os.Quantity * os.UnitPrice,
-                                     Quantity = os.Quantity,
-                                     CategoryId = c.CategoryId,
-                                     CategoryName = c.CategoryName
-                                 };
+                                  join os in _context.OrderDetails on o.OrderId equals os.OrderId
+                                  join p in _context.Products on os.ProductId equals p.ProductId
+                                  join c in _context.ProductCategories on p.CategoryId equals c.CategoryId
+                                  where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
+                                  select new
+                                  {
+                                      TotalAmount = os.Quantity * os.UnitPrice,
+                                      Quantity = os.Quantity,
+                                      CategoryId = c.CategoryId,
+                                      CategoryName = c.CategoryName
+                                  };
 
 
                 ViewBag.MonthlyRevenue = string.Format("{0:n0}", Convert.ToInt32(monthOrder.Sum(o => o.TotalAmount)));
@@ -321,7 +310,7 @@ namespace msit59_vita.Controllers
                                                ProductName = g.Key.ProductName,
                                                TotalAmount = g.Sum(x => x.TotalAmount),
                                                Quantity = g.Sum(x => x.Quantity)
-                                           }).OrderByDescending(x => x.TotalAmount);
+                                           }).OrderByDescending(x => x.TotalAmount).Take(10);
 
                 int[] MonthlyProductSales = new int[monthlyproductsales.Count()];
                 string[] MonthlyProductNames = new string[monthlyproductsales.Count()];
@@ -348,51 +337,7 @@ namespace msit59_vita.Controllers
                 Console.WriteLine("----------------------------------------------------------------------------------------------------------");
 
 
-                // 月客戶銷售甜甜圈圖
-                var monthlycustomersales = (from o in _context.Orders
-                                            join od in _context.OrderDetails on o.OrderId equals od.OrderId
-
-                                            join c in _context.Customers on o.CustomerId equals c.CustomerId
-                                            where o.OrderTime.Month == _todayDate.AddMonths(-1).Month && o.StoreId == StoreId
-                                            select new
-                                            {
-                                                CustomerName = c.CustomerName,
-                                                TotalAmount = od.Quantity * od.UnitPrice
-                                            } into monthlycustomer
-                                            group monthlycustomer by new
-                                            {
-                                                monthlycustomer.CustomerName
-                                            } into g
-                                            select new
-                                            {
-                                                CustomerName = g.Key.CustomerName,
-                                                TotalAmount = g.Sum(x => x.TotalAmount)
-                                            }).OrderByDescending(x => x.TotalAmount);
-
-                int[] MonthlyCustomerSales = new int[monthlycustomersales.Count()];
-                string[] MonthlyCustomerNames = new string[monthlycustomersales.Count()];
-
-                for (int i = 0; i < monthlycustomersales.Count(); i++)
-                {
-                    MonthlyCustomerSales[i] = Convert.ToInt32(monthlycustomersales.ElementAt(i).TotalAmount);
-                    MonthlyCustomerNames[i] = monthlycustomersales.ElementAt(i).CustomerName;
-                }
-
-                ViewBag.MonthlyCustomerSales = MonthlyCustomerSales;
-                ViewBag.MonthlyCustomerNames = MonthlyCustomerNames;
-                ViewBag.SumMonthlyCustomerSales = MonthlyCustomerSales.Sum();
-
-
-                Console.WriteLine("----------------------------------------------------------------------------------------------------------");
-
-                for (int i = 0; i < MonthlyCustomerSales.Length; i++)
-                {
-                    Console.Write(MonthlyCustomerNames[i] + " " + MonthlyCustomerSales[i] + " ");
-
-                }
-
-                Console.WriteLine("----------------------------------------------------------------------------------------------------------");
-
+              
                 // 月每日營收、訂單數趨勢圖
                 var monthlysalesperday = (from o in _context.Orders
                                           join od in _context.OrderDetails on o.OrderId equals od.OrderId
@@ -421,7 +366,7 @@ namespace msit59_vita.Controllers
 
                 for (int i = 0; i < monthlysalesperday.Count(); i++)
                 {
-                    MonthlyOrderDates[i] = monthlysalesperday.ElementAt(i).OrderDate.ToString("yyyy-MM-dd");
+                    MonthlyOrderDates[i] = monthlysalesperday.ElementAt(i).OrderDate.ToString("MM-dd ddd");
                     MonthlyTotalAmountPerDay[i] = Convert.ToInt32(monthlysalesperday.ElementAt(i).TotalAmount);
                     MonthlyOrderIdPerDay[i] = Convert.ToInt32(monthlysalesperday.ElementAt(i).DistinctOrderIDCount);
                 }
