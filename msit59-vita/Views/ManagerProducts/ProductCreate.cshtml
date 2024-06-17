@@ -82,17 +82,17 @@
 
 
                         <div class="form-group">
-                            <label class="form-label mb-0 mt-2" for="ProductName">商品名稱</label>
+                            <label class="form-label mb-0 mt-2" for="ProductName" id="labelProductName">商品名稱</label>
                             <input class="form-control" id="ProductName" name="ProductName" type="text" placeholder="" value="" required />
                             <div class="invalid-feedback">不可和現有商品名稱重複</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label mb-0 mt-2" for="ProductUnitPrice">價格</label>
+                    <label class="form-label mb-0 mt-2" for="ProductUnitPrice" id="labelProductUnitPrice">價格</label>
                             <input class="form-control" id="ProductUnitPrice" name="ProductUnitPrice" type="number" placeholder="" value="" required />
                             <div class="invalid-feedback">商品價格必須大於0元</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label mb-0 mt-2" for="ProductUnitsInStock">庫存數</label>
+                    <label class="form-label mb-0 mt-2" for="ProductUnitsInStock" id="labelProductUnitsInStock">庫存數</label>
                             <input class="form-control" id="ProductUnitsInStock" name="ProductUnitsInStock" type="number"
                            placeholder="" value="" required />
                             <div class="invalid-feedback">庫存數必須大於0單位</div>
@@ -350,8 +350,20 @@
                     }
 
                 });
-            
 
+        // DEMO
+        $('#labelProductName').click(function (e) {
+            e.preventDefault();
+            $('#ProductName').val('超蔬果鮭魚生魚片飯');
+        })
+        $('#labelProductUnitPrice').click(function (e) {
+            e.preventDefault();
+            $('#ProductUnitPrice').val('400');
+        })
+        $('#labelProductUnitsInStock').click(function (e) {
+            e.preventDefault();
+            $('#ProductUnitsInStock').val('10');
+        })
 
         </script>
 }

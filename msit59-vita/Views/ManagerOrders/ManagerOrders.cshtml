@@ -485,7 +485,8 @@
 
                 filterCustomerOrderStatus(1, customerOrderStatus, todayDate);
 
-
+                sessionStorage.removeItem('CustomerOrderStatus');
+                sessionStorage.removeItem('todayDate');
 
             }
         }
