@@ -42,19 +42,19 @@
 
         /* 今日訂單資訊 */
         .wide-text-box {
-            width: 200px;
-            height: 200px;
+            min-width: 200px;
+            margin-top: 20px;
         }
 
         #orderChartCanvas {
-            width: 450px;
+            height: 300px;
         }
 
 
         /* 評論管理 */
         #reviewMosaicPlot {
             width: 100%;
-            height: 500px;
+            height: 600px;
         }
 
         /* 本月營收分析 */
@@ -115,10 +115,9 @@
         }
 
         #ProductsBarChartCanvas,
-        #CustomerDoughnutPlotCanvas,
         #DailyOrderChartCanvas {
-            height: 360px;
-            width: 360px
+            width: 100%;
+           height: 700px;
         }
 
     </style>
@@ -130,28 +129,28 @@
         <div class="info-area">
             <div id="order-info">
                 <h3 class="p-0 fw-bolder">今日訂單資訊</h3>
-                <div class="d-flex justify-content-around align-items-center">
+                <div class="d-flex justify-content-around align-items-start flex-wrap">
                     <div class="wide-text-box">
                         <ul class="list-unstyled">
-                            <li class="fw-bold">訂單狀態概覽 </li>
-                            <li>待接單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_0()" class="text-success fw-bolder">@ViewBag.OrderStatus[0] </a></li>
-                            <li>製作中：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_1()" class="text-success fw-bolder">@ViewBag.OrderStatus[1]</a></li>
-                            <li>配送中/等待自取：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_2()" class="text-success fw-bolder">@ViewBag.OrderStatus[2]</a></li>
-                            <li>已完成：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_3()" class="text-success fw-bolder">@ViewBag.OrderStatus[3]</a></li>
-                            <li>退單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_4()" class="text-success fw-bolder">@ViewBag.OrderStatus[4]</a></li>
-                            <li>已取消：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_5()" class="text-success fw-bolder">@ViewBag.OrderStatus[5]</a></li>
+                            <li class="fw-bold fs-4">訂單狀態概覽 </li>
+                            <li class="fs-4">待接單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_0()" class=" fw-bolder" style="color:blue">@ViewBag.OrderStatus[0] </a></li>
+                            <li class="fs-4">製作中：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_1()" class="fw-bolder" style="color:blue">@ViewBag.OrderStatus[1]</a></li>
+                            <li class="fs-4">配送中/等待自取：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_2()" class="fw-bolder" style="color:blue">@ViewBag.OrderStatus[2]</a></li>
+                            <li class="fs-4">已完成：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_3()" class=" fw-bolder" style="color:blue">@ViewBag.OrderStatus[3]</a></li>
+                            <li class="fs-4">退單：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_4()" class=" fw-bolder" style="color:blue">@ViewBag.OrderStatus[4]</a></li>
+                            <li class="fs-4">已取消：<a href="/ManagerOrders/ManagerOrders" onclick="CustomserStatusSelect_5()" class="fw-bolder" style="color:blue">@ViewBag.OrderStatus[5]</a></li>
 
 
                         </ul>
                     </div>
-                    <div>
-                        <canvas id="orderChartCanvas" class="ps-0 pe-5"></canvas>
+                    <div >
+                        <canvas id="orderChartCanvas" class="ps-0"></canvas>
                     </div>
-                    <div class="wide-text-box ">
+                    <div class="wide-text-box " >
                         <ul class="list-unstyled ">
-                            <li class="fw-bold fs-5">已完成訂單統計 </li>
-                            <li>營業額： <span class="fw-bolder" style="color:blue">@ViewBag.TodayRevenue</span> </li>
-                            <li>便當總數量：<span class="fw-bolder" style="color:blue">@ViewBag.TodayQuantity </span></li>
+                            <li class="fw-bold fs-4" style="font-size: 20px">已完成訂單統計 </li>
+                            <li class="fs-4">營業額： <span class="fw-bolder" style="color:blue">@ViewBag.TodayRevenue</span> </li>
+                            <li class="fs-4">便當總數量：<span class="fw-bolder" style="color:blue">@ViewBag.TodayQuantity </span></li>
                         </ul>
                     </div>
 
@@ -159,10 +158,10 @@
 
                 </div>
 
-                <div id="review-info" class="pl-0">
-                    <h3 class="fw-bolder">評論管理</h3>
+                <div id="review-info" class="pl-0 pt-4">
+                    <h3 class="fw-bolder">前週評論分析</h3>
                     <ul class="list-unstyled ">
-                        <li> 本週新進評論： <a href="/ManagerComments/ManagerComments" onclick="redirectToManagerComments()" class="text-success fw-bolder">@ViewBag.NumComment</a> </li>
+                        <li> 本週新進評論： <a href="/ManagerComments/ManagerComments" onclick="redirectToManagerComments()" class=" fw-bolder " style="color:blue">@ViewBag.NumComment</a> </li>
                     </ul>
                     <div id="reviewMosaicPlot"></div>
                 </div>
@@ -189,26 +188,16 @@
                 </div>
             </div>
             <div id="hist-stats" class="row">
-                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                <div class="col-12  pt-3 pb-3">
                     <canvas id="ProductsBarChartCanvas">
                     </canvas>
                 </div>
-                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
+                <div class="col-12  pt-3 pb-3">
                     <canvas id="DailyOrderChartCanvas"></canvas>
 
                 </div>
-                <div class="col-lg-4 col-sm-12  pt-3 pb-3">
-                    <canvas id="CustomerDoughnutPlotCanvas"></canvas>
-                </div>
+
             </div>
-            @*     <div id="line-chart-stats" class="row ">
-        <div class="col-lg-6 col-sm-12  pt-3 pb-3">
-        <img src="https://placehold.co/600x400" class="w-100" alt="">
-        </div>
-        <div class="col-lg-6 col-sm-12  pt-3 pb-3">
-        <img src="https://placehold.co/600x400" class="w-100" alt="">
-        </div>
-        </div> *@
         </div>
 
 
@@ -257,6 +246,8 @@
                 sessionStorage.setItem('CustomerOrderStatus', 5)
 
             }
+
+          
             //mosaic plot
         @{
             var WeeklyReviewByProductAndRating = ViewBag.WeeklyReviewByProductAndRating;
@@ -289,19 +280,18 @@
                     chart.data(mosaicData);
 
                     // set the chart labels settings
-                    chart.labels();
+                    chart.labels().fontSize(18);
 
                     // set background-color
                     chart.background().fill("#F2F2E7");
 
                     // enable HTML in tooltips and format
-                    chart
-                        .tooltip()
+                    chart.tooltip()
                         .useHtml(true)
-                        .titleFormat("<b><span style='font-size:15px;'>{%x}</b>")
-                        .format('<h5 style=\'font-size:14px; margin: 0.5rem 0;\'>{%name}</h5>評分級數：{%SeriesName}<br>銷售總額: {%value}{scale:(1000)(1000)|( K)}<br>');
-
-                    // set container id for the chart
+                        .titleFormat('<span style=\"font-size: 18px;\">{%X}</span>')
+                        .format('<h5 style="font-size:18px; margin: 0.5rem 0;">{%Name}</h5><p style="font-size:18px;">評分級數：{%SeriesName}<br>銷售總額: {%Value}{scale:(1000)(1000)|( K)}</p>');
+                    
+                        // set container id for the chart
                     chart.container('reviewMosaicPlot');
 
                     // set the chart title
@@ -309,7 +299,17 @@
                         .title()
                         .enabled(true)
                         .useHtml(true)
-                        .text('<span style=\'font-size:14px; font-weight:bolder\';>商品銷售總額（評分級距 vs. 單點便當商品）</span>');
+                        .text('<span style=\'font-size:30px; font-weight:bolder; color: black\'>商品銷售總額（評分級距 vs. 單點便當商品）</span>');
+
+
+                    // configure X axis
+                    chart.xAxis().labels().fontSize(20);
+                    chart.xAxis().labels().fontColor('black');
+
+                    // configure Y axis
+                    chart.yAxis().labels().fontSize(20);
+                    chart.yAxis().labels().fontColor('black');
+
 
                     // initiate chart drawing
                     chart.draw();
@@ -333,9 +333,8 @@
                                 {
 
                                     data: @Html.Raw(Json.Serialize(productSalesList)),
-                                    color: '#0bb4ff',
-                                    hoverBackgroundColor: 'rgba(52, 143, 226, .8)',
-                                    hoverBorderColor: 'rgba(52, 143, 226, 1)',
+                                    backgroundColor: "#bb62f8",
+                                    hoverBackgroundColor: '#9b19f5',
                                     borderWidth: 1
 
                                 }
@@ -348,15 +347,33 @@
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: '各單點便當總營收'
+                                    text: '各單點便當總營收',
+                                    font: {
+                                        size: 30
+                                    },
+                                    color: 'black'
                                 },
                                 datalabels: {
                                     align: 'end',
+                                    color: 'black',
                                     anchor: 'center',
-                                    font: { weight: 'bold' },
+                                    font: {
+                                        weight: 'bold',
+                                        size: 20
+                                    },
                                     formatter: function (value) {
                                         const percentage = (value * 100 / @ViewBag.SumMonthlyProductSales).toFixed(0); // 將數字四捨五入到小數點第二位
                                         return percentage + '%';
+                                    }
+                                }, tooltip: {
+                                    titleFont: {
+                                        size: 30
+                                    },
+                                    bodyFont: {
+                                        size: 20
+                                    },
+                                    footerFont: {
+                                        size: 20 // there is no footer by default
                                     }
                                 },
                                 legend: {
@@ -364,9 +381,25 @@
                                 }
                             },
                             scales: {
-                                y: { beginAtZero: true, }
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            size: 20,
+
+                                        }, color: 'black'
+                                    }
+                                },
+                                y: {
+                                    ticks: {
+                                        font: {
+                                            size: 20,
+
+                                        }, color: 'black'
+                                    }
+                                }
                             }
 
+
                         }
                     })
 
@@ -375,148 +408,8 @@
 
                 })
 
-            //stacked bar chart
-        @{
-            var productCategoryList = ViewBag.ProductCategoryList as string[];
-            var orderTotalAmountByCategory = ViewBag.OrderTotalAmountByCategory as int[,];
-            string[] DutchField = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
-        }
 
-
-                $(document).ready(function () {
-                    var ProductCategoryList = @Html.Raw(Json.Serialize(productCategoryList));
-                    var OrderStatusList = ["待接單", "製作中", "配送中/等待自取", "已完成", "退單/已取消"];
-                    var OrderStatusData = {
-        @for (int i = 0; i < orderTotalAmountByCategory.GetLength(0); i++)
-        {
-            <text>"@Html.Raw(productCategoryList[i])": [@string.Join(", ", Enumerable.Range(0, orderTotalAmountByCategory.GetLength(1)).Select(j => orderTotalAmountByCategory[i, j]))], </text>
-        }
-                                };
-
-            // Lab 練習的程式寫在這裡
-            var ctx = document.getElementById("orderChartCanvas");
-            var populationChart = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: OrderStatusList,  // X 軸項目清單
-                    datasets: [ //堆疊類別清單
-        @for (int i = 0; i < orderTotalAmountByCategory.GetLength(0); i++)
-        {
-            <text>
-                            {
-                                label: "@Html.Raw(productCategoryList[i])",
-                                data: OrderStatusData["@Html.Raw(productCategoryList[i])"],
-                                backgroundColor: "@DutchField[i]",
-                            },
-            </text>
-        }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    plugins: {
-                        datalabels: false,
-                        title: {
-                            display: true,
-                            text: '今日營收長條圖 依據訂單狀態和產品分類'
-                        },
-                        legend: {
-                            display: false
-                        },
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                        },
-                        y: {
-                            stacked: true
-                        }
-                    },
-
-                }
-            });
-
-                    })
-
-            //doughnut chart
-
-        @{
-            // 取得 ViewBag 中的資料
-            var customerNameList = ViewBag.MonthlyCustomerNames as string[];
-            var customerTotalAmountList = ViewBag.MonthlyCustomerSales as int[];
-        }
-
-                $(document).ready(function () {
-                    const pieGenerateLabelsLegendHandler = Chart.controllers.doughnut.overrides.plugins.legend.labels.generateLabels;
-                    const pieLegendClickHandler = Chart.controllers.doughnut.overrides.plugins.legend.onClick;
-                    let others = [];
-
-                    var ctx3 = document.getElementById("CustomerDoughnutPlotCanvas");
-                    var pieChart = new Chart(ctx3, {
-                        type: "doughnut",
-                        data: {
-                            labels: @Html.Raw(Json.Serialize(customerNameList)),
-                            datasets: [
-                                {
-                                    data: @Html.Raw(Json.Serialize(customerTotalAmountList)),
-                                    // backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"]
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
-                            plugins: {
-                                datalabels: {
-                                    align: 'center',
-                                    anchor: 'center',
-                                    font: { weight: 'bold' },
-                                    formatter: function (value) {
-                                        const percentage = (value * 100 / @ViewBag.SumMonthlyCustomerSales).toFixed(0); // 將數字四捨五入到小數點第二位
-                                        if (percentage > 5) {
-                                            return percentage + '%';
-                                        } else {
-                                            return "";
-                                        }
-
-                                    }
-                                },
-                                title: {
-                                    display: true,
-                                    text: '客戶消費金額佔比'
-                                },
-                                legend: {
-                                    labels: {
-                                        generateLabels(chart) {
-                                            const labels = pieGenerateLabelsLegendHandler(chart);
-                                            const sorted = labels.sort((a, b) => chart.data.datasets[0].data[a.index] <= chart.data.datasets[0].data[b.index]);
-                                            const top5 = sorted.filter((el, index) => index <= 4);
-                                            others = sorted.filter((el, index) => index > 4);
-                                            top5.push({ text: 'Others', hidden: others[0].hidden });
-                                            return top5;
-                                        }
-                                    },
-                                    onClick(e, legendItem, legend) {
-                                        if (legendItem.text === 'Others') {
-                                            const ci = legend.chart;
-                                            others.forEach(function (item) {
-                                                ci.toggleDataVisibility(item.index);
-                                            });
-                                            ci.update();
-                                            return;
-                                        }
-                                        pieLegendClickHandler(e, legendItem, legend);
-                                    }
-                                }
-
-                            },
-                        }
-                    })
-
-
-
-
-
-                })
+      
 
             //line chart
         @{
@@ -539,8 +432,8 @@
                                     data: @Html.Raw(Json.Serialize(MonthlyTotalAmountPerDayList)),
                                     fill: false,
                                     // 著色:
-                                    backgroundColor: "rgba(14,72,100,0.2)",
-                                    borderColor: "rgba(14,72,100,1.0)",
+                                    backgroundColor: "#e60049",
+                                    borderColor: "#ab0036",
                                     borderWidth: 1,
                                     yAxisID: 'y1'
 
@@ -551,8 +444,8 @@
                                     data: @Html.Raw(Json.Serialize(MonthlyOrderIdPerDayList)),
                                     fill: false,
                                     // 著色:
-                                    backgroundColor: "rgba(255,99,132,0.2)",
-                                    borderColor: "rgba(255,99,132,1.0)",
+                                    backgroundColor: "#0bb4ff",
+                                    borderColor: "#0083be",
                                     borderWidth: 1,
                                     borderDash: [5, 5], //虛線,
                                     yAxisID: 'y2'
@@ -567,31 +460,164 @@
                                 intersect: false,
                             },
                             plugins: {
-                                datalabels: false,
+                                legend: {
+                                    labels: {
+                                        // This more specific font property overrides the global property
+                                        font: {
+                                            size: 20
+                                        }
+                                    }
+                                },
+                                datalabels: {
+                                    display: false,
+
+                                }, tooltip: {
+                                    titleFont: {
+                                        size: 30
+                                    },
+                                    bodyFont: {
+                                        size: 20
+                                    },
+                                    footerFont: {
+                                        size: 20 
+                                    }
+                                },
                                 title: {
                                     display: true,
-                                    text: '每日營收、來客數折線圖'
+                                    text: '每日營收、來客數折線圖',
+                                    font: {
+                                        size: 30
+                                    },
+                                    color: 'black'
                                 }
                             },
                             scales: {
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            size: 20
+                                        }, color: 'black'
+                                    }
+                                },
                                 y1: {
                                     type: 'linear',
                                     display: true,
                                     position: 'left',
+                                    ticks: {
+                                        font: {
+                                            size: 20
+                                        }, color: 'black'
+                                    }
                                 },
                                 y2: {
                                     type: 'linear',
                                     display: true,
                                     position: 'right',
+                                    ticks: {
+                                        font: {
+                                            size: 20
+                                        }, color: 'black'
+                                    }
                                 }
                             }
                         }
                     })
+                })
 
+            // doughnut plot
 
+        @{
+            // 取得 ViewBag 中的資料
+            var OrderTotalAmountByCategory = ViewBag.OrderTotalAmountByCategory as int[];
+            var OrderTotalAmountCategoryNames = ViewBag.OrderTotalAmountCategoryNames as string[];
+            // string[] DutchField = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
+        }
 
+                $(document).ready(function () {
 
+                    const pieGenerateLabelsLegendHandler = Chart.controllers.doughnut.overrides.plugins.legend.labels.generateLabels;
+                    const pieLegendClickHandler = Chart.controllers.doughnut.overrides.plugins.legend.onClick;
+                    let others = [];
 
+                    var ctx3 = document.getElementById("orderChartCanvas");
+                    var pieChart = new Chart(ctx3, {
+                        type: "doughnut",
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(OrderTotalAmountCategoryNames)),
+                            datasets: [
+                                {
+                                    data: @Html.Raw(Json.Serialize(OrderTotalAmountByCategory)),
+                                    backgroundColor: ["#e60049", "#0bb4ff", "#50e991"],
+                                    borderColor: "white",
+                                    borderWidth: 1,
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                               
+                                datalabels: {
+                                    align: 'center',
+                                    anchor: 'center',
+                                    color: 'black',
+                                    font: { weight: 'bold' },
+                                    formatter: function (value) {
+                                        const percentage = (value * 100 / @ViewBag.SumOrderTodaySales).toFixed(0); // 將數字四捨五入到小數點第二位
+                                        if (percentage > 5) {
+                                            return percentage + '%';
+                                        } else {
+                                            return "";
+                                        }                                    
+                                    },
+                                }, tooltip: {
+                                    titleFont: {
+                                        size: 20
+                                    },
+                                    bodyFont: {
+                                        size: 17
+                                    },
+                                    footerFont: {
+                                        size: 17
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: '依據商品分類的今日營收環形圖',
+                                    font: {
+                                        size: 20
+                                    },
+                                    color: 'black'
+                                },
+                                legend: { position: 'bottom' },
+                            }, legend: {
+                                    labels: {
+                                        generateLabels(chart) {
+                                            const labels = pieGenerateLabelsLegendHandler(chart);
+                                            const sorted = labels.sort((a, b) => chart.data.datasets[0].data[a.index] <= chart.data.datasets[0].data[b.index]);
+                                            const top5 = sorted.filter((el, index) => index <= 4);
+                                            others = sorted.filter((el, index) => index > 4);
+                                            top5.push({ text: 'Others', hidden: others[0].hidden });
+                                            return top5;
+                                    }
+                                    },
+                                    onClick(e, legendItem, legend) {
+                                        if (legendItem.text === 'Others') {
+                                            const ci = legend.chart;
+                                            others.forEach(function (item) {
+                                                ci.toggleDataVisibility(item.index);
+                                            });
+                                            ci.update();
+                                            return;
+                                        }
+                                        pieLegendClickHandler(e, legendItem, legend);
+                                    }
+                                }
+
+                            },
+
+                        })
                 })
 
 

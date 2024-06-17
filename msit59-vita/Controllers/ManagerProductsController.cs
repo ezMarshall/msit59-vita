@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using msit59_vita.Models;
-using System.Collections;
 using static msit59_vita.Models.ManagerProducts;
 
 namespace msit59_vita.Controllers
@@ -24,12 +19,12 @@ namespace msit59_vita.Controllers
         }
 
         // 首頁
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string sortString)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 TempData["currentPageIndex"] = 1;
-                return View(GetProducts(1));
+                return View(await GetProductsAsync(1, sortString));
             }
             else
             {
@@ -39,19 +34,19 @@ namespace msit59_vita.Controllers
 
 
         [HttpPost]
-        public IActionResult Index(int currentPageIndex)
+        public async Task<IActionResult> Index(int currentPageIndex, string sortString)
         {
             TempData["currentPageIndex"] = currentPageIndex;
 
-            return View(GetProducts(currentPageIndex));
+            return View(await GetProductsAsync(currentPageIndex, sortString));
 
         }
 
         [HttpPost]
-        public IActionResult ProductOnSellSwitch(int ProductId, bool ProductOnSell)
+        public async Task<IActionResult> ProductOnSellSwitch(int ProductId, bool ProductOnSell)
         {
-            Product item = _context.Products.Find(ProductId);
-            ProductCategory category = _context.ProductCategories.Find(item.CategoryId);
+            Product item = await _context.Products.FindAsync(ProductId);
+            ProductCategory category = await _context.ProductCategories.FindAsync(item.CategoryId);
 
             if (category.CategoryOnDelete == true && ProductOnSell == true)
             {
@@ -60,7 +55,7 @@ namespace msit59_vita.Controllers
             else
             {
                 item.ProductOnSell = ProductOnSell;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return Json(new { success = true, message = "修改上架狀態成功" });
             }
@@ -70,11 +65,11 @@ namespace msit59_vita.Controllers
 
 
         //商品分類彈窗
-        public ActionResult CategoryDetails()
+        public async Task<IActionResult> CategoryDetails()
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                var categories = GetProductCategories();
+                var categories = await GetProductCategoriesAsync();
 
                 return PartialView("CategoryDetails", categories);
             }
@@ -85,34 +80,34 @@ namespace msit59_vita.Controllers
 
 
         }
-    
 
 
 
-        public IActionResult CategoryEdit(int CategoryId, string CategoryName)
+
+        public async Task<IActionResult> CategoryEdit(int CategoryId, string CategoryName)
         {
 
-            var categoryItem = _context.ProductCategories.Find(CategoryId);
+            var categoryItem = await _context.ProductCategories.FindAsync(CategoryId);
             categoryItem.CategoryName = CategoryName;
             categoryItem.CategoryOnDelete = false;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var categories = GetProductCategories();
+            var categories = await GetProductCategoriesAsync();
             return PartialView("CategoryDetails", categories);
         }
 
         [HttpPost]
-        public IActionResult CategoryDelete(int CategoryId)
+        public async Task<IActionResult> CategoryDelete(int CategoryId)
         {
-            ProductCategory item = _context.ProductCategories.Find(CategoryId);
+            ProductCategory item =await _context.ProductCategories.FindAsync(CategoryId);
             //_context.ProductCategories.Remove(item);
 
-            var products = _context.Products.Where(p => p.CategoryId == CategoryId && p.StoreId == StoreId).ToList();
+            var products = await _context.Products.Where(p => p.CategoryId == CategoryId && p.StoreId == StoreId).ToListAsync();
 
             if (products == null)
             {
                 item.CategoryOnDelete = true;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return Json(new { success = true, message = "刪除成功" });
             }
@@ -126,13 +121,13 @@ namespace msit59_vita.Controllers
             }
 
             item.CategoryOnDelete = true;
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
 
             return Json(new { success = true, message = "刪除成功" });
         }
 
         [HttpPost]
-        public IActionResult CategoryCreate(string CategoryName)
+        public async Task<IActionResult> CategoryCreate(string CategoryName)
         {
             ProductCategory item = new ProductCategory()
             {
@@ -141,9 +136,9 @@ namespace msit59_vita.Controllers
                 CategoryOnDelete = false,
             };
             _context.ProductCategories.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var categories = GetProductCategories();
+            var categories =await GetProductCategoriesAsync();
             return PartialView("CategoryDetails", categories);
         }
 
@@ -151,23 +146,23 @@ namespace msit59_vita.Controllers
 
 
         // ProductCopy頁面
-        public IActionResult ProductCopy(int id)
+        public async Task<IActionResult> ProductCopy(int id)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                 Product item = _context.Products.Find(id);
+                Product item = await _context.Products.FindAsync(id);
                 if (item != null)
                 {
-                     int thisCategoryId = item.CategoryId;
+                    int thisCategoryId = item.CategoryId;
                     var productname = from p in _context.Products
-                                      where p.CategoryId == thisCategoryId 
+                                      where p.CategoryId == thisCategoryId
                                       select p.ProductName;
 
-                    var productnamelist = productname.Distinct().ToList();
+                    var productnamelist = await productname.Distinct().ToListAsync();
                     ViewBag.ProductNameList = productnamelist;
                 }
-                                
-                return View(GetSpecificProduct(id));
+
+                return View(await GetSpecificProductAsync(id));
             }
             else
             {
@@ -177,7 +172,7 @@ namespace msit59_vita.Controllers
 
 
         [HttpPost]
-        public IActionResult ProductCopy(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
+        public async Task<IActionResult> ProductCopy(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId, IFormFile? ProductImage)
         {
 
             Product item = new Product()
@@ -190,7 +185,7 @@ namespace msit59_vita.Controllers
                 StoreId = StoreId
             };
             _context.Products.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
 
             if (ProductImage != null)
@@ -200,29 +195,29 @@ namespace msit59_vita.Controllers
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    ProductImage.CopyTo(stream);
+                    await ProductImage.CopyToAsync(stream);
                 }
 
                 item.ProductImage = "image/Store/" + fileName;
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
 
             int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
 
-            return View("Index", GetProducts(currentPageIndex));
+            return View("Index", await GetProductsAsync(currentPageIndex, "id_asc"));
 
 
         }
 
-        public IActionResult ProductCreate()
+        public async Task<IActionResult> ProductCreate()
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                var categories = GetProductCategories();
+                var categories = await GetProductCategoriesAsync();
                 var productname = from p in _context.Products
                                   where p.StoreId == StoreId
                                   select p.ProductName;
-                var productnamelist = productname.Distinct().ToList();
+                var productnamelist = await productname.Distinct().ToListAsync();
                 ViewBag.ProductNameList = productnamelist;
 
                 return View(categories);
@@ -235,7 +230,7 @@ namespace msit59_vita.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductCreate(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, int CategoryId, IFormFile? ProductImage)
+        public async Task<IActionResult> ProductCreate(string ProductName, int ProductUnitPrice, short ProductUnitsInStock, int CategoryId, IFormFile? ProductImage)
         {
             Product item = new Product()
             {
@@ -249,7 +244,7 @@ namespace msit59_vita.Controllers
 
 
             _context.Products.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // 若有上傳圖片，則儲存圖片檔案
             if (ProductImage != null)
@@ -259,25 +254,25 @@ namespace msit59_vita.Controllers
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    ProductImage.CopyTo(stream);
+                    await ProductImage.CopyToAsync(stream);
                 }
 
                 item.ProductImage = "image/Store/" + fileName;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
-            return View("Index", GetProducts(1));
+            return View("Index",await GetProductsAsync(1, "id_asc"));
 
 
         }
 
 
         // ProductEdit頁面
-        public IActionResult ProductEdit(int id)
+        public async Task<IActionResult> ProductEdit(int id)
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                Product item = _context.Products.Find(id);
+                Product item =await  _context.Products.FindAsync(id);
                 if (item != null)
                 {
                     int thisCategoryId = item.CategoryId;
@@ -285,12 +280,12 @@ namespace msit59_vita.Controllers
                                       where p.CategoryId == thisCategoryId && p.ProductName != item.ProductName
                                       select p.ProductName;
 
-                    var productnamelist = productname.Distinct().ToList();
+                    var productnamelist =await productname.Distinct().ToListAsync();
                     ViewBag.ProductNameList = productnamelist;
                 }
 
 
-                    return View(GetSpecificProduct(id));
+                return View(await GetSpecificProductAsync(id));
             }
             else
             {
@@ -299,10 +294,10 @@ namespace msit59_vita.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductEdit(int ProductId, string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId)
+        public async Task<IActionResult> ProductEdit(int ProductId, string ProductName, int ProductUnitPrice, short ProductUnitsInStock, string ProductOnSell, int CategoryId)
         {
 
-            Product product = _context.Products.Find(ProductId);
+            Product product = await _context.Products.FindAsync(ProductId);
             if (product != null)
             {
 
@@ -311,21 +306,21 @@ namespace msit59_vita.Controllers
                 product.ProductUnitsInStock = ProductUnitsInStock;
                 product.CategoryId = CategoryId;
 
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
 
             }
 
             int currentPageIndex = TempData.ContainsKey("currentPageIndex") ? (int)TempData["currentPageIndex"] : 1;
 
             //return Redirect("/ManagerProducts/Index"); 
-            return View("Index", GetProducts(currentPageIndex));
+            return View("Index", await GetProductsAsync(currentPageIndex, "id_asc"));
         }
 
         [HttpPost]
-        public IActionResult PictureUpload(int ProductId, IFormFile ProductImage)
+        public async Task<IActionResult> PictureUpload(int ProductId, IFormFile ProductImage)
         {
 
-            Product product = _context.Products.Find(ProductId);
+            Product product = await _context.Products.FindAsync(ProductId);
 
             if (ProductImage != null)
             {
@@ -334,11 +329,11 @@ namespace msit59_vita.Controllers
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    ProductImage.CopyTo(stream);
+                   await ProductImage.CopyToAsync(stream);
                 }
 
                 product.ProductImage = "image/Store/" + fileName;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return Json(new { success = true, message = "圖片成功上傳" });
             }
@@ -350,9 +345,9 @@ namespace msit59_vita.Controllers
         }
 
         [HttpPost]
-        public IActionResult PictureDelete(int ProductId)
+        public async Task<IActionResult> PictureDelete(int ProductId)
         {
-            var product = _context.Products.Find(ProductId);
+            var product = await _context.Products.FindAsync(ProductId);
             if (!string.IsNullOrEmpty(product.ProductImage))
             {
 
@@ -367,7 +362,7 @@ namespace msit59_vita.Controllers
             }
 
             product.ProductImage = string.Empty;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
 
             return Json(new { success = true, message = "圖片成功刪除" });
@@ -377,7 +372,7 @@ namespace msit59_vita.Controllers
 
         //用到的函數
 
-        private List<ProductCategory> GetProductCategories()
+        private async Task<List<ProductCategory>> GetProductCategoriesAsync()
         {
             var queryProductCategories = from c in _context.ProductCategories
                                          where c.StoreId == StoreId && c.CategoryOnDelete == false
@@ -386,14 +381,20 @@ namespace msit59_vita.Controllers
                                              CategoryId = c.CategoryId,
                                              CategoryName = c.CategoryName
                                          };
-            var viewModel = queryProductCategories.ToList();
+            var viewModel = await queryProductCategories.ToListAsync();
 
             return viewModel;
 
         }
 
-        private ManagerProducts GetProducts(int currentPage)
+        private async Task<ManagerProducts> GetProductsAsync(int currentPage, string sortString)
         {
+
+            ViewBag.ProductIdSortParm = sortString == "id_desc" ? "id_asc" : "id_desc";
+            ViewBag.CategoryIdParm = sortString == "category_id_desc" ? "category_id_asc" : "category_id_desc";
+            ViewBag.ProductOnSellParm = sortString == "product_on_sell_asc" ? "product_on_sell_desc" : "product_on_sell_asc";
+            ViewBag.ProductUnitsInStockParm = sortString == "product_units_in_stock_asc" ? "product_units_in_stock_desc" : "product_units_in_stock_asc";
+
 
             int maxRows = 10; //每頁幾列'
 
@@ -413,8 +414,39 @@ namespace msit59_vita.Controllers
                                     CategoryName = c.CategoryName
                                 };
 
+            switch (sortString)
+            {
+                case "id_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductId);
+                    break;
+                case "id_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductId);
+                    break;
+                case "category_id_asc":
+                    queryProducts = queryProducts.OrderBy(c => c.CategoryId);
+                    break;
+                case "category_id_desc":
+                    queryProducts = queryProducts.OrderByDescending(c => c.CategoryId);
+                    break;
+                case "product_units_in_stock_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductUnitsInStock);
+                    break;
+                case "product_units_in_stock_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductUnitsInStock);
+                    break;
+                case "product_on_sell_asc":
+                    queryProducts = queryProducts.OrderBy(p => p.ProductOnSell);
+                    break;
+                case "product_on_sell_desc":
+                    queryProducts = queryProducts.OrderByDescending(p => p.ProductOnSell);
+                    break;
+                default:
+                    queryProducts = queryProducts.OrderBy(p => p.ProductId);
+                    break;
+            }
 
-            var products = queryProducts.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+            var products = await queryProducts.Skip((currentPage - 1) * maxRows).Take(maxRows).ToListAsync();
 
             var queryCategories = from c in _context.ProductCategories
                                   where c.StoreId == StoreId && c.CategoryOnDelete == false
@@ -425,7 +457,7 @@ namespace msit59_vita.Controllers
                                       CategoryOnDelete = c.CategoryOnDelete,
                                       StoreId = StoreId
                                   };
-            var categories = queryCategories.ToList();
+            var categories = await queryCategories.ToListAsync();
 
             var viewModel = new ManagerProducts
             {
@@ -444,7 +476,7 @@ namespace msit59_vita.Controllers
 
 
         }
-        private ManagerProducts GetSpecificProduct(int ProductId)
+        private async Task<ManagerProducts> GetSpecificProductAsync(int ProductId)
         {
 
             var queryProducts = from p in _context.Products
@@ -463,7 +495,7 @@ namespace msit59_vita.Controllers
                                     CategoryName = c.CategoryName
                                 };
 
-            var products = queryProducts.ToList();
+            var products = await queryProducts.ToListAsync();
 
             var queryCategories = from c in _context.ProductCategories
                                   where c.StoreId == StoreId && c.CategoryOnDelete == false
@@ -474,7 +506,7 @@ namespace msit59_vita.Controllers
                                       CategoryOnDelete = c.CategoryOnDelete,
                                       StoreId = StoreId
                                   };
-            var categories = queryCategories.ToList();
+            var categories = await queryCategories.ToListAsync();
 
             var viewModel = new ManagerProducts
             {
@@ -485,6 +517,6 @@ namespace msit59_vita.Controllers
             return viewModel;
         }
     }
-    
+
 
 }

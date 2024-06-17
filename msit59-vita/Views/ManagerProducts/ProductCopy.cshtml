@@ -130,7 +130,71 @@
             }
 
         </div>
+        <!-- #region Modal: EditProductCategories -->
 
+        <div class="modal fade" id="EditProductCategoriesModal" aria-hidden="true"
+             aria-labelledby="EditProductCategoriesModalLabel" tabindex="-1">
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fs-2" id="EditProductCategoriesModalLabel">編輯商品分類</h5>
+                        @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:void(0)" id="btnProductCategoryCreate" class="btn btn-outline-dark me-2 mb-1"
+                           data-bs-target="#CreateProductCategoryModal" data-bs-toggle="modal"
+                           data-bs-dismiss="modal">新增分類</a>
+                        <a href="" class="btn btn-outline-danger me-2 mb-1">關閉視窗</a>
+                        <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Open second modal</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #endregion -->
+        <!-- #region Modal: CreateProductCategories -->
+
+        <div class="modal fade" id="CreateProductCategoryModal" aria-hidden="true"
+             aria-labelledby="CreateProductCategoryModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fs-2" id="CreateProductCategoryModal">新增商品分類</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="alertPlaceholderCategoryCreate" class="d-none">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <span>
+                                    <strong>警告: </strong><p class="d-inline"></p>
+                                    <button type="button" id="btnAlertCloseCategoryCreate" class="btn close float-end shadow-none p-0" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <form action="/ManagerProducts/CategoryCreate" method="post">
+                            <label class="form-label" for="CreateCategoryName">商品分類名稱</label>
+                            <input class="form-control" id="CreateCategoryName" name="CreateCategoryName" type="text" />
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Back to first</button> -->
+                        <a href="" class="btn btn-success me-2 mb-1" id="ProductCategoryCreateEnsure"
+                           data-bs-target="#EditProductCategoriesModal">新增分類</a>
+                        <a href="" class="btn btn-danger me-2 mb-1" id="ProductCategoryCreateCancel"
+                           data-bs-target="#EditProductCategoriesModal" data-bs-toggle="modal"
+                           data-bs-dismiss="modal">取消設定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #endregion -->
 
 
 
@@ -144,14 +208,14 @@
             $(function () {
 
                 $("#btnEditProductCategoriesModal").on('click', function () {
+                    console.log('你好')
                     $("#EditProductCategoriesModal .modal-body").load("/ManagerProducts/CategoryDetails", function () {
                         $("#EditProductCategoriesModal").modal("show");
+                        console.log('你好2')
                     });
 
                 });
-
             });
-
             var categoryNameList = @Html.Raw(Json.Serialize(categoryNames));
             $('#ProductCategoryCreateEnsure').on('click', function (event) {
                 event.preventDefault();
