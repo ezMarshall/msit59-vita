@@ -350,5 +350,53 @@ namespace msit59_vita.Controllers
 
 
 		}
+
+
+
+		//linePay確認付款頁面
+		public IActionResult ConfirmLinePay(string transactionId, string orderId)
+		{
+
+			var customer = from c in _context.Customers
+						   where c.CustomerEmail == User.Identity.Name
+						   select c;
+
+			var customerId = customer.FirstOrDefault();
+
+			var customerID = customerId.CustomerId;
+
+			var cart = from c in _context.ShoppingCarts
+					   join ct in _context.Customers on c.CustomerId equals ct.CustomerId
+					   join p in _context.Products on c.ProductId equals p.ProductId
+					   join s in _context.Stores on p.StoreId equals s.StoreId
+					   where c.CustomerId == customerID
+					   select new
+					   {
+						   ShoppingCartId = c.ShoppingCartId,
+						   ShoppingCartQuantity = c.ShoppingCartQuantity,
+						   StoreId = s.StoreId,
+						   StoreName = s.StoreName,
+						   StoreLinePay = s.StoreLinePay,
+						   StorePhoneNumber = s.StorePhoneNumber,
+						   StoreUniformInvoiceVia = s.StoreUniformInvoiceVia,
+						   CustomerName = ct.CustomerName,
+						   ProductId = p.ProductId,
+						   ProductName = p.ProductName,
+						   ProductUnitPrice = p.ProductUnitPrice,
+						   ProductUnitsInStock = p.ProductUnitsInStock,
+						   p.ProductImage
+					   };
+
+			var paymentInfo = cart.ToList();
+
+			var totalAmount = (int)paymentInfo.Sum(x => x.ProductUnitPrice * x.ShoppingCartQuantity);
+
+
+			ViewBag.PaymentInfo = paymentInfo;
+			ViewBag.TotalAmount = totalAmount;
+			ViewBag.TransactionId = transactionId;
+			ViewBag.OrderId = orderId;
+			return View();
+		}
 	}
 }

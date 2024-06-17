@@ -271,7 +271,9 @@
                     $link.text(pageNumber);
                 }
             }
-        } function setPageBox(boxIndex, pageNumber, isActive) {
+        } 
+        
+        function setPageBox(boxIndex, pageNumber, isActive) {
             var $btn = $('#pageBox' + boxIndex);
             var $link = $('#pageBox' + boxIndex + '-link');
             $btn.toggleClass('active', isActive);
@@ -324,15 +326,21 @@
                     // 從服務器響應中提取總頁數和當前頁碼
                     var pageCount = $(result).find('#hfPageCount').val();
                     var currentPageIndex = $(result).find('#hfCurrentPageIndex').val();
-
-                    // 重置分頁按鈕狀態
-                    $('.page-item').removeClass('active disabled');
-
-
                     $("#hfPageCount").val(pageCount);
                     $("#hfCurrentPageIndex").val(currentPageIndex);
 
+                    // 重置分頁按鈕狀態
+                    $('.page-item').removeClass('active disabled');
+                    
+                    // 沒有資料或資料<=一頁 將頁碼移除
+                    if (isNaN(pageCount) || pageCount <= 1) {
+                        $('.pagination').addClass("d-none");
+                    } else {
+                        $('.pagination').removeClass("d-none");
+                    }
                     updatePaginationButtons(parseInt(currentPageIndex));
+                    //下拉選單箭頭方向改變
+                    bindAccordionToggle();
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in AJAX request:", error);
@@ -426,8 +434,21 @@
             $(document).on('dblclick', 'textarea', function () {
                 $('textarea').val('謝謝您的支持!')
             });
+            //下拉選單箭頭方向改變
+            bindAccordionToggle();
         });
+        // 下拉選單箭頭方向改變
+        function bindAccordionToggle() {
+            $(".btn-accordion").each(function (index) {
+                var chevronBtnId = "chevron-btn-" + index;
+                var chevronIconId = "chevron-icon-" + index;
 
+                $("#" + chevronBtnId).off('click').on("click", function () {
+                    $("#" + chevronIconId).toggleClass("fa-chevron-down");
+                    $("#" + chevronIconId).toggleClass("fa-chevron-up");
+                });
+            });
+        }
         </script>
 
 
