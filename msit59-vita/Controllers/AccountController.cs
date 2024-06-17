@@ -331,5 +331,14 @@ namespace msit59_vita.Controllers
             return Json(model);
         }
         #endregion
+
+        #region Email是否重複驗證
+        [HttpPost]
+        public IActionResult IsEmailAvailable(string CustomerEmail)
+        {
+            bool isAvailable = !_context.Customers.Any(u => u.CustomerEmail == CustomerEmail);
+            return Json(isAvailable);
+        }
+        #endregion
     }
 }
