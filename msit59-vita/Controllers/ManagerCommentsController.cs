@@ -92,14 +92,13 @@ namespace msit59_vita.Controllers
             return RedirectToAction("ManagerComments", "ManagerComments");
         }
 
-        public IActionResult FilterReviews(string searchString, string replyStatus, string startDate, string endDate, int currentPage = 1)
+        public IActionResult FilterReviews(string searchString, string replyStatus, string startDate, string endDate, string sortOrder, int currentPage = 1)
         {
-            var viewModel = GetFilterReviews(searchString, replyStatus, startDate, endDate, currentPage);
+            var viewModel = GetFilterReviews(searchString, replyStatus, startDate, endDate, sortOrder, currentPage);
             return PartialView("_ReviewsTable", viewModel);
         }
 
-
-        public ManagerReviews GetFilterReviews(string searchString, string replyStatus, string startDate, string endDate, int currentPage = 1)
+        public ManagerReviews GetFilterReviews(string searchString, string replyStatus, string startDate, string endDate, string sortOrder, int currentPage = 1)
         {
             int? replyStatusInt = null;
             if (!string.IsNullOrEmpty(replyStatus))
@@ -161,7 +160,22 @@ namespace msit59_vita.Controllers
 
                 queryReviews = queryReviews.Where(r => r.ReviewTime >= startDateParsed.Value && r.ReviewTime <= endDateParsed.Value);
             }
-          
+
+            // 根據排序方式對篩選後的評論進行排序
+            switch (sortOrder)
+            {
+                case "rating_desc":
+                    queryReviews = queryReviews.OrderByDescending(r => r.ReviewRating);
+                    break;
+                case "rating_asc":
+                    queryReviews = queryReviews.OrderBy(r => r.ReviewRating);
+                    break;
+                default:
+                    // 默認按發佈時間降序排列
+                    queryReviews = queryReviews.OrderByDescending(r => r.ReviewTime);
+                    break;
+            }
+
 
             var totalCount = queryReviews.Count(); // 總記錄數
             int maxRows = 10; // 每頁行數
@@ -182,6 +196,7 @@ namespace msit59_vita.Controllers
 
             return viewModel;
         }
+
 
 
 

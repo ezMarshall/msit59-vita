@@ -21,7 +21,7 @@
                             </div>
                             <div class="card-body home-card-body d-flex flex-column h-100 position-relative">
                                 <div class="d-flex justify-content-between">
-                                    <h2 class="card-title h6 d-inline-block align-top m-0">@store.StoreName</h2>
+                                    <h2 class="card-title h6 d-inline-block align-top m-0 fw-bold">@store.StoreName</h2>
                                     <span href="#" class="d-block" id="homeFavoriteStore" data-storeid="@store.StoreId">
                                         @if (store.isFavorite)
                                         {
@@ -37,9 +37,19 @@
                                 <div>
                                     <div class="home-store-star d-inline-block align-middle" style="background: linear-gradient(to right , #ffd700 0 @(store.averageRating*20)%, #F2F2E7 @(store.averageRating*20)% 100%)"></div>
                                     <span class="align-middle text-dark">@store.averageRating</span>
-                                    <span class="align-middle link-dark">
+                                    @if (@store.totalReviews == 0)
+                                    {
+                                        <span class="align-middle link-dark">
+                                        (尚無評論)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="align-middle link-dark">
                                         (@store.totalReviews 則評論)
-                                    </span>
+                                        </span>
+                                    }
+                                        <span>‧&nbsp;@(store.Dis > 1000 ? Math.Round(store.Dis / 1000, 1) + "公里" : store.Dis + "公尺")</span>
                                 </div>
                                 <p class="d-block link-dark mb-0"><i class="fa-solid fa-location-dot me-2"></i>@store.StoreAddress</p>
                                 <p class="card-text mt-1">

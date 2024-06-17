@@ -85,12 +85,13 @@
 
             let LoginForm = $('#LoginForm');
             LoginForm.on('submit', function (e) {
-                if (!form[0].checkValidity()) {
+                console.log(LoginForm);
+                if (!LoginForm[0].checkValidity()) {
                     e.preventDefault();
                     e.stopPropagation();
                 }
 
-                form.addClass('was-validated');
+                LoginForm.addClass('was-validated');
             })
 
             // DEMO
