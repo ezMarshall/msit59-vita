@@ -38,19 +38,26 @@
                         <a href="#" id="searchLink">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
-                        <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="text" name="searchString" placeholder="請輸入關鍵字" id="searchString">
+                        <input class="comment-input border-2 rounded-3 py-1 px-2 me-3 bg-light" type="text" name="searchString" placeholder="請輸入關鍵字" id="searchString">
                     </div>
-                <div>
-                    <input class="comment-input border-2 rounded-3 py-1 px-2" type="date" name="" id="startDate">
+                    <div class="d-flex">
+                    <input class="comment-input border-2 rounded-3 py-1 px-2 bg-light" type="date" name="" id="startDate">
                     <span class="fw-bold">~</span>
-                    <input class="comment-input border-2 rounded-3 py-1 px-2 me-3" type="date" name="" id="endDate">
+                    <input class="comment-input border-2 rounded-3 py-1 px-2 me-3 bg-light" type="date" name="" id="endDate">
                 </div>
                 <div>
-                    <select class="comment-select border-2 border-dark rounded-3 py-1 px-2 me-3" id="replyStatus">
+                        <select class="comment-select border-2 border-dark rounded-3 py-1 px-2 me-3 bg-light" id="replyStatus">
                         <option value="">回覆狀態</option>
                         <option value="1">已回覆</option>
                         <option value="0">未回覆</option>
                     </select>
+                </div>
+                <div class="d-flex">
+                    <span class="fw-bold rounded-3 me-3 py-1 px-2 border-2 rating-btn" id="sortByRating">
+                        依星級排序
+                            <i class="fa-solid fa-chevron-down" id="sortDescIcon" style="display: none;"></i>
+                        <i class="fa-solid fa-chevron-up" id="sortAscIcon"></i>
+                    </span>
                 </div>
                 <div>
                     <a href="/ManagerComments/ManagerComments" class="btn clear-btn btn-dark rounded-3 py-1 px-2">清除篩選</a>
@@ -312,7 +319,8 @@
                 startDate: startDateInput.value,
                 endDate: endNextDay,
                 replyStatus: replyStatusSelect.value,
-                currentPage: currentPage // 添加當前頁碼
+                currentPage: currentPage,
+                sortOrder: sortOrder
             };
 
 
@@ -437,6 +445,7 @@
             //下拉選單箭頭方向改變
             bindAccordionToggle();
         });
+
         // 下拉選單箭頭方向改變
         function bindAccordionToggle() {
             $(".btn-accordion").each(function (index) {
@@ -449,6 +458,23 @@
                 });
             });
         }
+
+        let sortOrder = "";
+
+
+        $("#sortByRating").click(function () {
+        if (sortOrder === "" || sortOrder === "rating_asc") {
+            sortOrder = "rating_desc";
+            $("#sortDescIcon").show();
+            $("#sortAscIcon").hide();
+        } else {
+            sortOrder = "rating_asc";
+            $("#sortDescIcon").hide();
+            $("#sortAscIcon").show();
+        }
+        
+        filterTable(1);
+    });
         </script>
 
 
