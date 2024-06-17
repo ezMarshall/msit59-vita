@@ -27,17 +27,6 @@ namespace msit59_vita.Controllers
         {
             if (!string.IsNullOrEmpty(state))
             {
-                state = System.Web.HttpUtility.UrlDecode(state);
-
-                // 將解碼後的 state 字符串反序列化為對象
-                var searchState = JsonConvert.DeserializeObject<SearchStateViewModel>(state);
-
-                // 獲取經緯度數據
-                var data = (JObject)searchState.Data;
-                double lat = (double)data["lat"];
-                double lng = (double)data["lng"];
-                GetStorList(lat, lng);
-                StoreList.NowStoreList = _nowStoreList;
                 ViewBag.isSearched = true;
                 return View(_nowStoreList);
             }
@@ -122,6 +111,7 @@ namespace msit59_vita.Controllers
         public IActionResult SortRating()
         {
             _nowStoreList.Sort((x, y) => y.averageRating.CompareTo(x.averageRating));
+            StoreList.NowStoreList = _nowStoreList;
             ViewBag.isSearched = true;
             return PartialView("_StoreListPartial", _nowStoreList);
         }
@@ -232,6 +222,7 @@ namespace msit59_vita.Controllers
                     totalReviews = totalReviews,
                     isFavorite = isFavorite,
                     ProductImageList = ProductImageList,
+                    Dis = Dis
                 };
                 _nowStoreList.Add(store);
             }
