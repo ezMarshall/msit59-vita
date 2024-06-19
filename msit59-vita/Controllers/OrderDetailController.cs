@@ -222,7 +222,8 @@ namespace msit59_vita.Controllers
 				var carrier = HttpContext.Session.GetString("Carrier");
 				var address = HttpContext.Session.GetString("address");
 				var orderNote = HttpContext.Session.GetString("orderNote");
-
+				// 新建立的id
+				int orderId = 0;
 
 				var phone = phoneMethod == "0" ? cellPhoneNumber : phoneNum;
 
@@ -295,7 +296,6 @@ namespace msit59_vita.Controllers
 				string addressCity = segments[0].Substring(0, Math.Min(3, segments[0].Length));
 				string addressDistrict = segments[0].Substring(Math.Min(3, segments[0].Length));
 				string addressDetails = segments.Length > 1 ? segments[1] : string.Empty;
-
 				if (DateTime.TryParse(orderTime, out predictedArrivalTime))
 				{
 					var order = new Order
@@ -318,6 +318,7 @@ namespace msit59_vita.Controllers
 					};
 					_context.Orders.Add(order);
 					_context.SaveChanges();
+					orderId = order.OrderId;
 					foreach (var item in paymentInfo)
 					{
 						var orderDetail = new OrderDetail
@@ -340,7 +341,7 @@ namespace msit59_vita.Controllers
 				_context.SaveChanges();
 
 
-				return Json(new { success = true, message = "訂單已成功完成" });
+				return Json(new { success = true, message = "訂單已成功完成",OrderId = orderId });
 			}
 			catch (Exception ex)
 			{

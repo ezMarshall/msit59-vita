@@ -144,7 +144,6 @@
 				data: JSON.stringify(payment),
 				success: (res) => {
 					console.log(res);
-					//todo 後續linepay流程
 					if (res.returnCode === "0000") {
 						// initOrder();
 						//todo 存入regKey
@@ -157,9 +156,9 @@
 				error: (err) => {
 					console.log(err);
 				}
-			})
+			}) 
 		}
-		 function initOrder(){
+		function initOrder(){
 
 			 $.ajax({
 				url: '/OrderDetail/ConfirmOrder',
