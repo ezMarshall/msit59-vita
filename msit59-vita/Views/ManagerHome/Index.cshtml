@@ -362,8 +362,11 @@
                                         size: 20
                                     },
                                     formatter: function (value) {
-                                        const percentage = (value * 100 / @ViewBag.SumMonthlyProductSales).toFixed(0); // 將數字四捨五入到小數點第二位
-                                        return percentage + '%';
+                                        function numberComma(num) {
+                                            let comma = /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g
+                                            return num.toString().replace(comma, ',')
+                                        }
+                                        return numberComma(value);
                                     }
                                 }, tooltip: {
                                     titleFont: {
