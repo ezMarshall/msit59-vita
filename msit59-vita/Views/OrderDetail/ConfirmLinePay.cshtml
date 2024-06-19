@@ -1,0 +1,132 @@
+﻿@{
+	ViewData["Title"] = "LinePay付款";
+	var paymentInfo = ViewBag.PaymentInfo;
+}
+
+
+<section class="container-lg">
+
+	
+	<div class="order mt-3 row mb-3">
+
+		<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
+
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">1</div>
+				<div class="fs-6 fw-bold text-break">LINE PAY 登入授權</div>
+			</div>
+			<div class="step active col-2 text-center fw-bold ">
+				<div class="circle d-inline-block mb-1 rounded-circle">2</div>
+				<div class="fs-6 fw-bold text-break">LINE PAY 確認付款</div>
+			</div>
+		</div>
+		<div class="order-form row bg-white rounded-2 col-9 mx-auto pt-4 px-5 mb-3">
+			<div class="row d-flex justify-content-center py-4">
+				<div class="col-md-8">
+					<div class="fs-5">
+						<dl class="row">
+							<dt class="col-sm-4 fw-bold fs-3 text-end">訂購門市:</dt>
+							<dd class="col-sm-8  fs-3 text-center" id="store-name">@paymentInfo[0].StoreName</dd>
+							<hr>
+							@foreach (var item in paymentInfo)
+							{
+
+								<div class="col-sm-12"><img class="card-img-top line-pay-image" src="~/@(String.IsNullOrEmpty(item.ProductImage) ? "image/Common/300x300_default.png" : item.ProductImage)" alt="@(item.ProductName)_picture" /></div>
+								<dt class="col-sm-4 fw-bold">商品名稱</dt>
+								<dd class="col-sm-8">@item.ProductName</dd>
+								<dt class="col-sm-4 fw-bold">商品單價</dt>
+								<dd class="col-sm-8">$@((int)item.ProductUnitPrice)</dd>
+								<dt class="col-sm-4 fw-bold">購買數量</dt>
+								<dd class="col-sm-8">@item.ShoppingCartQuantity</dd>
+								<dt class="col-sm-4 fw-bold">小計</dt>
+								<dd class="col-sm-8">$@((int)item.ProductUnitPrice * item.ShoppingCartQuantity)</dd>
+								<hr>
+							}
+								<dt class="col-sm-4 fw-bold fs-3 text-end">應付金額:</dt>
+								<dd class="col-sm-8 fs-3 text-start">$@ViewBag.TotalAmount</dd>
+								<dt class="col-sm-4 fw-bold fs-3 text-end">交易狀態:</dt>
+								<dd class="col-sm-8 fs-3 text-start" id="paymentStatus"> 交易已授權，等待確認</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mb-3 mx-auto ">
+			<button id="confirm-order" class="btn-next btn btn-dark fs-5 fw-bold" onclick="confirmPayment('@(ViewBag.transactionId)','@(ViewBag.orderId)')" type="button">
+				<p class="text-decoration-none text-white my-auto">確認付款</p>
+			</button>
+		</div>
+	</div>
+
+</section>
+ 
+@section Scripts {
+	<script>
+		let baseLoginPayUrl = '/api/LinePay/';
+		let transactionId = "2024060602134460110";
+		let orderId = "1717601209796";
+
+		function initOrder() {
+
+			$.ajax({
+				url: '/OrderDetail/ConfirmOrder',
+				type: 'POST',
+				success: function (data) {
+					console.log(data);
+					if (data.success) {
+						alert('LinePay 付款完成,即將回到當前訂單頁面');
+
+
+						connection.invoke("MakeOrders").catch(function (err) {
+							return console.error(err.toString());
+						});
+
+
+						// window.location.href = '/CurrentOrder';
+					} else {
+						alert('訂單送出失敗，請重新確認');
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert('訂單送出失敗，請重新確認');
+				}
+			});
+		}
+
+		function confirmPayment(transactionId, orderId) {
+			// 交易訂單假資料
+			payment = {
+				amount: @(ViewBag.TotalAmount),
+				currency: "TWD",
+			};
+			//  送出確認交易
+			$.post({
+				url: baseLoginPayUrl + `Confirm?transactionId=${transactionId}&orderId=${orderId}`,
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify(payment),
+				success: (res) => {
+					console.log(res);
+					if (res.returnCode !== "0000") {
+						$("#paymentStatus").text("失敗");
+						return
+					}
+					initOrder();
+					$("#paymentStatus").text("成功");
+					//todo將資料存到db
+
+
+					setTimeout(() => {
+					    window.location = "/CurrentOrder";
+					        }, 2000);
+				},
+				error: (err) => {
+					console.log("[err]");
+
+					console.log(err);
+				}
+			})
+		}
+	</script>
+}

@@ -22,7 +22,7 @@ builder.Services.AddDefaultIdentity<VitaUser>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
+    options.Password.RequiredLength = 8;
 })
     .AddEntityFrameworkStores<VitaContext>();
 

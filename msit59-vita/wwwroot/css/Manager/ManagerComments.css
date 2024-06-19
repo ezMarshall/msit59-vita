@@ -15,7 +15,17 @@
     border-radius: 15px;
     padding: 6px;
     font-weight: bold;
-    height: 34px;
+    height: 35px;
+    width: 80px;
+}
+.rating-btn {
+    width: 120px;
+    height: 35px;
+    border: solid #262a10;
+}
+
+.rating-btn:hover {
+    border: 2px solid #399E5A;
 }
 
 .search-icon i {

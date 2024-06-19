@@ -190,6 +190,12 @@ namespace msit59_vita.Controllers
 
                     // 減庫存量
                     product.ProductUnitsInStock -= detail.Quantity;
+
+                    // 如果庫存量小於 10，將產品下架
+                    if (product.ProductUnitsInStock < 10)
+                    {
+                        product.ProductOnSell = false;
+                    }
                 }
 
                 // 更新訂單狀態

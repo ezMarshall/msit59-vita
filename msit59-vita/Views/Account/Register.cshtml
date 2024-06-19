@@ -32,8 +32,8 @@
                 <div class="mb-3">
                     <label for="CustomerEmail" class="form-label is-required ps-3 mb-1" id="RegisterCustomerEmailLabel">電子信箱</label>
                     <input type="text" class="form-control text-dark rounded-pill" id="RegisterCustomerEmail" name="CustomerEmail" required>
-                    <span id="EmailAvail"></span>
-                    <div class="invalid-feedback ps-3">
+                    <div class="valid-feedback ps-3">此用戶Email可以使用</div>
+                    <div class="invalid-feedback ps-3" id="EmailAvail">
                         請輸入有效的電子信箱
                     </div>
                     @{
@@ -102,7 +102,7 @@
     <script>
         $(function () {
             // 名字驗證
-            $('#CustomerName').on('blur', function () {
+            $('#RegisterCustomerName').on('blur', function () {
                 $(this).removeClass('is-invalid');
                 if (!$(this).val()) {
                     $(this).addClass('is-invalid');
@@ -110,25 +110,26 @@
             });
 
             // Email驗證
-            $('#CustomerEmail').on('blur', function () {
+            $('#RegisterCustomerEmail').on('blur', function () {
                 $(this).removeClass('is-invalid');
                 let emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 let CustomerEmail = $(this).val();
                 if (!emailPattern.test(CustomerEmail)) {
+                    $('#EmailAvail').text('請輸入有效的電子信箱');
                     $(this).addClass('is-invalid');
                 } else {
                     // 帳號是否重複
                     $.ajax({
-                        url: '@Url.Action("IsEmailAvailable", "Register")',
+                        url: '@Url.Action("IsEmailAvailable", "Account")',
                         type: 'POST',
                         data: { CustomerEmail: CustomerEmail },
                         success: function (data) {
                             if (data) {
-                                $('#EmailAvail').text('用戶Email可以使用');
-                                $('#EmailAvail').removeClass('text-danger').addClass('text-success ps-3');
+                                $('#RegisterCustomerEmail').removeClass('is-invalid');
+                                $('#RegisterCustomerEmail').addClass('is-valid');
                             } else {
                                 $('#EmailAvail').text('此用戶Email已註冊');
-                                $('#EmailAvail').removeClass('text-success').addClass('text-danger ps-3');
+                                $('#RegisterCustomerEmail').addClass('is-invalid');
                             }
                         }
                     });
@@ -136,7 +137,7 @@
             });
 
             // 手機驗證
-            $('#CustomerCellPhone').on('blur', function () {
+            $('#RegisterCustomerCellPhone').on('blur', function () {
                 $(this).removeClass('is-invalid');
                 let phonePattern = /^09\d{8}$/
                 if ($(this).val()) {
@@ -147,7 +148,7 @@
             })
 
             // 密碼驗證
-            $('#CustomerPassword').on('blur', function () {
+            $('#RegisterCustomerPassword').on('blur', function () {
                 $(this).removeClass('is-invalid');
                 let pwdPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/;
                 if (!pwdPattern.test($(this).val())) {
@@ -156,7 +157,7 @@
             })
 
             // 再次輸入密碼驗證
-            $('#ConfirmPassword').on('blur', function () {
+            $('#RegisterConfirmPassword').on('blur', function () {
                 $(this).removeClass('is-invalid');
                 if (($('#CustomerPassword').val() !== $('#ConfirmPassword').val())) {
                     $('#ConfirmPassword').addClass('is-invalid');
