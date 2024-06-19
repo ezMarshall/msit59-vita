@@ -67,8 +67,19 @@
 		let transactionId = "2024060602134460110";
 		let orderId = "1717601209796";
 
-		function initOrder() {
+		async function initOrder() {
 
+			const url = '/OrderDetail/ConfirmOrder'
+			const result = await fetch(url,
+				{
+					method: 'POST',
+
+				})
+				.then(res => res.json())
+				.then(data => data);
+				
+
+			return result;
 			$.ajax({
 				url: '/OrderDetail/ConfirmOrder',
 				type: 'POST',
@@ -76,7 +87,7 @@
 					console.log(data);
 					if (data.success) {
 						alert('LinePay 付款完成,即將回到當前訂單頁面');
-
+						orderId = data.OrderId;
 
 						connection.invoke("MakeOrders").catch(function (err) {
 							return console.error(err.toString());
@@ -93,40 +104,101 @@
 				}
 			});
 		}
+		async function initTransactionRecord() {
+			const url = "/Transaction/InitTransactionRecord"
+			const result = await fetch(url,
+				{
+					method: 'GET',
 
-		function confirmPayment(transactionId, orderId) {
+				})
+				.then(res => res.json())
+				.then(data => data))
+
+			return result;
+		}
+		async function confirmLinePay(transactionId, orderId) {
+
 			// 交易訂單假資料
 			payment = {
 				amount: @(ViewBag.TotalAmount),
 				currency: "TWD",
 			};
-			//  送出確認交易
-			$.post({
-				url: baseLoginPayUrl + `Confirm?transactionId=${transactionId}&orderId=${orderId}`,
-				dataType: "json",
-				contentType: "application/json",
-				data: JSON.stringify(payment),
-				success: (res) => {
-					console.log(res);
-					if (res.returnCode !== "0000") {
-						$("#paymentStatus").text("失敗");
-						return
-					}
-					initOrder();
-					$("#paymentStatus").text("成功");
-					//todo將資料存到db
-
-
-					setTimeout(() => {
-					    window.location = "/CurrentOrder";
-					        }, 2000);
-				},
-				error: (err) => {
-					console.log("[err]");
-
-					console.log(err);
-				}
+			const url = baseLoginPayUrl + `Confirm?transactionId=${transactionId}&orderId=${orderId}`;
+			const result = await fetch(url,{
+				method:"POST",
+				contentType: "application / json",
+				body: JSON.stringify(payment)
+			}).then(res => res.json())
+			.then(data=>data)
+			.catch(err => {
+				console.log("[err]");
+				console.log(err);
 			})
+			if (result.returnCode !== "0000") {
+				$("#paymentStatus").text("失敗");
+				return
+			}
+
+		// 	console.log(newOrderId);
+		// 	// initTransaction(newOrderId,transactionId, 1, orderId,true);
+		// 	$("#paymentStatus").text("成功");
+		// 	//todo將資料存到db
+
+
+		// 	// setTimeout(() => {
+		// 	//     window.location = "/CurrentOrder";
+		// 	//         }, 2000);
+		// }
+
+		//  function confirmPayment(transactionId, orderId) {
+		// 	// 交易訂單假資料
+		// 	payment = {
+		// 		amount: @(ViewBag.TotalAmount),
+		// 		currency: "TWD",
+		// 	};
+		// 	//  送出確認交易
+		// 	$.post({
+		// 		url: baseLoginPayUrl + `Confirm?transactionId=${transactionId}&orderId=${orderId}`,
+		// 		dataType: "json",
+		// 		contentType: "application/json",
+		// 		data: JSON.stringify(payment),
+		// 		success: (res) => {
+		// 			console.log(res);
+		// 			if (res.returnCode !== "0000") {
+		// 				$("#paymentStatus").text("失敗");
+		// 				return
+		// 			}
+		// 			const newOrderId = initOrder();
+		// 			console.log(newOrderId);
+		// 			// initTransaction(newOrderId,transactionId, 1, orderId,true);
+		// 			$("#paymentStatus").text("成功");
+		// 			//todo將資料存到db
+
+
+		// 			// setTimeout(() => {
+		// 			//     window.location = "/CurrentOrder";
+		// 			//         }, 2000);
+		// 		},
+		// 		error: (err) => {
+		// 			console.log("[err]");
+
+		// 			console.log(err);
+		// 		}
+		// 	})
 		}
+
+		async function confirmPayment(transactionId, orderId){
+
+
+			const resultLinePay = await confirmLinePay(transactionId, orderId);
+
+
+
+
+
+
+		}
+
+
 	</script>
 }
