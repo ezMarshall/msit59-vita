@@ -39,7 +39,6 @@ namespace msit59_vita.Controllers
             {
                 VitaUser user = new VitaUser {
                     UserName = model.CustomerEmail,
-                    VitaUserName = model.CustomerNickName ?? model.CustomerName,
                     Email = model.CustomerEmail,
                     PhoneNumber = model.CustomerCellPhone,
                     IsCustomer = true,
@@ -64,7 +63,7 @@ namespace msit59_vita.Controllers
 					// 創建自定義聲明
 					var claims = new List<Claim>
                     {
-                        new Claim("VitaUserName", user.VitaUserName ?? ""),
+                        new Claim("VitaUserName", model.CustomerNickName ?? model.CustomerName),
 						new Claim("VitaCustomerId", CustomerId.ToString())
 					};
                     // 添加聲明到用戶
@@ -117,11 +116,13 @@ namespace msit59_vita.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, model.CustomerPassword, false, false);
                     if (result.Succeeded)
                     {
-                        int CustomerId = _context.Customers.Where(c => c.CustomerEmail == user.Email).Select(c => c.CustomerId).FirstOrDefault();
+                        Customer customer = _context.Customers.Where(c => c.CustomerEmail == user.Email).FirstOrDefault();
+                        int CustomerId = customer.CustomerId;
+                        string CustomerName = customer.CustomerNickName ?? customer.CustomerName;
 
-                        var claims = new List<Claim>
+						var claims = new List<Claim>
                         {
-                            new Claim("VitaUserName", user.VitaUserName ?? ""),
+                            new Claim("VitaUserName", CustomerName),
 							new Claim("VitaCustomerId", CustomerId.ToString())
 						};
 
@@ -132,7 +133,7 @@ namespace msit59_vita.Controllers
                             userIdentity.AddClaims(claims);
                             await _signInManager.SignOutAsync();
                             await _signInManager.SignInAsync(user, isPersistent: false);
-                            return RedirectToAction("Index","Home");
+							return RedirectToAction("Index","Home");
                         }
                         return RedirectToAction("Index", "Home");
                     }
@@ -156,7 +157,8 @@ namespace msit59_vita.Controllers
             {
                 await _signInManager.SignOutAsync();
                 await HttpContext.SignOutAsync();
-                return Content("ok");
+				await RemoveCustomClaimsAsync(User);
+				return Content("ok");
             }
             catch (Exception ex)
             {
@@ -165,8 +167,22 @@ namespace msit59_vita.Controllers
             }
         }
 
-        #region google 驗證
-        public IActionResult GoogleLogin(string returnUrl = null)
+		private async Task RemoveCustomClaimsAsync(ClaimsPrincipal principal)
+		{
+			var user = await _userManager.GetUserAsync(principal);
+			if (user != null)
+			{
+				// 移除所有自定義的 Claims
+				var customClaims = principal.Claims.Where(c => c.Type == "VitaUserName" || c.Type == "VitaCustomerId");
+				foreach (var claim in customClaims)
+				{
+					await _userManager.RemoveClaimAsync(user, claim);
+				}
+			}
+		}
+
+		#region google 驗證
+		public IActionResult GoogleLogin(string returnUrl = null)
         {
 			var redirectUrl = Url.Action("Callback", "Account", new { returnUrl });
 			var properties = new AuthenticationProperties { RedirectUri = redirectUrl ?? "/" };
@@ -184,10 +200,13 @@ namespace msit59_vita.Controllers
 
 			    VitaUser? user = await _userManager.FindByEmailAsync(cEmail);
                 if (user != null && user.IsCustomer) {
-					int CustomerId = _context.Customers.Where(c => c.CustomerEmail == user.Email).Select(c => c.CustomerId).FirstOrDefault();
+					Customer customer = _context.Customers.Where(c => c.CustomerEmail == user.Email).FirstOrDefault();
+					int CustomerId = customer.CustomerId;
+					string CustomerName = customer.CustomerNickName ?? customer.CustomerName;
+
 					var myClaims = new List<Claim>
 					{
-						new Claim("VitaUserName", user.VitaUserName ?? ""),
+						new Claim("VitaUserName", CustomerName),
 						new Claim("VitaCustomerId", CustomerId.ToString())
 					};
 
@@ -203,7 +222,6 @@ namespace msit59_vita.Controllers
 				VitaUser newUser = new VitaUser
 				{
 					UserName = cEmail,
-					VitaUserName = cName,
 					Email = cEmail,
 					IsCustomer = true,
 				};
@@ -226,7 +244,7 @@ namespace msit59_vita.Controllers
 					// 創建自定義聲明
 					var myClaims = new List<Claim>
 					{
-						new Claim("VitaUserName", newUser.VitaUserName ?? ""),
+						new Claim("VitaUserName", cName),
 						new Claim("VitaCustomerId", CustomerId.ToString())
 					};
 
