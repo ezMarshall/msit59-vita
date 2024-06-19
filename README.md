@@ -13,8 +13,7 @@ Vita線上訂餐平台
 ## 網站架構
 
 ### 前臺
-
-### 後臺
+![前台](https://github.com/ezMarshall/msit59-vita/assets/46256884/29a3d91d-07e1-4d83-b0dd-94e6cf572f22)
 
 ### 前臺完成功能
 
@@ -23,6 +22,9 @@ Vita線上訂餐平台
 - 購物車功能
 - 線上結帳系統，支援第三支付LINEPAY
 - 我的會員：個人資料管理、訂單查詢、收藏店家、評論記錄
+
+### 後臺
+![後台](https://github.com/ezMarshall/msit59-vita/assets/46256884/55ac7ed8-f1a0-430a-b46e-a22992062fdf)
 
 ### 後臺完成功能
 
