@@ -5,20 +5,19 @@ namespace msit59_vita.Models;
 
 public partial class TransactionRecord
 {
-    public int TransactionRecordId { get; set; }
+    public int TransactionRecordsId { get; set; }
 
-    public int OrderID { get; set; }
+    public int OrderId { get; set; }
 
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = null!;
 
     public DateTime TransactionTime { get; set; }
 
-    public string TransactionTimestamp { get; set; }
+    public string TransactionTimestamp { get; set; } = null!;
 
     public byte TransactionType { get; set; }
 
     public bool TransactionResult { get; set; }
 
-    public virtual Order Order{ get; set; } = null!;
-
+    public virtual Order Order { get; set; } = null!;
 }
