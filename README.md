@@ -47,7 +47,7 @@ Vita線上訂餐平台
 
 **前台-測試帳號密碼**
 
-帳號：[bunnylover77@gmail.com](mailto:bunnylover77@gmail.com) 密碼：Pqrs567lmn
+帳號：777meng@gmail.com 密碼：/A1B2C3D       
 
 **後臺-測試帳號密碼**
 
