@@ -159,8 +159,8 @@
             // 再次輸入密碼驗證
             $('#RegisterConfirmPassword').on('blur', function () {
                 $(this).removeClass('is-invalid');
-                if (($('#CustomerPassword').val() !== $('#ConfirmPassword').val())) {
-                    $('#ConfirmPassword').addClass('is-invalid');
+                if (($('#RegisterCustomerPassword').val() !== $('#RegisterConfirmPassword').val())) {
+                    $('#RegisterConfirmPassword').addClass('is-invalid');
                 }
             })
 

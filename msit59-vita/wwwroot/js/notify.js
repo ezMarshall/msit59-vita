@@ -35,17 +35,15 @@ function getNotifyList() {
 $(document).ready(function () {
 	getNotifyList();
 
-	$('#offcanvasNotify, #offcanvasNotifyMobile').on('hidden.bs.offcanvas', function () {
+	$('#offcanvasNotify, #offcanvasNotifyMobile').on('shown.bs.offcanvas', function () {
 		$.ajax({
 			url: '/Notify/SetRead',
 			type: 'POST',
 			success: function (res) {
-				$(".notify-list").each((idx, item) => $(item).html(res));
 				getUnreadNum();
 			},
 			error: function (xhr, status, error) {
 				console.error(error);
-				alert("出現無法預期的問題，請稍後再試。")
 			}
 		})
 	})
