@@ -51,9 +51,13 @@
                 e.preventDefault();
                 let emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 let CustomerEmail = $('#ForgetPwdEmail').val();
+                $('#modalForgetPwdSubmit').prop('disabled', true).find('.spinner-border').show();
+                $('#modalForgetPwdText').addClass('d-none');
                 if (!emailPattern.test(CustomerEmail)) {
                     $('#ForgetPwdEmailValid').text('請輸入有效的電子信箱');
                     $('#ForgetPwdEmail').addClass('is-invalid');
+                    $('#modalForgetPwdSubmit').prop('disabled', false).find('.spinner-border').hide();
+                    $('#modalForgetPwdText').removeClass('d-none');
                 } else {
                     var formData = forgetPwdForm.serialize();
                     $.ajax({
@@ -80,6 +84,10 @@
                         error: function (xhr, status, error) {
                             console.error(error);
                             alert("出現無法預期的問題，請稍後再試。")
+                        },
+                        complete: function () {
+                            $('#modalForgetPwdSubmit').prop('disabled', false).find('.spinner-border').hide();
+                            $('#modalForgetPwdText').removeClass('d-none');
                         }
                     });
                 }
