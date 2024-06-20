@@ -49,7 +49,7 @@ Vita線上訂餐平台
 
 **前台-測試帳號密碼**
 
-帳號：777meng@gmail.com 密碼：/A1B2C3D       
+帳號：777meng@gmail.com 密碼：Xyz789Pqr       
 
 **後臺-測試帳號密碼**
 
