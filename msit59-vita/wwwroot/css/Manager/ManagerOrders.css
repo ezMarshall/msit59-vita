@@ -7,16 +7,16 @@
     border: solid #262a10;
 }
 
-.order-select {
+/*.order-select {
     height: 35px;
-}
+}*/
 
 .clear-btn {
     border-radius: 15px;
     padding: 6px;
     font-weight: bold;
-    height: 34px;
-    width:80px;
+/*    height: 34px;
+    width:80px;*/
 }
 
 .search-icon i {
