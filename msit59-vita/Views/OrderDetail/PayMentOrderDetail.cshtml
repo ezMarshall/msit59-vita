@@ -6,7 +6,6 @@
 
 <section class="container-lg">
 
-@* 	<form action="/OrderDetail/ConfirmOrder" method="post"> *@
 		<div class="order mt-3 row mb-3">
 			<div class="order-step mx-auto col-md-8 d-flex justify-content-around mb-4">
 				<div class="step active col-2 text-center fw-bold ">
@@ -105,9 +104,6 @@
 				</div>
 			</div>
 		</div>
-	@*
-	</form> *@
-
 </section>
 
 @section Scripts {
@@ -134,8 +130,6 @@
 					}
 				}
 			};
-
-			console.log(payment);
 			// 送出 交易申請至商家 server
 			$.post({
 				url: baseLoginPayUrl + "Create",
@@ -150,39 +144,11 @@
 						setTimeout(x => window.location = res.info.paymentUrl.web, 500);
 ;						
 					}
-					console.log(res.info.paymentUrl.web);
-					// window.location = res.info.paymentUrl.web;
 				},
 				error: (err) => {
 					console.log(err);
 				}
 			}) 
-		}
-		function initOrder(){
-
-			 $.ajax({
-				url: '/OrderDetail/ConfirmOrder',
-				type: 'POST',
-				success: function (data) {
-					console.log(data);
-					if (data.success) {
-						alert('訂單已成功送出');
-
-
-						connection.invoke("MakeOrders").catch(function (err) {
-							return console.error(err.toString());
-						});
-
-
-						// window.location.href = '/CurrentOrder';
-					} else {
-						alert('訂單送出失敗，請重新確認');
-					}
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					alert('訂單送出失敗，請重新確認');
-				}
-			});
 		}
 		$(document).ready(function () {
 			$('#confirm-order').click(function () {
@@ -192,9 +158,7 @@
 
 						id: (@paymentInfo[0].StoreId).toString(),
 						amount: parseInt(@ViewBag.TotalAmount),
-						//todo 中文亂碼
 						name: $("#store-name").text(),
-						// name: '商店1',
 						products: [
 							{
 								name: "襪子",
@@ -205,50 +169,20 @@
 						]
 					}];
 
-					console.log("進行line pay");
-					console.log("店家名稱");
-					console.log('@(paymentInfo[0].StoreName)');
-					console.log($("#store-name").text());
-					console.log("店家ID");
-					console.log(@paymentInfo[0].StoreId);
-					console.log("總金額");
-					console.log(@ViewBag.TotalAmount);
-					@{int i = 0;}
-					console.log("商品名稱稱稱");
-					console.log($("#product-detail .product-name"));
 
 					for (let i = 0; i < @paymentInfo.Count; i++) {
-						console.log("@(paymentInfo[i].ProductName.ToString())");
-
-						console.log($("#product-detail .product-name")[i].innerText);
-						// const item = @(paymentInfo)[i];
-						console.log("變數iiiiiiiiiiiiiii");
-						console.log($($("#product-detail>tr")[i]).find("td"));
 						const name = $($("#product-detail>tr")[i]).find("td")[0].innerText;
 						// const imageUrl = $($("#product-detail>tr")[i]).find("td")[1].innerText;
 						const quantity = parseInt($($("#product-detail>tr")[i]).find("td")[1].innerText);
 						const price = parseInt($($("#product-detail>tr")[i]).find("td")[2].innerText.replace("$", "")) / quantity;
-						console.log(name, quantity, price)
-						//todo變數i有問題
-						console.log(parseInt("@i"));
-						//todo 中文亂碼
-						console.log(parseInt("@(paymentInfo[i].ProductUnitPrice)"));
 						const product = {
 							name ,
 							quantity,
 							price
 						}
-						// packages[0].products[i].name = $("#product-detail .product-name")[i].innerText; 
-						// packages[0].products[i].imageUrl = "@(paymentInfo[i].ProductImage)";
-						// packages[0].products[i].quantity = parseInt("@(paymentInfo[i].ShoppingCartQuantity)");
-						// packages[0].products[i].price = parseInt("@(paymentInfo[i].ProductUnitPrice)");
 						packages[0].products[i] = product;
-						@(i = i + 1)
-						console.log("進行line payyyyyy");
 
 					}
-					console.log(packages); 
-					// initOrder();
 					requestPayment(packages);
 					return
 				}
