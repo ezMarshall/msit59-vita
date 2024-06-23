@@ -43,7 +43,13 @@
         /* 今日訂單資訊 */
         .wide-text-box {
             min-width: 200px;
-            margin-top: 20px;
+            margin-top: 0px;
+        }
+
+        @@media (max-width: 992px) {
+           .wide-text-box {
+                margin-top: 20px;
+            }
         }
 
         #orderChartCanvas {
@@ -91,9 +97,15 @@
 
         .c-dashboardInfo__count {
             font-weight: 600;
-            font-size: 2.5em;
+            font-size: 2em;
             line-height: 64px;
             color: #323c43;
+        }
+
+       @@media (min-width: 992px) and (max-width: 1200px) {
+            .c-dashboardInfo__count {
+                font-size: 1.5em;
+            }
         }
 
         .c-dashboardInfo .wrap:after {
@@ -117,9 +129,17 @@
         #ProductsBarChartCanvas,
         #DailyOrderChartCanvas {
             width: 100%;
-           height: 700px;
+           height: 700px !important;
         }
 
+
+        @@media (max-width: 992px) {
+            #reviewMosaicPlot,
+            #ProductsBarChartCanvas,
+            #DailyOrderChartCanvas {
+                display: none !important; 
+            }
+        }
     </style>
 }
 
@@ -129,7 +149,7 @@
         <div class="info-area">
             <div id="order-info">
                 <h3 class="p-0 fw-bolder">今日訂單資訊</h3>
-                <div class="d-flex justify-content-around align-items-start flex-wrap">
+                <div class="d-flex justify-content-start align-items-start flex-wrap">
                     <div class="wide-text-box">
                         <ul class="list-unstyled">
                             <li class="fw-bold fs-4">訂單狀態概覽 </li>
@@ -143,7 +163,7 @@
 
                         </ul>
                     </div>
-                    <div >
+                    <div style="padding-right:80px;">
                         <canvas id="orderChartCanvas" class="ps-0"></canvas>
                     </div>
                     <div class="wide-text-box " >
@@ -289,7 +309,7 @@
                     chart.tooltip()
                         .useHtml(true)
                         .titleFormat('<span style=\"font-size: 18px;\">{%X}</span>')
-                        .format('<h5 style="font-size:18px; margin: 0.5rem 0;">{%Name}</h5><p style="font-size:18px;">評分級數：{%SeriesName}<br>銷售總額: {%Value}{scale:(1000)(1000)|( K)}</p>');
+                        .format('<h5 style="font-size:20px; margin: 0.5rem 0;">{%Name}</h5><p style="font-size:17px;">評分級數：{%SeriesName}<br>銷售總額: {%Value}{scale:(1000)(1000)|( K)}</p>');
                     
                         // set container id for the chart
                     chart.container('reviewMosaicPlot');
@@ -299,7 +319,7 @@
                         .title()
                         .enabled(true)
                         .useHtml(true)
-                        .text('<span style=\'font-size:30px; font-weight:bolder; color: black\'>商品銷售總額（評分級距 vs. 單點便當商品）</span>');
+                        .text('<span style=\'font-size:23px; font-weight:bolder; color: black\'>商品銷售總金額（評分級距 vs. 單點便當商品）</span>');
 
 
                     // configure X axis
@@ -349,7 +369,7 @@
                                     display: true,
                                     text: '各單點便當總營收',
                                     font: {
-                                        size: 30
+                                        size: 23
                                     },
                                     color: 'black'
                                 },
@@ -370,13 +390,13 @@
                                     }
                                 }, tooltip: {
                                     titleFont: {
-                                        size: 30
-                                    },
-                                    bodyFont: {
                                         size: 20
                                     },
+                                    bodyFont: {
+                                        size: 17
+                                    },
                                     footerFont: {
-                                        size: 20 // there is no footer by default
+                                        size: 17 // there is no footer by default
                                     }
                                 },
                                 legend: {
@@ -476,20 +496,20 @@
 
                                 }, tooltip: {
                                     titleFont: {
-                                        size: 30
-                                    },
-                                    bodyFont: {
                                         size: 20
                                     },
+                                    bodyFont: {
+                                        size: 17
+                                    },
                                     footerFont: {
-                                        size: 20 
+                                        size: 17 
                                     }
                                 },
                                 title: {
                                     display: true,
-                                    text: '每日營收、來客數折線圖',
+                                    text: '每日營收、訂單量折線圖',
                                     font: {
-                                        size: 30
+                                        size: 23
                                     },
                                     color: 'black'
                                 }
@@ -589,7 +609,7 @@
                                     display: true,
                                     text: '依據商品分類的今日營收環形圖',
                                     font: {
-                                        size: 20
+                                        size: 23
                                     },
                                     color: 'black'
                                 },
