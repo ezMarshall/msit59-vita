@@ -290,8 +290,9 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<TransactionRecord>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.TransactionRecordsId).HasName("PK_TransactionRecordsID");
 
+            entity.Property(e => e.TransactionRecordsId).HasColumnName("TransactionRecordsID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.TransactionId)
                 .HasMaxLength(25)
@@ -305,7 +306,7 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
                 .HasMaxLength(15)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Order).WithMany()
+            entity.HasOne(d => d.Order).WithMany(p => p.TransactionRecords)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TransactionRecords_Orders");
