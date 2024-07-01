@@ -39,6 +39,8 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<StoreOpeningHour> StoreOpeningHours { get; set; }
 
+    public virtual DbSet<TransactionRecord> TransactionRecords { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -67,13 +69,15 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
                 .IsFixedLength();
             entity.Property(e => e.CustomerName).HasMaxLength(20);
             entity.Property(e => e.CustomerNickName).HasMaxLength(10);
-            entity.Property(e => e.CustomerPassword)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+            entity.Property(e => e.CustomerPassword).HasMaxLength(512);
         });
 
         modelBuilder.Entity<Favorite>(entity =>
         {
+            entity.HasIndex(e => e.CustomerId, "IX_Favorites_CustomerID");
+
+            entity.HasIndex(e => e.StoreId, "IX_Favorites_StoreID");
+
             entity.Property(e => e.FavoriteId).HasColumnName("FavoriteID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.StoreId).HasColumnName("StoreID");
@@ -91,6 +95,10 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<Order>(entity =>
         {
+            entity.HasIndex(e => e.CustomerId, "IX_Orders_CustomerID");
+
+            entity.HasIndex(e => e.StoreId, "IX_Orders_StoreID");
+
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.OrderAddressCity).HasMaxLength(10);
@@ -127,6 +135,8 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
         {
             entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK_Order_Details");
 
+            entity.HasIndex(e => e.ProductId, "IX_OrderDetails_ProductID");
+
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UnitPrice).HasColumnType("smallmoney");
@@ -146,6 +156,8 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
         {
             entity.HasKey(e => e.MessageId);
 
+            entity.HasIndex(e => e.OrderId, "IX_OrderMessages_OrderID");
+
             entity.Property(e => e.MessageId).HasColumnName("MessageID");
             entity.Property(e => e.MessageInformedTime).HasColumnType("smalldatetime");
             entity.Property(e => e.MessageStatus).HasDefaultValue(false);
@@ -159,6 +171,10 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<Product>(entity =>
         {
+            entity.HasIndex(e => e.CategoryId, "IX_Products_CategoryID");
+
+            entity.HasIndex(e => e.StoreId, "IX_Products_StoreID");
+
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ProductImage)
@@ -183,6 +199,8 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
         {
             entity.HasKey(e => e.CategoryId);
 
+            entity.HasIndex(e => e.StoreId, "IX_ProductCategories_StoreID");
+
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(20);
             entity.Property(e => e.StoreId).HasColumnName("StoreID");
@@ -195,6 +213,8 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<Review>(entity =>
         {
+            entity.HasIndex(e => e.OrderId, "IX_Reviews_OrderID");
+
             entity.Property(e => e.ReviewId).HasColumnName("ReviewID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ReviewContent).HasMaxLength(1000);
@@ -210,6 +230,10 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<ShoppingCart>(entity =>
         {
+            entity.HasIndex(e => e.CustomerId, "IX_ShoppingCarts_CustomerID");
+
+            entity.HasIndex(e => e.ProductId, "IX_ShoppingCarts_ProductID");
+
             entity.Property(e => e.ShoppingCartId).HasColumnName("ShoppingCartID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
@@ -240,9 +264,7 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.StoreName).HasMaxLength(40);
-            entity.Property(e => e.StorePassword)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+            entity.Property(e => e.StorePassword).HasMaxLength(512);
             entity.Property(e => e.StorePhoneNumber)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -264,6 +286,30 @@ public partial class VitaContext : IdentityDbContext<IdentityUser>
                 .HasForeignKey(d => d.StoreId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoreOpeningHours_Stores");
+        });
+
+        modelBuilder.Entity<TransactionRecord>(entity =>
+        {
+            entity.HasKey(e => e.TransactionRecordsId).HasName("PK_TransactionRecordsID");
+
+            entity.Property(e => e.TransactionRecordsId).HasColumnName("TransactionRecordsID");
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("TransactionID");
+            entity.Property(e => e.TransactionRecordsId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("TransactionRecordsID");
+            entity.Property(e => e.TransactionTime).HasColumnType("datetime");
+            entity.Property(e => e.TransactionTimestamp)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Order).WithMany(p => p.TransactionRecords)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TransactionRecords_Orders");
         });
 
         modelBuilder.Entity<VitaUser>(entity =>

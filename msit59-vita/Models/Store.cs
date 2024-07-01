@@ -25,7 +25,7 @@ public partial class Store
 
     public string StoreAccountNumber { get; set; } = null!;
 
-    public string StorePassword { get; set; } = null!;
+    public string? StorePassword { get; set; }
 
     public DateTime StoreSetTime { get; set; }
 
